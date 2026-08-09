@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-10T03:25:00+07:00",
+  "title": "Design System: ROOC Kit — Night Ops",
+  "extensions": {
+    "colorMeta": {
+      "bg": { "role": "neutral", "displayName": "Console Night", "canonical": "oklch(0.2 0.015 255)", "light": "oklch(0.955 0.008 250)", "note": "Dark is the default theme; the light value applies under :root.light.", "tonalRamp": ["oklch(0.15 0.015 255)", "oklch(0.26 0.015 255)", "oklch(0.38 0.015 255)", "oklch(0.49 0.015 255)", "oklch(0.61 0.015 255)", "oklch(0.72 0.015 255)", "oklch(0.84 0.015 255)", "oklch(0.95 0.015 255)"] },
+      "surface": { "role": "neutral", "displayName": "Panel", "canonical": "oklch(0.24 0.016 255)", "light": "oklch(0.99 0.004 250)", "tonalRamp": ["oklch(0.15 0.016 255)", "oklch(0.26 0.016 255)", "oklch(0.38 0.016 255)", "oklch(0.49 0.016 255)", "oklch(0.61 0.016 255)", "oklch(0.72 0.016 255)", "oklch(0.84 0.016 255)", "oklch(0.95 0.016 255)"] },
+      "surface-2": { "role": "neutral", "displayName": "Inner Panel", "canonical": "oklch(0.28 0.018 255)", "light": "oklch(0.925 0.012 250)", "note": "Hover fills and inner layers; depth comes from surface steps, not shadows.", "tonalRamp": ["oklch(0.15 0.018 255)", "oklch(0.26 0.018 255)", "oklch(0.38 0.018 255)", "oklch(0.49 0.018 255)", "oklch(0.61 0.018 255)", "oklch(0.72 0.018 255)", "oklch(0.84 0.018 255)", "oklch(0.95 0.018 255)"] },
+      "ink": { "role": "neutral", "displayName": "Console Ink", "canonical": "oklch(0.93 0.008 250)", "light": "oklch(0.26 0.02 255)", "tonalRamp": ["oklch(0.15 0.008 250)", "oklch(0.26 0.008 250)", "oklch(0.38 0.008 250)", "oklch(0.49 0.008 250)", "oklch(0.61 0.008 250)", "oklch(0.72 0.008 250)", "oklch(0.84 0.008 250)", "oklch(0.95 0.008 250)"] },
+      "sub": { "role": "neutral", "displayName": "Muted Steel", "canonical": "oklch(0.7 0.02 250)", "light": "oklch(0.46 0.025 255)", "tonalRamp": ["oklch(0.15 0.02 250)", "oklch(0.26 0.02 250)", "oklch(0.38 0.02 250)", "oklch(0.49 0.02 250)", "oklch(0.61 0.02 250)", "oklch(0.72 0.02 250)", "oklch(0.84 0.02 250)", "oklch(0.95 0.02 250)"] },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "oklch(0.33 0.02 252)", "light": "oklch(0.865 0.015 252)", "note": "The 1px thin-line signature; borders do the work shadows would.", "tonalRamp": ["oklch(0.15 0.02 252)", "oklch(0.26 0.02 252)", "oklch(0.38 0.02 252)", "oklch(0.49 0.02 252)", "oklch(0.61 0.02 252)", "oklch(0.72 0.02 252)", "oklch(0.84 0.02 252)", "oklch(0.95 0.02 252)"] },
+      "accent": { "role": "primary", "displayName": "Blaze Orange", "canonical": "oklch(0.68 0.19 40)", "light": "oklch(0.52 0.19 40)", "note": "Decisions and active states only; light value darkened to pass 4.5:1 on light surfaces.", "tonalRamp": ["oklch(0.15 0.19 40)", "oklch(0.26 0.19 40)", "oklch(0.38 0.19 40)", "oklch(0.49 0.19 40)", "oklch(0.61 0.19 40)", "oklch(0.72 0.19 40)", "oklch(0.84 0.19 40)", "oklch(0.95 0.19 40)"] },
+      "accent-ink": { "role": "neutral", "displayName": "On-Accent", "canonical": "oklch(0.17 0.03 40)", "light": "oklch(0.99 0.005 40)", "tonalRamp": ["oklch(0.15 0.03 40)", "oklch(0.26 0.03 40)", "oklch(0.38 0.03 40)", "oklch(0.49 0.03 40)", "oklch(0.61 0.03 40)", "oklch(0.72 0.03 40)", "oklch(0.84 0.03 40)", "oklch(0.95 0.03 40)"] },
+      "gold": { "role": "secondary", "displayName": "Research Gold", "canonical": "oklch(0.76 0.11 80)", "light": "oklch(0.5 0.12 80)", "note": "Levels, progress, estimated data, completion; never a decision color.", "tonalRamp": ["oklch(0.15 0.11 80)", "oklch(0.26 0.11 80)", "oklch(0.38 0.11 80)", "oklch(0.49 0.11 80)", "oklch(0.61 0.11 80)", "oklch(0.72 0.11 80)", "oklch(0.84 0.11 80)", "oklch(0.95 0.11 80)"] },
+      "gold-ink": { "role": "neutral", "displayName": "On-Gold", "canonical": "oklch(0.22 0.05 80)", "light": "oklch(0.98 0.02 80)", "tonalRamp": ["oklch(0.15 0.05 80)", "oklch(0.26 0.05 80)", "oklch(0.38 0.05 80)", "oklch(0.49 0.05 80)", "oklch(0.61 0.05 80)", "oklch(0.72 0.05 80)", "oklch(0.84 0.05 80)", "oklch(0.95 0.05 80)"] },
+      "danger": { "role": "tertiary", "displayName": "Blocker Red", "canonical": "oklch(0.62 0.17 25)", "light": "oklch(0.5 0.19 25)", "note": "Blockers and real failures (auth error) only; never decorative.", "tonalRamp": ["oklch(0.15 0.17 25)", "oklch(0.26 0.17 25)", "oklch(0.38 0.17 25)", "oklch(0.49 0.17 25)", "oklch(0.61 0.17 25)", "oklch(0.72 0.17 25)", "oklch(0.84 0.17 25)", "oklch(0.95 0.17 25)"] },
+      "tip-bg": { "role": "neutral", "displayName": "Tooltip Chip", "canonical": "oklch(0.14 0.012 255)", "light": "oklch(0.24 0.02 255)", "note": "Tooltip stays dark in both themes.", "tonalRamp": ["oklch(0.15 0.012 255)", "oklch(0.26 0.012 255)", "oklch(0.38 0.012 255)", "oklch(0.49 0.012 255)", "oklch(0.61 0.012 255)", "oklch(0.72 0.012 255)", "oklch(0.84 0.012 255)", "oklch(0.95 0.012 255)"] },
+      "tip-ink": { "role": "neutral", "displayName": "Tooltip Ink", "canonical": "oklch(0.93 0.008 250)", "light": "oklch(0.96 0.005 250)", "tonalRamp": ["oklch(0.15 0.008 250)", "oklch(0.26 0.008 250)", "oklch(0.38 0.008 250)", "oklch(0.49 0.008 250)", "oklch(0.61 0.008 250)", "oklch(0.72 0.008 250)", "oklch(0.84 0.008 250)", "oklch(0.95 0.008 250)"] },
+      "frame-ink": { "role": "neutral", "displayName": "Frame Ink", "canonical": "oklch(0.42 0.02 255)", "note": "Letter fallback drawn inside the light in-game frame art; does not flip with the theme.", "tonalRamp": ["oklch(0.15 0.02 255)", "oklch(0.26 0.02 255)", "oklch(0.38 0.02 255)", "oklch(0.49 0.02 255)", "oklch(0.61 0.02 255)", "oklch(0.72 0.02 255)", "oklch(0.84 0.02 255)", "oklch(0.95 0.02 255)"] },
+      "el-neutral": { "role": "tertiary", "displayName": "Element: Neutral", "canonical": "oklch(0.75 0.02 20)", "light": "oklch(0.45 0.02 20)", "tonalRamp": ["oklch(0.15 0.02 20)", "oklch(0.26 0.02 20)", "oklch(0.38 0.02 20)", "oklch(0.49 0.02 20)", "oklch(0.61 0.02 20)", "oklch(0.72 0.02 20)", "oklch(0.84 0.02 20)", "oklch(0.95 0.02 20)"] },
+      "el-wind": { "role": "tertiary", "displayName": "Element: Wind", "canonical": "oklch(0.75 0.1 145)", "light": "oklch(0.45 0.1 145)", "tonalRamp": ["oklch(0.15 0.1 145)", "oklch(0.26 0.1 145)", "oklch(0.38 0.1 145)", "oklch(0.49 0.1 145)", "oklch(0.61 0.1 145)", "oklch(0.72 0.1 145)", "oklch(0.84 0.1 145)", "oklch(0.95 0.1 145)"] },
+      "el-earth": { "role": "tertiary", "displayName": "Element: Earth", "canonical": "oklch(0.75 0.1 85)", "light": "oklch(0.47 0.09 85)", "tonalRamp": ["oklch(0.15 0.1 85)", "oklch(0.26 0.1 85)", "oklch(0.38 0.1 85)", "oklch(0.49 0.1 85)", "oklch(0.61 0.1 85)", "oklch(0.72 0.1 85)", "oklch(0.84 0.1 85)", "oklch(0.95 0.1 85)"] },
+      "el-fire": { "role": "tertiary", "displayName": "Element: Fire", "canonical": "oklch(0.72 0.14 35)", "light": "oklch(0.5 0.16 35)", "tonalRamp": ["oklch(0.15 0.14 35)", "oklch(0.26 0.14 35)", "oklch(0.38 0.14 35)", "oklch(0.49 0.14 35)", "oklch(0.61 0.14 35)", "oklch(0.72 0.14 35)", "oklch(0.84 0.14 35)", "oklch(0.95 0.14 35)"] },
+      "el-water": { "role": "tertiary", "displayName": "Element: Water", "canonical": "oklch(0.74 0.1 240)", "light": "oklch(0.48 0.1 240)", "tonalRamp": ["oklch(0.15 0.1 240)", "oklch(0.26 0.1 240)", "oklch(0.38 0.1 240)", "oklch(0.49 0.1 240)", "oklch(0.61 0.1 240)", "oklch(0.72 0.1 240)", "oklch(0.84 0.1 240)", "oklch(0.95 0.1 240)"] },
+      "el-poison": { "role": "tertiary", "displayName": "Element: Poison", "canonical": "oklch(0.72 0.12 310)", "light": "oklch(0.47 0.13 310)", "tonalRamp": ["oklch(0.15 0.12 310)", "oklch(0.26 0.12 310)", "oklch(0.38 0.12 310)", "oklch(0.49 0.12 310)", "oklch(0.61 0.12 310)", "oklch(0.72 0.12 310)", "oklch(0.84 0.12 310)", "oklch(0.95 0.12 310)"] },
+      "el-holy": { "role": "tertiary", "displayName": "Element: Holy", "canonical": "oklch(0.82 0.1 90)", "light": "oklch(0.55 0.1 90)", "tonalRamp": ["oklch(0.15 0.1 90)", "oklch(0.26 0.1 90)", "oklch(0.38 0.1 90)", "oklch(0.49 0.1 90)", "oklch(0.61 0.1 90)", "oklch(0.72 0.1 90)", "oklch(0.84 0.1 90)", "oklch(0.95 0.1 90)"] },
+      "el-shadow": { "role": "tertiary", "displayName": "Element: Shadow", "canonical": "oklch(0.68 0.13 290)", "light": "oklch(0.42 0.12 290)", "tonalRamp": ["oklch(0.15 0.13 290)", "oklch(0.26 0.13 290)", "oklch(0.38 0.13 290)", "oklch(0.49 0.13 290)", "oklch(0.61 0.13 290)", "oklch(0.72 0.13 290)", "oklch(0.84 0.13 290)", "oklch(0.95 0.13 290)"] },
+      "el-ghost": { "role": "tertiary", "displayName": "Element: Ghost", "canonical": "oklch(0.75 0.05 220)", "light": "oklch(0.48 0.05 220)", "tonalRamp": ["oklch(0.15 0.05 220)", "oklch(0.26 0.05 220)", "oklch(0.38 0.05 220)", "oklch(0.49 0.05 220)", "oklch(0.61 0.05 220)", "oklch(0.72 0.05 220)", "oklch(0.84 0.05 220)", "oklch(0.95 0.05 220)"] },
+      "el-undead": { "role": "tertiary", "displayName": "Element: Undead", "canonical": "oklch(0.72 0.08 120)", "light": "oklch(0.45 0.07 120)", "tonalRamp": ["oklch(0.15 0.08 120)", "oklch(0.26 0.08 120)", "oklch(0.38 0.08 120)", "oklch(0.49 0.08 120)", "oklch(0.61 0.08 120)", "oklch(0.72 0.08 120)", "oklch(0.84 0.08 120)", "oklch(0.95 0.08 120)"] }
+    },
+    "typographyMeta": {
+      "hero": { "displayName": "Hero", "purpose": "Landing headline only: extrabold, tracking-tight, text-balance (text-4xl sm:text-5xl)." },
+      "headline": { "displayName": "Headline", "purpose": "Section/page titles: extrabold, tracking-tight." },
+      "title": { "displayName": "Title", "purpose": "Row names, gate/dialog titles, ledger feature titles; bold." },
+      "body": { "displayName": "Body", "purpose": "Dominant UI size (text-sm): rows, buttons, controls, footers." },
+      "label": { "displayName": "Label", "purpose": "Meta text: hints, legal notice, privacy bullets, gold feature sublines; usually --sub or --gold." },
+      "number": { "displayName": "Number", "purpose": "All comparable numbers: Geist Mono + tabular-nums (Lv badges, sidebar counters, steppers, proof fragments)." }
+    },
+    "shadows": [
+      { "name": "flat-world", "value": "none", "purpose": "Cards and panels are flat: depth = 1px --line borders + surface/surface-2 steps. No shadows at rest." },
+      { "name": "floating-layer", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "shadcn/Radix floating layers only (dialog, select popover) over a black/50 backdrop; never on in-flow cards." }
+    ],
+    "motion": [
+      { "name": "lv-pop", "value": "260ms cubic-bezier(0.16, 1, 0.3, 1); scale 1 -> 1.18 -> 1", "purpose": "Signature moment: a row-level badge pops only when the row level rises (blocker cleared) — used in the tracker and the landing demo card." },
+      { "name": "rise-in", "value": "180ms cubic-bezier(0.16, 1, 0.3, 1); translateY(6px) + fade in", "purpose": "Inline editor unfolding under a row; AuthGate card arriving." },
+      { "name": "press", "value": "150ms ease-out; :active scale(0.96)", "purpose": "Soft press feedback on chunky controls (.press)." },
+      { "name": "tip-fade", "value": "opacity 120ms ease-out", "purpose": "Monster-name tooltip on hover/focus-visible." },
+      { "name": "theme-switch-click", "value": "/audios/rocker-switch.wav on ThemeToggle", "purpose": "Physical rocker-switch click paired with flipping the lights; fails silently when audio is blocked." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce -> animation: none; all transitions/animations clamped to 0.01ms", "purpose": "Mandatory fallback for every animation." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary CTA Button",
+      "kind": "button",
+      "refersTo": "button-cta",
+      "description": "The one full-accent action per viewport (landing hero, closing CTA, active nav).",
+      "html": "<button class=\"ds-btn-cta\">Open Tracker <svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2.5 8h11\"/><path d=\"m9 3.5 4.5 4.5L9 12.5\"/></svg></button>",
+      "css": ".ds-btn-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--accent-ink); border: none; border-radius: 8px; padding: 10px 20px; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: transform 150ms ease-out, filter 150ms ease-out; } .ds-btn-cta:hover { filter: brightness(1.07); } .ds-btn-cta:active { transform: scale(0.96); } .ds-btn-cta:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Provider Sign-in Button",
+      "kind": "button",
+      "refersTo": "button-provider",
+      "description": "Outline sign-in button with a fixed-color third-party brand mark — the one sanctioned exception to token-only color.",
+      "html": "<button class=\"ds-btn-provider\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"#5865F2\" aria-hidden=\"true\"><path d=\"M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.445.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.106c.36.699.772 1.363 1.225 1.994a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.661a.061.061 0 0 0-.031-.028ZM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418Zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418Z\"/></svg>Sign in with Discord</button>",
+      "css": ".ds-btn-provider { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 40px; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 0 24px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; } .ds-btn-provider:hover { background: var(--surface-2); } .ds-btn-provider:active { transform: scale(0.96); } .ds-btn-provider:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-btn-provider:disabled { pointer-events: none; opacity: 0.5; }"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-active",
+      "description": "Header navigation; the active page is a full-accent block (never a tint), idle items are muted with a surface-2 hover.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item ds-nav-item--active\" aria-current=\"page\" href=\"#\">Monster Research</a><a class=\"ds-nav-item\" href=\"#\">Backup</a></nav>",
+      "css": ".ds-nav { display: inline-flex; gap: 4px; font-size: 0.875rem; } .ds-nav-item { border-radius: 8px; padding: 6px 14px; color: var(--sub); text-decoration: none; transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out; } .ds-nav-item:hover { background: var(--surface-2); color: var(--ink); } .ds-nav-item:active { transform: scale(0.96); } .ds-nav-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-nav-item--active { background: var(--accent); color: var(--accent-ink); font-weight: 600; }"
+    },
+    {
+      "name": "Row-Level Badge",
+      "kind": "custom",
+      "refersTo": "badge-row-level",
+      "description": "Gold mono badge showing a row's level; turns accent when the row completes; pops (lv-pop) only when the level rises.",
+      "html": "<span class=\"ds-lv-badge\">Lv 4</span> <span class=\"ds-lv-badge ds-lv-badge--complete\">Completed</span>",
+      "css": "@keyframes ds-lv-pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } } .ds-lv-badge { display: inline-block; background: var(--gold); color: var(--gold-ink); border-radius: 6px; padding: 2px 8px; font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 0.75rem; font-weight: 700; } .ds-lv-badge--complete { background: var(--accent); color: var(--accent-ink); } .ds-lv-badge:hover { animation: ds-lv-pop 260ms cubic-bezier(0.16, 1, 0.3, 1); } @media (prefers-reduced-motion: reduce) { .ds-lv-badge:hover { animation: none; } }"
+    },
+    {
+      "name": "Monster Tile",
+      "kind": "custom",
+      "refersTo": "monster-tile",
+      "description": "56px sprite tile (letter fallback shown here; real build uses in-game level frames), mono level badge in the bottom-right corner, blocker variant ringed red, name in a dark tooltip.",
+      "html": "<span style=\"display:inline-flex;gap:14px;padding-top:28px\"><button class=\"ds-tile\" aria-label=\"Fabre — Lv 4\"><span class=\"ds-tile-face\">F</span><span class=\"ds-tile-lv\">4</span><span class=\"ds-tile-tip\">Fabre</span></button><button class=\"ds-tile ds-tile--blocker\" aria-label=\"Pupa — Lv 4 (blocker)\"><span class=\"ds-tile-face\">P</span><span class=\"ds-tile-lv ds-tile-lv--blocker\">4</span><span class=\"ds-tile-tip\">Pupa — blocker</span></button></span>",
+      "css": ".ds-tile { position: relative; width: 56px; height: 56px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); cursor: pointer; padding: 0; transition: transform 150ms ease-out; } .ds-tile:active { transform: scale(0.96); } .ds-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-tile--blocker { outline: 2px solid var(--danger); outline-offset: 1px; } .ds-tile-face { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; font-weight: 700; font-size: 1.25rem; color: var(--sub); } .ds-tile-lv { position: absolute; right: -6px; bottom: -6px; z-index: 2; min-width: 18px; border-radius: 6px; padding: 0 4px; background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); text-align: center; font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 10px; font-weight: 700; } .ds-tile-lv--blocker { background: var(--danger); border-color: var(--danger); color: #fff; } .ds-tile-tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: 10; white-space: nowrap; pointer-events: none; background: var(--tip-bg); color: var(--tip-ink); border: 1px solid var(--line); font-size: 0.72rem; font-weight: 500; padding: 4px 10px; border-radius: 8px; opacity: 0; transition: opacity 120ms ease-out; } .ds-tile:hover .ds-tile-tip, .ds-tile:focus-visible .ds-tile-tip { opacity: 1; }"
+    },
+    {
+      "name": "Level Stepper",
+      "kind": "input",
+      "refersTo": "input-level",
+      "description": "Minus/number/plus; dashed gold marks estimated values (shape + color). Coarse pointers get >=44px targets via an ::after expansion.",
+      "html": "<span class=\"ds-stepper\"><button class=\"ds-step-btn\" aria-label=\"Lv -1\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><path d=\"M3.5 8h9\"/></svg></button><input class=\"ds-step-input ds-step-input--estimated\" type=\"number\" value=\"7\" min=\"0\" max=\"10\" aria-label=\"Lv\"/><button class=\"ds-step-btn\" aria-label=\"Lv +1\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><path d=\"M8 3.5v9\"/><path d=\"M3.5 8h9\"/></svg></button></span>",
+      "css": ".ds-stepper { display: inline-flex; align-items: center; gap: 2px; } .ds-step-btn { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--sub); cursor: pointer; transition: background-color 150ms ease-out, color 150ms ease-out; } .ds-step-btn:hover { background: var(--surface-2); color: var(--ink); } .ds-step-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-step-input { width: 36px; height: 28px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--ink); text-align: center; font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 0.875rem; font-weight: 700; } .ds-step-input--estimated { border-style: dashed; border-color: var(--gold); color: var(--gold); } .ds-step-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-step-input::-webkit-outer-spin-button, .ds-step-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; } @media (pointer: coarse) { .ds-step-btn { width: 36px; height: 36px; } .ds-step-btn::after { content: \"\"; position: absolute; inset: -4px; } }"
+    },
+    {
+      "name": "Proof Fragment Chip",
+      "kind": "chip",
+      "refersTo": "proof-fragment",
+      "description": "Landing ledger evidence: a real UI fragment as a mono chip — element dot or 1.75-stroke icon, muted text, bold ink numbers.",
+      "html": "<span style=\"display:inline-flex;flex-direction:column;gap:8px;align-items:flex-start\"><span class=\"ds-frag\"><span class=\"ds-frag-dot\" style=\"color: var(--el-earth)\" aria-hidden=\"true\"></span>Earth <b>12/40</b> maxed</span><span class=\"ds-frag ds-frag--trip\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"var(--accent)\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 14.5s-4.5-4.1-4.5-7.3a4.5 4.5 0 0 1 9 0c0 3.2-4.5 7.3-4.5 7.3Z\"/><circle cx=\"8\" cy=\"7\" r=\"1.6\"/></svg>Go <b>Southern Payon</b> — clears 3 blockers</span></span>",
+      "css": ".ds-frag { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 8px 14px; font-family: ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 0.75rem; color: var(--sub); } .ds-frag b { font-weight: 700; color: var(--ink); } .ds-frag--trip { border-color: color-mix(in oklab, var(--accent) 45%, var(--line)); } .ds-frag-dot { display: inline-block; width: 8px; height: 8px; border-radius: 9999px; background: currentColor; }"
+    },
+    {
+      "name": "Sample Tag",
+      "kind": "chip",
+      "refersTo": "sample-tag",
+      "description": "Dashed gold tag labeling sample/unconfirmed content (the landing demo card) — Dashed-Means-Unconfirmed made into a chip.",
+      "html": "<span class=\"ds-sample-tag\">Sample data — try it</span>",
+      "css": ".ds-sample-tag { display: inline-block; border: 1px dashed var(--gold); border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.025em; color: var(--gold); }"
+    },
+    {
+      "name": "Auth Gate Card",
+      "kind": "card",
+      "refersTo": "gate-card",
+      "description": "The one-time entry choice on /tracker: providers above an uppercase hairline divider, an equal-standing anonymous path, dashed local-only note.",
+      "html": "<div class=\"ds-gate\"><h2 class=\"ds-gate-title\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"var(--accent)\" aria-hidden=\"true\"><path d=\"M10 2.2c3.6 0 7.3 3.4 7.3 7.6 0 4.6-3.3 7.4-7.3 7.4S2.7 14.4 2.7 9.8C2.7 5.6 6.4 2.2 10 2.2Z\"/><ellipse cx=\"6.9\" cy=\"6.4\" rx=\"1.7\" ry=\"1\" transform=\"rotate(-28 6.9 6.4)\" fill=\"var(--bg)\" opacity=\"0.55\"/></svg>Keep your progress</h2><p class=\"ds-gate-sub\">Sign in to sync across devices, or stay in this browser.</p><button class=\"ds-gate-provider\">Sign in with Discord</button><div class=\"ds-gate-or\" aria-hidden=\"true\"><span></span>or<span></span></div><button class=\"ds-gate-anon\">Continue without an account</button><p class=\"ds-gate-note\">Your data stays in this browser until you sign in.</p></div>",
+      "css": ".ds-gate { max-width: 384px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; color: var(--ink); font-size: 0.875rem; } .ds-gate-title { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.025em; } .ds-gate-sub { margin: 4px 0 20px; color: var(--sub); } .ds-gate-provider, .ds-gate-anon { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--ink); padding: 10px 16px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: background-color 150ms ease-out, transform 150ms ease-out; } .ds-gate-provider:hover, .ds-gate-anon:hover { background: var(--surface-2); } .ds-gate-provider:active, .ds-gate-anon:active { transform: scale(0.96); } .ds-gate-provider:focus-visible, .ds-gate-anon:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-gate-or { display: flex; align-items: center; gap: 12px; margin: 16px 0; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); } .ds-gate-or span { height: 1px; flex: 1; background: var(--line); } .ds-gate-note { margin: 12px 0 0; border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; font-size: 0.75rem; color: var(--sub); }"
+    },
+    {
+      "name": "Ghost Icon Button",
+      "kind": "button",
+      "refersTo": "button-provider",
+      "description": "Bordered 32px icon button (ThemeToggle, locale switch): hairline border, sub ink, surface-2 hover, press feedback.",
+      "html": "<button class=\"ds-icon-btn\" aria-label=\"Switch to light theme\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"3\"/><path d=\"M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M12.6 3.4l-1.3 1.3M4.7 11.3l-1.3 1.3\"/></svg></button>",
+      "css": ".ds-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--sub); cursor: pointer; transition: background-color 150ms ease-out, color 150ms ease-out, transform 150ms ease-out; } .ds-icon-btn:hover { background: var(--surface-2); color: var(--ink); } .ds-icon-btn:active { transform: scale(0.96); } .ds-icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "เครื่องมือจอสองข้างเกมตอนกลางคืน",
+    "overview": "คอนโซลมืดโทนเทาน้ำเงินเย็น (hue ~255) แบบเครื่องมือเกมเมอร์ (Raidbots/WoWhead) — เส้นขอบบาง 1px, มุมโค้งน้อย (6–12px), ตัวเลข mono tabular-nums ทุกจุด, ไม่มีของประดับ Dark-first: ค่าเริ่มต้นคือมืด (เปิดคู่เกมตอนกลางคืน) และมี light theme \"กลางวันของคอนโซลเดียวกัน\" เป็น opt-in ผ่าน ThemeToggle (:root.light — ส้ม/ทอง/แดงถูกกดเข้มลงให้ผ่าน 4.5:1 บนพื้นสว่าง) สีหน้าที่เข้มงวด: ส้มแสด = จุดตัดสินใจ/สถานะ active ทั้งหมด, ทอง = เลเวล/ความคืบหน้า/estimated, แดง = blocker เท่านั้น ผังหน้า: / = landing แบบ \"Live demo first\" (demo เล่นได้ + proof fragment จริง), /tracker = tracker หลัง AuthGate ที่มีทาง anonymous เสมอ",
+    "keyCharacteristics": [
+      "คอนโซลมืดเทาน้ำเงินเย็น hue ~255 — เส้น 1px, มุมคม 6–12px, ไม่มีเงาบนการ์ด",
+      "Accent economy เข้มงวด: ส้ม = ตัดสินใจ/active, ทอง = เลเวล/ความคืบหน้า/estimated, แดง = blocker เท่านั้น",
+      "ตัวเลขเทียบกันได้ทุกตัวเป็น Geist Mono tabular-nums",
+      "Dark-first + light opt-in: token ทุกตัวนิยามทั้ง :root และ :root.light",
+      "สถานะทุกแบบสื่อด้วยรูปทรง/ไอคอน (stroke 1.75) คู่สี ไม่ใช่สีเดี่ยว",
+      "โครงจากเกม: sidebar ธาตุ + tile 56px กรอบรูปเกมตามเลเวล + tooltip ชื่อ",
+      "พิสูจน์ด้วยของจริง: landing ใช้ demo เล่นได้และ proof fragment ไม่ใช่ icon card"
+    ],
+    "rules": [
+      { "name": "The Accent Economy Rule", "body": "ส้ม (--accent) = จุดตัดสินใจและสถานะ active ทั้งหมด — ปุ่มส้มเต็มมีจุดเดียวต่อ viewport; ทอง = เลเวล/ความคืบหน้า/estimated; ห้ามสลับหน้าที่กัน", "section": "colors" },
+      { "name": "The Red-Is-Blocker Rule", "body": "--danger ใช้ได้เฉพาะ blocker และความล้มเหลวจริง (เช่น auth error role=alert) ห้ามใช้ตกแต่ง", "section": "colors" },
+      { "name": "The Two-Theme Token Rule", "body": "สีใหม่ต้องนิยามทั้ง :root และ :root.light และผ่าน contrast 4.5:1 บน surface/surface-2 ทั้งสองธีม — component อ้าง token เท่านั้น", "section": "colors" },
+      { "name": "The Brand-Mark Exception Rule", "body": "สี hardcode มีได้ที่เดียว: brand mark third-party (Discord #5865F2, Google 4 สี official) คงที่ทั้งสองธีม — BlobMark ของเราเองใช้ currentColor", "section": "colors" },
+      { "name": "The Never-Color-Alone Rule", "body": "สีไม่เคยยืนลำพัง — dot ธาตุคู่ชื่อ, blocker = outline + badge + BlockerIcon + aria-label, estimated = เส้นประคู่สีทอง", "section": "colors" },
+      { "name": "The Tabular Numbers Rule", "body": "ตัวเลขที่เทียบกันได้ใช้ font-mono tabular-nums เสมอ (Lv badge, ตัวนับ sidebar, stepper, proof fragment)", "section": "typography" },
+      { "name": "The Sharp-Corner Rule", "body": "Radius มีสามขั้น: 12px การ์ด, 8px ปุ่ม/tile, 6px badge — ไม่มี rounded-full ยกเว้น dot ธาตุ; shadcn default rounded-md ต้องถูกทับเป็น rounded-lg ในจุดใช้งาน", "section": "elevation" },
+      { "name": "The Flat-Console Rule", "body": "การ์ดแบน: ความลึก = เส้น 1px + ขั้น surface → surface-2; เงามีได้เฉพาะชั้นลอย Radix (dialog/popover) บน backdrop black/50", "section": "elevation" },
+      { "name": "The Dashed-Means-Unconfirmed Rule", "body": "เส้นประ = ยังไม่ยืนยัน/ยังไม่ commit (estimated, sample tag, หมายเหตุ anonymous) เส้นทึบคือของจริง", "section": "elevation" }
+    ],
+    "dos": [
+      "Do อ้างสีผ่าน token; สีใหม่ต้องนิยามทั้ง :root และ :root.light และผ่าน contrast 4.5:1 บน surface/surface-2 ทั้งสองธีม",
+      "Do ให้ทุกสถานะมีรูปทรงคู่สี (ไอคอนชุด stroke 1.75 ใน icons.tsx)",
+      "Do เก็บลุคที่ใช้ซ้ำเป็น recipe class ใน globals.css ไม่ก็อปคลาสยาวใน JSX",
+      "Do ธีม: dark คือบ้านหลัก, light เป็น opt-in ผ่าน ThemeToggle (class light บน <html>, เก็บใน localStorage[\"rooc.theme\"], boot script ใน layout กัน FOUC) — ห้าม pastel",
+      "Do เสิร์ฟ game art จาก /public/img ผ่าน helper ใน src/lib/images.ts เท่านั้น — asset ผู้ใช้จัดหา ห้ามดึงโลโก้/ฟอนต์ official เพิ่มเอง",
+      "Do พิสูจน์ฟีเจอร์บน surface โน้มน้าวด้วยชิ้น UI จริง (proof fragment / demo เล่นได้) ไม่ใช่ icon card หรือภาพ mock"
+    ],
+    "donts": [
+      "Don't ใช้ --danger นอกบริบท blocker/ความล้มเหลวจริง (auth error); ส้ม/ทองห้ามสลับหน้าที่",
+      "Don't hardcode สี — ยกเว้น brand mark third-party (Discord blurple, Google 4 สี) ที่ต้องคงสี official ทั้งสองธีม",
+      "Don't ใช้ rounded-full (นอกจาก dot ธาตุ) และห้ามปล่อย shadcn component ที่ยังไม่ bridge เข้า token Night Ops",
+      "Don't บังคับ sign-in: ทุก gate ต้องมีทาง anonymous ที่เท่าเทียม (ขอบ border-line ปกติ ไม่ถูกกดให้ด้อย)",
+      "Don't เพิ่ม animation ใหม่โดยไม่มีเหตุผลเชิงความหมาย + fallback reduced-motion"
+    ]
+  }
+}
