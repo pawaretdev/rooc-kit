@@ -1,0 +1,215 @@
+{
+  "element": "Shadow",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Thief Bug Egg",
+          "type": "Normal",
+          "baseLevel": 22,
+          "locations": ["Culvert F1"]
+        },
+        {
+          "name": "Thief Bug",
+          "type": "Normal",
+          "baseLevel": 23,
+          "locations": ["Prontera West Gate", "Culvert F1"]
+        },
+        {
+          "name": "Tarou",
+          "type": "Normal",
+          "baseLevel": 25,
+          "locations": ["Culvert F1"]
+        },
+        {
+          "name": "Thief Bug Female",
+          "type": "Normal",
+          "baseLevel": 33,
+          "locations": ["Culvert F2"]
+        },
+        {
+          "name": "Thief Bug Male",
+          "type": "Normal",
+          "baseLevel": 35,
+          "locations": ["Culvert F2"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Familiar",
+          "type": "Normal",
+          "baseLevel": 26,
+          "locations": ["Ant Hell", "Culvert F1", "Payon Cave F1", "Culvert F2"]
+        },
+        {
+          "name": "Drainliar",
+          "type": "Normal",
+          "baseLevel": 47,
+          "locations": [
+            "Orc Cave",
+            "Sphinx Crypt",
+            "Pyramid F1",
+            "Mjolnir Abandoned Mine",
+            "Geffen Underground F1",
+            "Pyramid F2"
+          ]
+        },
+        {
+          "name": "Deviling",
+          "type": "MVP",
+          "baseLevel": 54,
+          "locations": ["Poring Island"]
+        },
+        {
+          "name": "Matyr",
+          "type": "Normal",
+          "baseLevel": 60,
+          "locations": ["Pyramid F3", "Sphinx Crypt"]
+        },
+        {
+          "name": "Infernal Nightmare",
+          "type": "Mini",
+          "baseLevel": 82,
+          "locations": ["Geffen Underground F2"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Isis",
+          "type": "Normal",
+          "baseLevel": 61,
+          "locations": ["Pyramid F3"]
+        },
+        {
+          "name": "Requiem",
+          "type": "Normal",
+          "baseLevel": 67,
+          "locations": ["Sphinx Crypt"]
+        },
+        {
+          "name": "Zenorc",
+          "type": "Normal",
+          "baseLevel": 70,
+          "locations": ["Orc Cave"]
+        },
+        {
+          "name": "Dracula",
+          "type": "MVP",
+          "baseLevel": 80,
+          "locations": ["Geffen Underground F2"]
+        },
+        {
+          "name": "Doppelganger",
+          "type": "MVP",
+          "baseLevel": 83,
+          "locations": ["Geffen Underground F2"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Dokebi",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Payon Cave F3"]
+        },
+        {
+          "name": "Pharaoh",
+          "type": "MVP",
+          "baseLevel": 86,
+          "locations": ["Sphinx Crypt F2"]
+        },
+        {
+          "name": "Baphomet",
+          "type": "MVP",
+          "baseLevel": 90,
+          "locations": ["Labyrinth Forest F1"]
+        },
+        {
+          "name": "Deviruchi",
+          "type": "Normal",
+          "baseLevel": 90,
+          "locations": ["Geffen Underground F3"]
+        },
+        {
+          "name": "Baphomet Jr.",
+          "type": "Normal",
+          "baseLevel": 97,
+          "locations": ["Labyrinth Forest F3"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Injustice",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Monastery"]
+        },
+        {
+          "name": "Raydric",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order F2", "Glast Heim Castle F2"]
+        },
+        {
+          "name": "Raydric Archer",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": [
+            "Catacomb",
+            "Glast Heim",
+            "Glast Heim Order",
+            "Glast Heim Order F2"
+          ]
+        },
+        {
+          "name": "Knight of Abyss",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order"]
+        },
+        {
+          "name": "Bloody Knight",
+          "type": "MVP",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order F2"]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "monsters": [
+        {
+          "name": "Dark Frame",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim", "Glast Heim Castle F1"]
+        },
+        {
+          "name": "Tirfing",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Glast Heim"]
+        },
+        {
+          "name": "Mysteltainn",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order F2"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "element": "Holy",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Angeling",
+          "type": "MVP",
+          "baseLevel": 50,
+          "locations": ["Poring Island"]
+        }
+      ]
+    }
+  ]
+}

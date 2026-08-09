@@ -1,0 +1,191 @@
+{
+  "element": "Undead",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Zombie",
+          "type": "Normal",
+          "baseLevel": 30,
+          "locations": ["Payon Cave F1"]
+        },
+        {
+          "name": "Munak",
+          "type": "Normal",
+          "baseLevel": 63,
+          "locations": ["Payon Cave F2"]
+        },
+        {
+          "name": "Bongun",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Payon Cave F2"]
+        },
+        {
+          "name": "Orc Zombie",
+          "type": "Normal",
+          "baseLevel": 69,
+          "locations": ["Orc Cave"]
+        },
+        {
+          "name": "Ghoul",
+          "type": "Normal",
+          "baseLevel": 76,
+          "locations": ["Geffen Underground F2"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Skeleton",
+          "type": "Normal",
+          "baseLevel": 34,
+          "locations": ["Payon Cave F1"]
+        },
+        {
+          "name": "Pirate Skeleton",
+          "type": "Normal",
+          "baseLevel": 42,
+          "locations": ["Shipwreck Labyrinth"]
+        },
+        {
+          "name": "Soldier Skeleton",
+          "type": "Normal",
+          "baseLevel": 52,
+          "locations": ["Pyramid F2", "Pyramid F1"]
+        },
+        {
+          "name": "Archer Skeleton",
+          "type": "Normal",
+          "baseLevel": 59,
+          "locations": ["Payon Cave F2", "Pyramid F1", "Pyramid F2"]
+        },
+        {
+          "name": "Drake",
+          "type": "MVP",
+          "baseLevel": 65,
+          "locations": ["Shipwreck Labyrinth"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Megalodon",
+          "type": "Normal",
+          "baseLevel": 47,
+          "locations": ["Shipwreck Labyrinth"]
+        },
+        {
+          "name": "Mummy",
+          "type": "Normal",
+          "baseLevel": 55,
+          "locations": ["Pyramid F1", "Pyramid F2", "Pyramid F3"]
+        },
+        {
+          "name": "Verit",
+          "type": "Normal",
+          "baseLevel": 57,
+          "locations": ["Pyramid F2"]
+        },
+        {
+          "name": "Osiris",
+          "type": "MVP",
+          "baseLevel": 72,
+          "locations": ["Pyramid F3"]
+        },
+        {
+          "name": "Wraith",
+          "type": "Normal",
+          "baseLevel": 85,
+          "locations": ["Geffen Underground F3"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Skeleton Worker",
+          "type": "Normal",
+          "baseLevel": 62,
+          "locations": ["Mjolnir Abandoned Mine"]
+        },
+        {
+          "name": "Orc Skeleton",
+          "type": "Normal",
+          "baseLevel": 72,
+          "locations": ["Orc Cave"]
+        },
+        {
+          "name": "Ancient Mummy",
+          "type": "Normal",
+          "baseLevel": 95,
+          "locations": ["Pyramid F3"]
+        },
+        {
+          "name": "Anubis",
+          "type": "Mini",
+          "baseLevel": 96,
+          "locations": ["Sphinx Crypt F2"]
+        },
+        {
+          "name": "Dark Priest",
+          "type": "MVP",
+          "baseLevel": 98,
+          "locations": ["Geffen Underground F3"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Evil Druid",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Catacomb", "Glast Heim", "Glast Heim Monastery"]
+        },
+        {
+          "name": "Skel Prisoner",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Underground Prison"]
+        },
+        {
+          "name": "Zombie Prisoner",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Underground Prison"]
+        },
+        {
+          "name": "Dark Illusion",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Monastery"]
+        },
+        {
+          "name": "Dark Lord",
+          "type": "MVP",
+          "baseLevel": 101,
+          "locations": ["Catacomb"]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "monsters": [
+        {
+          "name": "Khalitzburg",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order F2", "Glast Heim Castle F2"]
+        }
+      ]
+    }
+  ]
+}

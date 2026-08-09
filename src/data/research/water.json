@@ -1,0 +1,237 @@
+{
+  "element": "Water",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Poring",
+          "type": "Normal",
+          "baseLevel": 3,
+          "locations": [
+            "Poring Island",
+            "Western Geffen",
+            "Southern Payon",
+            "Northern Geffen",
+            "Prontera South Gate",
+            "Eastern Geffen"
+          ]
+        },
+        {
+          "name": "Spore",
+          "type": "Normal",
+          "baseLevel": 20,
+          "locations": ["Culvert F1", "Eastern Payon"]
+        },
+        {
+          "name": "Mastering",
+          "type": "Mini",
+          "baseLevel": 40,
+          "locations": ["Labyrinth Forest F1"]
+        },
+        {
+          "name": "Hydra",
+          "type": "Normal",
+          "baseLevel": 42,
+          "locations": [
+            "Undersea Tunnel F1",
+            "Payon Cave F3",
+            "Shipwreck Labyrinth"
+          ]
+        },
+        {
+          "name": "Plankton",
+          "type": "Normal",
+          "baseLevel": 44,
+          "locations": ["Undersea Tunnel F1"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Roda Frog",
+          "type": "Normal",
+          "baseLevel": 15,
+          "locations": ["Eastern Geffen"]
+        },
+        {
+          "name": "Toad",
+          "type": "Mini",
+          "baseLevel": 27,
+          "locations": ["Eastern Geffen"]
+        },
+        {
+          "name": "Thara Frog",
+          "type": "Normal",
+          "baseLevel": 42,
+          "locations": ["Undersea Tunnel F1"]
+        },
+        {
+          "name": "Marina",
+          "type": "Normal",
+          "baseLevel": 46,
+          "locations": ["Undersea Tunnel F1"]
+        },
+        {
+          "name": "Marine Sphere",
+          "type": "Normal",
+          "baseLevel": 51,
+          "locations": ["Undersea Tunnel F2"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Ambernite",
+          "type": "Normal",
+          "baseLevel": 19,
+          "locations": ["Eastern Geffen"]
+        },
+        {
+          "name": "Vadon",
+          "type": "Normal",
+          "baseLevel": 45,
+          "locations": ["Undersea Tunnel F1"]
+        },
+        {
+          "name": "King Ambernite",
+          "type": "Mini",
+          "baseLevel": 51,
+          "locations": ["Eastern Geffen"]
+        },
+        {
+          "name": "Magnolia",
+          "type": "Normal",
+          "baseLevel": 53,
+          "locations": ["Bridge of Desert", "Sograt Desert"]
+        },
+        {
+          "name": "Cornutus",
+          "type": "Normal",
+          "baseLevel": 54,
+          "locations": ["Undersea Tunnel F2"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Obeaune",
+          "type": "Normal",
+          "baseLevel": 53,
+          "locations": ["Undersea Tunnel F2"]
+        },
+        {
+          "name": "Ancient Obeaune",
+          "type": "Mini",
+          "baseLevel": 55,
+          "locations": ["Undersea Tunnel F2"]
+        },
+        {
+          "name": "Marse",
+          "type": "Normal",
+          "baseLevel": 56,
+          "locations": ["Undersea Tunnel F2"]
+        },
+        {
+          "name": "Goblin (Mace)",
+          "type": "Normal",
+          "baseLevel": 58,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Merman",
+          "type": "Normal",
+          "baseLevel": 76,
+          "locations": ["Undersea Tunnel F3"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Sohee",
+          "type": "Normal",
+          "baseLevel": 67,
+          "locations": ["Payon Cave F3"]
+        },
+        {
+          "name": "Phen",
+          "type": "Normal",
+          "baseLevel": 70,
+          "locations": ["Undersea Tunnel F3"]
+        },
+        {
+          "name": "Marc",
+          "type": "Normal",
+          "baseLevel": 72,
+          "locations": ["Undersea Tunnel F3"]
+        },
+        {
+          "name": "Sword Fish",
+          "type": "Normal",
+          "baseLevel": 73,
+          "locations": ["Undersea Tunnel F3"]
+        },
+        {
+          "name": "Ancient Strouf",
+          "type": "Mini",
+          "baseLevel": 85,
+          "locations": ["Undersea Tunnel F3"]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "monsters": [
+        {
+          "name": "Strouf",
+          "type": "Normal",
+          "baseLevel": 90,
+          "locations": ["Undersea Tunnel F3"]
+        },
+        {
+          "name": "Pot Dofle",
+          "type": "Normal",
+          "baseLevel": 91,
+          "locations": ["Undersea Tunnel F4"]
+        },
+        {
+          "name": "Sropho",
+          "type": "Normal",
+          "baseLevel": 97,
+          "locations": ["Undersea Tunnel F4"]
+        },
+        {
+          "name": "Deviace",
+          "type": "Normal",
+          "baseLevel": 98,
+          "locations": ["Undersea Tunnel F4"]
+        },
+        {
+          "name": "Squidgitte",
+          "type": "Normal",
+          "baseLevel": 99,
+          "locations": ["Undersea Tunnel F4"]
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "monsters": [
+        {
+          "name": "Anolian",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Culvert"]
+        }
+      ]
+    }
+  ]
+}

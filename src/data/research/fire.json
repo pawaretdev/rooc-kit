@@ -1,0 +1,203 @@
+{
+  "element": "Fire",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Picky",
+          "type": "Normal",
+          "baseLevel": 9,
+          "locations": ["Southern Morroc"]
+        },
+        {
+          "name": "Super Picky",
+          "type": "Normal",
+          "baseLevel": 11,
+          "locations": ["Southern Morroc"]
+        },
+        {
+          "name": "Drops",
+          "type": "Normal",
+          "baseLevel": 23,
+          "locations": ["Desert Crossroad", "Poring Island"]
+        },
+        {
+          "name": "Baby Desert Wolf",
+          "type": "Normal",
+          "baseLevel": 28,
+          "locations": ["Desert Crossroad"]
+        },
+        {
+          "name": "Scorpion",
+          "type": "Normal",
+          "baseLevel": 30,
+          "locations": ["Desert Crossroad"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Choco",
+          "type": "Mini",
+          "baseLevel": 43,
+          "locations": ["Labyrinth Forest F1"]
+        },
+        {
+          "name": "Peco Peco",
+          "type": "Normal",
+          "baseLevel": 50,
+          "locations": ["Sograt Desert"]
+        },
+        {
+          "name": "Elder Willow",
+          "type": "Normal",
+          "baseLevel": 50,
+          "locations": ["Payon Forest"]
+        },
+        {
+          "name": "Golden Thief Bug",
+          "type": "MVP",
+          "baseLevel": 52,
+          "locations": ["Culvert F2"]
+        },
+        {
+          "name": "Goblin (Hammer)",
+          "type": "Normal",
+          "baseLevel": 57,
+          "locations": ["Goblin Forest"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Metaller",
+          "type": "Normal",
+          "baseLevel": 57,
+          "locations": ["Bridge of Desert"]
+        },
+        {
+          "name": "Minorous",
+          "type": "Normal",
+          "baseLevel": 60,
+          "locations": ["Sphinx Crypt"]
+        },
+        {
+          "name": "Greatest General",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Deep Payon Forest", "Payon Cave F3"]
+        },
+        {
+          "name": "Highest General",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Deep Payon Forest"]
+        },
+        {
+          "name": "Eddga",
+          "type": "MVP",
+          "baseLevel": 68,
+          "locations": ["Deep Payon Forest"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Frilldora",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Southern Sograt"]
+        },
+        {
+          "name": "Horong",
+          "type": "Normal",
+          "baseLevel": 66,
+          "locations": ["Payon Cave F3"]
+        },
+        {
+          "name": "Nine Tail",
+          "type": "Normal",
+          "baseLevel": 72,
+          "locations": ["Payon Cave F3"]
+        },
+        {
+          "name": "Cat O Nine Tails",
+          "type": "Mini",
+          "baseLevel": 79,
+          "locations": ["Payon Cave F3"]
+        },
+        {
+          "name": "Moonlight Flower",
+          "type": "MVP",
+          "baseLevel": 79,
+          "locations": ["Payon Cave F3"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Zerom",
+          "type": "Normal",
+          "baseLevel": 66,
+          "locations": ["Sphinx Crypt"]
+        },
+        {
+          "name": "Jakk",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Geffen Underground F2"]
+        },
+        {
+          "name": "Marduk",
+          "type": "Normal",
+          "baseLevel": 79,
+          "locations": ["Geffen Underground F2"]
+        },
+        {
+          "name": "Mace Kobold",
+          "type": "Normal",
+          "baseLevel": 86,
+          "locations": ["Kordt Forest"]
+        },
+        {
+          "name": "Kobold Archer",
+          "type": "Normal",
+          "baseLevel": 87,
+          "locations": ["Kordt Forest"]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "monsters": [
+        {
+          "name": "Pasana",
+          "type": "Normal",
+          "baseLevel": 84,
+          "locations": ["Sphinx Crypt F2"]
+        },
+        {
+          "name": "Manojuros",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Monastery", "Glast Heim Castle F2"]
+        },
+        {
+          "name": "Chimera",
+          "type": "MVP",
+          "baseLevel": 101,
+          "locations": ["Glast Heim"]
+        }
+      ]
+    }
+  ]
+}

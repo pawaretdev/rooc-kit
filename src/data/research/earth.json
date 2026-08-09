@@ -1,0 +1,347 @@
+{
+  "element": "Earth",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Pupa",
+          "type": "Normal",
+          "baseLevel": 5,
+          "locations": ["Southern Payon", "Prontera South Gate"]
+        },
+        {
+          "name": "Fabre",
+          "type": "Normal",
+          "baseLevel": 8,
+          "locations": [
+            "Western Geffen",
+            "Southern Payon",
+            "Prontera South Gate",
+            "Eastern Geffen"
+          ]
+        },
+        {
+          "name": "Willow",
+          "type": "Normal",
+          "baseLevel": 12,
+          "locations": ["Southern Payon", "Prontera West Gate"]
+        },
+        {
+          "name": "Savage Babe",
+          "type": "Normal",
+          "baseLevel": 14,
+          "locations": ["Eastern Geffen", "Prontera West Gate"]
+        },
+        {
+          "name": "Worm Tail",
+          "type": "Normal",
+          "baseLevel": 18,
+          "locations": ["Labyrinth Forest F1", "Eastern Payon"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Yoyo",
+          "type": "Normal",
+          "baseLevel": 30,
+          "locations": ["Labyrinth Forest F1", "Prontera North Gate"]
+        },
+        {
+          "name": "Smokie",
+          "type": "Normal",
+          "baseLevel": 38,
+          "locations": ["Northern Geffen", "Southeast Payon"]
+        },
+        {
+          "name": "Boa",
+          "type": "Normal",
+          "baseLevel": 38,
+          "locations": ["Western Geffen"]
+        },
+        {
+          "name": "Bigfoot",
+          "type": "Normal",
+          "baseLevel": 40,
+          "locations": ["Southeast Payon"]
+        },
+        {
+          "name": "Steel Fur Grizzly",
+          "type": "Mini",
+          "baseLevel": 40,
+          "locations": ["Southeast Payon"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Rocker",
+          "type": "Normal",
+          "baseLevel": 15,
+          "locations": ["Prontera West Gate"]
+        },
+        {
+          "name": "Vocal",
+          "type": "Mini",
+          "baseLevel": 18,
+          "locations": ["Labyrinth Forest F1", "Prontera West Gate"]
+        },
+        {
+          "name": "Mandragora",
+          "type": "Normal",
+          "baseLevel": 35,
+          "locations": ["Western Geffen", "Northern Geffen"]
+        },
+        {
+          "name": "Horn",
+          "type": "Normal",
+          "baseLevel": 40,
+          "locations": ["Northern Geffen"]
+        },
+        {
+          "name": "Muka",
+          "type": "Normal",
+          "baseLevel": 45,
+          "locations": ["Sograt Desert"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Deniro",
+          "type": "Normal",
+          "baseLevel": 31,
+          "locations": ["Ant Hell", "Sograt Desert"]
+        },
+        {
+          "name": "Piere",
+          "type": "Normal",
+          "baseLevel": 32,
+          "locations": ["Ant Hell", "Sograt Desert"]
+        },
+        {
+          "name": "Andre",
+          "type": "Normal",
+          "baseLevel": 38,
+          "locations": ["Ant Hell"]
+        },
+        {
+          "name": "Vitata",
+          "type": "Normal",
+          "baseLevel": 40,
+          "locations": ["Ant Hell"]
+        },
+        {
+          "name": "Maya",
+          "type": "MVP",
+          "baseLevel": 58,
+          "locations": ["Ant Hell"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Coco",
+          "type": "Normal",
+          "baseLevel": 41,
+          "locations": ["Western Geffen"]
+        },
+        {
+          "name": "Giearth",
+          "type": "Normal",
+          "baseLevel": 43,
+          "locations": ["Ant Hell", "Mjolnir Abandoned Mine"]
+        },
+        {
+          "name": "Goblin (Axe)",
+          "type": "Normal",
+          "baseLevel": 52,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Goblin (Flail)",
+          "type": "Normal",
+          "baseLevel": 52,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Martin",
+          "type": "Normal",
+          "baseLevel": 58,
+          "locations": ["Mjolnir Abandoned Mine"]
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "monsters": [
+        {
+          "name": "Orc Baby",
+          "type": "Normal",
+          "baseLevel": 51,
+          "locations": ["Orc Village"]
+        },
+        {
+          "name": "Orc Warrior",
+          "type": "Normal",
+          "baseLevel": 53,
+          "locations": ["Orc Village"]
+        },
+        {
+          "name": "Orc Lady",
+          "type": "Normal",
+          "baseLevel": 54,
+          "locations": ["Orc Village"]
+        },
+        {
+          "name": "Orc Lord",
+          "type": "MVP",
+          "baseLevel": 55,
+          "locations": ["Orc Village"]
+        },
+        {
+          "name": "Orc Hero",
+          "type": "MVP",
+          "baseLevel": 65,
+          "locations": ["Orc Village"]
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "monsters": [
+        {
+          "name": "Wolf",
+          "type": "Normal",
+          "baseLevel": 47,
+          "locations": ["Bridge of Desert", "Labyrinth Forest F1"]
+        },
+        {
+          "name": "Vagabond Wolf",
+          "type": "Mini",
+          "baseLevel": 55,
+          "locations": ["Bridge of Desert"]
+        },
+        {
+          "name": "Savage",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Deep Payon Forest", "Labyrinth Forest F1"]
+        },
+        {
+          "name": "Orc Archer",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Orc Cave"]
+        },
+        {
+          "name": "Maya Purple",
+          "type": "Mini",
+          "baseLevel": 81,
+          "locations": ["Ant Hell"]
+        }
+      ]
+    },
+    {
+      "row": 8,
+      "monsters": [
+        {
+          "name": "Flora",
+          "type": "Normal",
+          "baseLevel": 60,
+          "locations": ["Geffen Field", "Garden", "Larva Canyon"]
+        },
+        {
+          "name": "Sandman",
+          "type": "Normal",
+          "baseLevel": 62,
+          "locations": ["Southern Sograt"]
+        },
+        {
+          "name": "Hode",
+          "type": "Normal",
+          "baseLevel": 63,
+          "locations": ["Southern Sograt"]
+        },
+        {
+          "name": "Beetle King",
+          "type": "Mini",
+          "baseLevel": 65,
+          "locations": ["Deep Payon Forest"]
+        },
+        {
+          "name": "Mantis",
+          "type": "Normal",
+          "baseLevel": 70,
+          "locations": [
+            "Glast Heim Outskirts",
+            "Garden",
+            "Mt.Mjolnir",
+            "Larva Canyon"
+          ]
+        }
+      ]
+    },
+    {
+      "row": 9,
+      "monsters": [
+        {
+          "name": "Driller",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Mt.Mjolnir"]
+        },
+        {
+          "name": "Petite",
+          "type": "Normal",
+          "baseLevel": 80,
+          "locations": ["Glast Heim Outskirts"]
+        },
+        {
+          "name": "Leib Olmai",
+          "type": "Normal",
+          "baseLevel": 89,
+          "locations": ["Labyrinth Forest F2"]
+        },
+        {
+          "name": "Killer Mantis",
+          "type": "Normal",
+          "baseLevel": 91,
+          "locations": ["Labyrinth Forest F3"]
+        },
+        {
+          "name": "Swift Mantis",
+          "type": "Normal",
+          "baseLevel": 96,
+          "locations": ["Labyrinth Forest F2"]
+        }
+      ]
+    },
+    {
+      "row": 10,
+      "monsters": [
+        {
+          "name": "Arclouze",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Culvert"]
+        },
+        {
+          "name": "Sting",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Culvert"]
+        }
+      ]
+    }
+  ]
+}

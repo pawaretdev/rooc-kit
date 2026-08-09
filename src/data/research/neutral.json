@@ -1,0 +1,129 @@
+{
+  "element": "Neutral",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Lunatic",
+          "type": "Normal",
+          "baseLevel": 5,
+          "locations": [
+            "Prontera North Gate",
+            "Prontera South Gate",
+            "Northern Geffen"
+          ]
+        },
+        {
+          "name": "Peco Peco Egg",
+          "type": "Normal",
+          "baseLevel": 5,
+          "locations": ["Desert Crossroad", "Southern Morroc"]
+        },
+        {
+          "name": "Ant Egg",
+          "type": "Normal",
+          "baseLevel": 28,
+          "locations": ["Ant Hell"]
+        },
+        {
+          "name": "Eclipse",
+          "type": "Mini",
+          "baseLevel": 31,
+          "locations": ["Labyrinth Forest F1", "Prontera North Gate"]
+        },
+        {
+          "name": "Golem",
+          "type": "Normal",
+          "baseLevel": 67,
+          "locations": ["Southern Sograt"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Mimic",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": [
+            "Pyramid F3",
+            "Sphinx Crypt F2",
+            "Shipwreck Labyrinth F2"
+          ]
+        },
+        {
+          "name": "Phreeoni",
+          "type": "MVP",
+          "baseLevel": 76,
+          "locations": ["Southern Sograt"]
+        },
+        {
+          "name": "Sasquatch",
+          "type": "Normal",
+          "baseLevel": 95,
+          "locations": ["Labyrinth Forest F3"]
+        },
+        {
+          "name": "Rideword",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order", "Glast Heim Castle F1"]
+        },
+        {
+          "name": "Rybio",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Underground Prison"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Alice",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Order", "Glast Heim Castle F1"]
+        },
+        {
+          "name": "Sage Worm",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Monastery", "Glast Heim Castle F2"]
+        },
+        {
+          "name": "Phendark",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Underground Prison"]
+        },
+        {
+          "name": "Owl Duke",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Castle F1"]
+        },
+        {
+          "name": "Owl Baron",
+          "type": "MVP",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Castle F2"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Zherlthsh",
+          "type": "Mini",
+          "baseLevel": 101,
+          "locations": ["Underground Prison"]
+        }
+      ]
+    }
+  ]
+}

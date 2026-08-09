@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-07",
+  "elementOrder": [
+    "Neutral",
+    "Wind",
+    "Earth",
+    "Fire",
+    "Water",
+    "Poison",
+    "Holy",
+    "Shadow",
+    "Ghost",
+    "Undead"
+  ],
+  "notes": "Bump version every time research data changes so the app can warn users about rows they have not filled in yet."
+}

@@ -1,0 +1,183 @@
+{
+  "element": "Wind",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Chonchon",
+          "type": "Normal",
+          "baseLevel": 11,
+          "locations": [
+            "Western Geffen",
+            "Southern Payon",
+            "Northern Geffen",
+            "Eastern Geffen"
+          ]
+        },
+        {
+          "name": "Condor",
+          "type": "Normal",
+          "baseLevel": 13,
+          "locations": ["Southern Morroc"]
+        },
+        {
+          "name": "Creamy",
+          "type": "Normal",
+          "baseLevel": 23,
+          "locations": [
+            "Labyrinth Forest F1",
+            "Prontera North Gate",
+            "Western Geffen"
+          ]
+        },
+        {
+          "name": "Dragon Fly",
+          "type": "Mini",
+          "baseLevel": 40,
+          "locations": ["Sograt Desert"]
+        },
+        {
+          "name": "Steel Chonchon",
+          "type": "Normal",
+          "baseLevel": 45,
+          "locations": ["Bridge of Desert", "Geffen Underground F2", "Orc Cave"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Goblin (Dagger)",
+          "type": "Normal",
+          "baseLevel": 53,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Rotar Zairo",
+          "type": "Normal",
+          "baseLevel": 55,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Goblin (Steamrider)",
+          "type": "Normal",
+          "baseLevel": 61,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Goblin Leader",
+          "type": "MVP",
+          "baseLevel": 65,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Stem Worm",
+          "type": "Normal",
+          "baseLevel": 77,
+          "locations": ["Geffen Field", "Labyrinth Forest F2"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Hornet",
+          "type": "Normal",
+          "baseLevel": 59,
+          "locations": ["Garden"]
+        },
+        {
+          "name": "Dustiness",
+          "type": "Normal",
+          "baseLevel": 62,
+          "locations": ["Garden"]
+        },
+        {
+          "name": "Mistress",
+          "type": "MVP",
+          "baseLevel": 70,
+          "locations": ["Garden"]
+        },
+        {
+          "name": "Hunter Fly",
+          "type": "Normal",
+          "baseLevel": 70,
+          "locations": ["Geffen Underground F2"]
+        },
+        {
+          "name": "Sky Petite",
+          "type": "Normal",
+          "baseLevel": 79,
+          "locations": ["Geffen Field"]
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "monsters": [
+        {
+          "name": "Gryphon",
+          "type": "Mini",
+          "baseLevel": 86,
+          "locations": ["Geffen Field"]
+        },
+        {
+          "name": "Wild Rose",
+          "type": "Normal",
+          "baseLevel": 83,
+          "locations": ["Kordt Forest"]
+        },
+        {
+          "name": "Axe Kobold",
+          "type": "Normal",
+          "baseLevel": 84,
+          "locations": ["Kordt Forest"]
+        },
+        {
+          "name": "Wind Ghost",
+          "type": "Normal",
+          "baseLevel": 85,
+          "locations": ["Geffen Underground F3"]
+        },
+        {
+          "name": "Kobold Leader",
+          "type": "Mini",
+          "baseLevel": 88,
+          "locations": ["Kordt Forest"]
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "monsters": [
+        {
+          "name": "Creamy Fear",
+          "type": "Normal",
+          "baseLevel": 93,
+          "locations": ["Labyrinth Forest F3"]
+        },
+        {
+          "name": "Carat",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Glast Heim Castle F2", "Glast Heim Castle F1"]
+        },
+        {
+          "name": "Wander Man",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Catacomb"]
+        },
+        {
+          "name": "Gargoyle",
+          "type": "Normal",
+          "baseLevel": 101,
+          "locations": ["Catacomb", "Glast Heim Culvert"]
+        }
+      ]
+    }
+  ]
+}

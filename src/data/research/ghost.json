@@ -1,0 +1,40 @@
+{
+  "element": "Ghost",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Whisper",
+          "type": "Normal",
+          "baseLevel": 46,
+          "locations": ["Shipwreck Labyrinth"]
+        },
+        {
+          "name": "Eggyra",
+          "type": "Normal",
+          "baseLevel": 57,
+          "locations": ["Payon Cave F2"]
+        },
+        {
+          "name": "Nightmare",
+          "type": "Normal",
+          "baseLevel": 80,
+          "locations": ["Geffen Underground F2"]
+        },
+        {
+          "name": "Ghostring",
+          "type": "Mini",
+          "baseLevel": 90,
+          "locations": ["Poring Island"]
+        },
+        {
+          "name": "Marionette",
+          "type": "Normal",
+          "baseLevel": 90,
+          "locations": ["Geffen Underground F3", "Shipwreck Labyrinth F2"]
+        }
+      ]
+    }
+  ]
+}

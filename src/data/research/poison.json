@@ -1,0 +1,95 @@
+{
+  "element": "Poison",
+  "rows": [
+    {
+      "row": 1,
+      "monsters": [
+        {
+          "name": "Poporing",
+          "type": "Normal",
+          "baseLevel": 32,
+          "locations": [
+            "Labyrinth Forest F1",
+            "Poring Island",
+            "Prontera North Gate",
+            "Payon Cave F1"
+          ]
+        },
+        {
+          "name": "Poison Spore",
+          "type": "Normal",
+          "baseLevel": 39,
+          "locations": [
+            "Geffen Underground F1",
+            "Shipwreck Labyrinth",
+            "Culvert F2"
+          ]
+        },
+        {
+          "name": "Argos",
+          "type": "Normal",
+          "baseLevel": 70,
+          "locations": ["Larva Canyon"]
+        },
+        {
+          "name": "Argiope",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Larva Canyon"]
+        },
+        {
+          "name": "Side winder",
+          "type": "Normal",
+          "baseLevel": 75,
+          "locations": ["Geffen Field", "Garden", "Glast Heim Outskirts"]
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "monsters": [
+        {
+          "name": "Goblin (Archer)",
+          "type": "Normal",
+          "baseLevel": 60,
+          "locations": ["Goblin Forest"]
+        },
+        {
+          "name": "Myst",
+          "type": "Normal",
+          "baseLevel": 65,
+          "locations": ["Mjolnir Abandoned Mine"]
+        },
+        {
+          "name": "Penomena",
+          "type": "Normal",
+          "baseLevel": 85,
+          "locations": ["Shipwreck Labyrinth F2"]
+        },
+        {
+          "name": "Cramp",
+          "type": "Normal",
+          "baseLevel": 85,
+          "locations": ["Shipwreck Labyrinth F2"]
+        },
+        {
+          "name": "Hammer Kobold",
+          "type": "Normal",
+          "baseLevel": 87,
+          "locations": ["Kordt Forest"]
+        }
+      ]
+    },
+    {
+      "row": 3,
+      "monsters": [
+        {
+          "name": "Furious Poporing",
+          "type": "Normal",
+          "baseLevel": 90,
+          "locations": ["Labyrinth Forest F3"]
+        }
+      ]
+    }
+  ]
+}
