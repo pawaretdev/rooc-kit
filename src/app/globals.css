@@ -1,26 +1,285 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* dark is the default theme; `dark:` utilities (from shadcn/ui components)
+ * apply unless the light opt-in class is on <html> */
+@custom-variant dark (&:where(:root:not(.light), :root:not(.light) *));
+
+/*
+ * ROOC Kit visual world — "Night Ops": a dark gamer-tool console (cool
+ * graphite blue, thin lines, mono numbers) with a single blaze-orange accent.
+ * Dark-first: the primary scene is a second-screen tool beside the game at
+ * night; a light theme is an explicit opt-in (`.light` on <html>, every token
+ * redefined below). Gold = levels/progress, red reserved for blockers.
+ * All colors OKLCH; components reference tokens only.
+ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --bg: oklch(0.2 0.015 255);
+  --surface: oklch(0.24 0.016 255);
+  --surface-2: oklch(0.28 0.018 255);
+  --ink: oklch(0.93 0.008 250);
+  --sub: oklch(0.7 0.02 250);
+  --line: oklch(0.33 0.02 252);
+
+  --accent: oklch(0.68 0.19 40);
+  --accent-ink: oklch(0.17 0.03 40);
+
+  --gold: oklch(0.76 0.11 80);
+  --gold-ink: oklch(0.22 0.05 80);
+  --danger: oklch(0.62 0.17 25);
+
+  /* tooltip chip — always dark, on both themes */
+  --tip-bg: oklch(0.14 0.012 255);
+  --tip-ink: oklch(0.93 0.008 250);
+
+  /* ink drawn INSIDE the in-game frame images — the frame art is light in
+   * both themes, so this stays dark and does not flip with the theme */
+  --frame-ink: oklch(0.42 0.02 255);
+
+  /* element hues — always paired with a letter/icon, never color alone */
+  --el-neutral: oklch(0.75 0.02 20);
+  --el-wind: oklch(0.75 0.1 145);
+  --el-earth: oklch(0.75 0.1 85);
+  --el-fire: oklch(0.72 0.14 35);
+  --el-water: oklch(0.74 0.1 240);
+  --el-poison: oklch(0.72 0.12 310);
+  --el-holy: oklch(0.82 0.1 90);
+  --el-shadow: oklch(0.68 0.13 290);
+  --el-ghost: oklch(0.75 0.05 220);
+  --el-undead: oklch(0.72 0.08 120);
+}
+
+/*
+ * Daytime counterpart — same console with the lights on. Dark stays the
+ * default; the `light` class is applied to <html> by the boot script in
+ * layout.tsx (stored preference) and toggled by ThemeToggle.
+ */
+:root.light {
+  color-scheme: light;
+
+  --bg: oklch(0.955 0.008 250);
+  --surface: oklch(0.99 0.004 250);
+  --surface-2: oklch(0.925 0.012 250);
+  --ink: oklch(0.26 0.02 255);
+  --sub: oklch(0.46 0.025 255);
+  --line: oklch(0.865 0.015 252);
+
+  --accent: oklch(0.52 0.19 40);
+  --accent-ink: oklch(0.99 0.005 40);
+
+  --gold: oklch(0.5 0.12 80);
+  --gold-ink: oklch(0.98 0.02 80);
+  --danger: oklch(0.5 0.19 25);
+
+  --tip-bg: oklch(0.24 0.02 255);
+  --tip-ink: oklch(0.96 0.005 250);
+
+  --el-neutral: oklch(0.45 0.02 20);
+  --el-wind: oklch(0.45 0.1 145);
+  --el-earth: oklch(0.47 0.09 85);
+  --el-fire: oklch(0.5 0.16 35);
+  --el-water: oklch(0.48 0.1 240);
+  --el-poison: oklch(0.47 0.13 310);
+  --el-holy: oklch(0.55 0.1 90);
+  --el-shadow: oklch(0.42 0.12 290);
+  --el-ghost: oklch(0.48 0.05 220);
+  --el-undead: oklch(0.45 0.07 120);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-sub: var(--sub);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-gold: var(--gold);
+  --color-gold-ink: var(--gold-ink);
+  --color-danger: var(--danger);
+  --color-frame-ink: var(--frame-ink);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-el-neutral: var(--el-neutral);
+  --color-el-wind: var(--el-wind);
+  --color-el-earth: var(--el-earth);
+  --color-el-fire: var(--el-fire);
+  --color-el-water: var(--el-water);
+  --color-el-poison: var(--el-poison);
+  --color-el-holy: var(--el-holy);
+  --color-el-shadow: var(--el-shadow);
+  --color-el-ghost: var(--el-ghost);
+  --color-el-undead: var(--el-undead);
+
+  /* legacy aliases still referenced by older content components */
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+
+  /* shadcn/ui token bridge — components/ui/* resolve to Night Ops tokens.
+   * `--color-accent` stays the app's blaze orange; shadcn's muted-hover
+   * accent usages are restyled to surface-2 inside components/ui. */
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-ink);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--surface-2);
+  --color-muted-foreground: var(--sub);
+  --color-accent-foreground: var(--accent-ink);
+  --color-destructive: var(--danger);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--accent);
+
+  --font-sans: var(--font-poppins), var(--font-noto-thai), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* shadcn/ui fields draw their own focus ring — don't stack the global outline on top */
+[data-slot]:focus-visible {
+  outline: none;
+}
+
+/* monster-tile name tooltip — shown on hover and keyboard focus */
+.tile-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  white-space: nowrap;
+  pointer-events: none;
+  background: var(--tip-bg);
+  color: var(--tip-ink);
+  border: 1px solid var(--line);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+.group:hover .tile-tip,
+.group:focus-visible .tile-tip {
+  opacity: 1;
+}
+
+/* soft press feedback on chunky controls */
+.press {
+  transition:
+    transform 150ms ease-out,
+    translate 150ms ease-out,
+    background-color 150ms ease-out,
+    color 150ms ease-out,
+    border-color 150ms ease-out;
+}
+.press:active {
+  transform: scale(0.96);
+}
+
+/* custom steppers render their own +/- controls */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* the inline editor strip arriving under a row's tiles */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise-in {
+  animation: rise-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* console re-query: cards sweep back in, staggered per row, after a filter/sort change */
+@keyframes row-sweep {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-row-sweep {
+  animation: row-sweep 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--sweep-i, 0) * 35ms);
+}
+
+/* one-time gold ring bloom the moment a row reaches Lv 10 */
+@keyframes row-complete {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--gold) 55%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 14px transparent;
+  }
+}
+.animate-row-complete {
+  animation: row-complete 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* the app's key moment: a row level going up when its blocker clears */
+@keyframes lv-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-lv-pop {
+  animation: lv-pop 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise-in,
+  .animate-lv-pop,
+  .animate-row-sweep,
+  .animate-row-complete {
+    animation: none;
+  }
+  .tile-tip {
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }
