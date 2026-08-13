@@ -266,11 +266,27 @@ input[type="number"] {
   animation: lv-pop 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* list rows arriving (checklist switch, admin table load) — opacity only, so
+   it never fights the inline transform dnd-kit writes while dragging */
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-stagger-in {
+  animation: stagger-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--stagger-i, 0) * 30ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-rise-in,
   .animate-lv-pop,
   .animate-row-sweep,
-  .animate-row-complete {
+  .animate-row-complete,
+  .animate-stagger-in {
     animation: none;
   }
   .tile-tip {

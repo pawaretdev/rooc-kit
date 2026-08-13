@@ -10,9 +10,10 @@ import {
   CloudUpload,
   LogOut,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 import { dataVersion } from "@/lib/game-data";
-import { localDb } from "@/lib/local-db";
+import { localDb, readAllDailies } from "@/lib/local-db";
 import { buildProgressExport } from "@/lib/progress-io";
 import { useT } from "@/lib/i18n";
 import {
@@ -83,7 +84,9 @@ export function AuthMenu() {
       const res = await fetch("/api/progress", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildProgressExport(records, dataVersion)),
+        body: JSON.stringify(
+          buildProgressExport(records, dataVersion, await readAllDailies()),
+        ),
       });
       setSyncState(res.ok ? "done" : "error");
     } catch {
@@ -132,6 +135,14 @@ export function AuthMenu() {
             {t("nav.settings")}
           </Link>
         </DropdownMenuItem>
+        {user.isSuperAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <ShieldCheck />
+              {t("admin.area")}
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           disabled={syncState === "busy"}
           onSelect={(e) => {

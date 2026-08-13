@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   jsonb,
   pgTable,
@@ -29,6 +30,12 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: text("image"),
+  /**
+   * Not part of the Auth.js contract — added for the admin user list (the
+   * adapter never writes it, the default does). Rows that existed before the
+   * column was added get the migration timestamp.
+   */
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
 });
 
 export const accounts = pgTable(
@@ -71,6 +78,35 @@ export const progressSnapshots = pgTable("progress_snapshot", {
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
   data: jsonb("data").$type<ProgressExport>().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+/**
+ * Suggested Dailies tasks curated by the app owner (super admin, gated by
+ * SUPER_ADMIN_EMAIL). Users adopt a template by copying it into their local
+ * task list — rows here are suggestions, never live references.
+ */
+export const taskTemplates = pgTable("task_template", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  cadence: text("cadence").$type<"daily" | "weekly">().notNull(),
+  /** rounds per period — >1 renders as a counter after adoption */
+  targetCount: integer("target_count").notNull().default(1),
+  /** optional special-event window (date or date-time, daily templates only) */
+  eventStart: text("event_start"),
+  eventEnd: text("event_end"),
+  /**
+   * Daily templates: id of a weekly template that caps this one. Adoption
+   * copies the pair, so the user's local link points at their own task ids.
+   * Self-referencing FKs would complicate deletes — the API validates it and
+   * a dangling id is simply ignored at adoption time.
+   */
+  linkedTemplateId: text("linked_template_id"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  published: boolean("published").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 

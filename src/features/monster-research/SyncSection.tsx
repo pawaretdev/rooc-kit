@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { CloudUpload, CloudDownload } from "lucide-react";
 import { dataVersion } from "@/lib/game-data";
-import { localDb, replaceAllLevels } from "@/lib/local-db";
+import {
+  localDb,
+  readAllDailies,
+  replaceAllDailies,
+  replaceAllLevels,
+} from "@/lib/local-db";
 import {
   buildProgressExport,
   parseProgressExport,
@@ -53,7 +58,8 @@ export function SyncSection() {
     setStatus("uploading");
     try {
       const records = await localDb.monsterLevels.toArray();
-      const doc = buildProgressExport(records, dataVersion);
+      // Dailies ride along on the cloud path only — file backups stay levels-only.
+      const doc = buildProgressExport(records, dataVersion, await readAllDailies());
       const res = await fetch("/api/progress", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -88,6 +94,10 @@ export function SyncSection() {
     if (!pendingRestore) return;
     try {
       await replaceAllLevels(pendingRestore.levels);
+      // Older snapshots have no dailies — leave local dailies untouched then.
+      if (pendingRestore.dailies) {
+        await replaceAllDailies(pendingRestore.dailies);
+      }
       setStatus("restored");
     } catch {
       setStatus("error");

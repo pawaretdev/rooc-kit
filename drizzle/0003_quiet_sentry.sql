@@ -1,0 +1,1 @@
+ALTER TABLE "task_template" ADD COLUMN "target_count" integer DEFAULT 1 NOT NULL;

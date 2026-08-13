@@ -28,6 +28,7 @@ export function AppHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const trackerActive = pathname === "/tracker";
+  const dailiesActive = pathname === "/dailies";
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur-sm">
@@ -52,6 +53,17 @@ export function AppHeader() {
             }`}
           >
             {t("nav.monsterResearch")}
+          </Link>
+          <Link
+            href="/dailies"
+            aria-current={dailiesActive ? "page" : undefined}
+            className={`press rounded-lg px-3.5 py-1.5 ${
+              dailiesActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "text-sub hover:bg-surface-2 hover:text-ink"
+            }`}
+          >
+            {t("nav.dailies")}
           </Link>
           <span
             aria-disabled
@@ -99,6 +111,18 @@ export function AppHeader() {
             }`}
           >
             {t("nav.monsterResearch")}
+          </Link>
+          <Link
+            href="/dailies"
+            aria-current={dailiesActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-lg px-3 py-2.5 text-sm ${
+              dailiesActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "hover:bg-surface-2"
+            }`}
+          >
+            {t("nav.dailies")}
           </Link>
           <span className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-sub/75">
             {t("nav.marketAlert")}

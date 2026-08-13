@@ -1,0 +1,1 @@
+ALTER TABLE "task_template" ADD COLUMN "linked_template_id" text;

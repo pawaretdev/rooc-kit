@@ -15,6 +15,41 @@
       "when": 1786306577831,
       "tag": "0001_smiling_silver_sable",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786473926547,
+      "tag": "0002_slimy_bushwacker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786477519147,
+      "tag": "0003_quiet_sentry",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786481638588,
+      "tag": "0004_easy_pixie",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786482658370,
+      "tag": "0005_numerous_tigra",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786483242488,
+      "tag": "0006_dazzling_whirlwind",
+      "breakpoints": true
     }
   ]
 }

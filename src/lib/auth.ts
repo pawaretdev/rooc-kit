@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { isSuperAdminEmail } from "./admin";
 import { db } from "./db/client";
 import { accounts, sessions, users, verificationTokens } from "./db/schema";
 
@@ -26,6 +27,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session({ session, token }) {
       // token.sub is the user id from the adapter — expose it for sync queries.
       if (token.sub) session.user.id = token.sub;
+      // Computed server-side so the client can show the /admin entry; every
+      // admin route still re-checks the email itself.
+      session.user.isSuperAdmin = isSuperAdminEmail(session.user.email);
       return session;
     },
   },

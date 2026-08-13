@@ -1,10 +1,18 @@
-import type { MonsterLevelRecord } from "./local-db";
+import type {
+  DailiesSnapshot,
+  MonsterLevelRecord,
+} from "./local-db";
 import { MAX_MR_LEVEL } from "./local-db";
+import { PERIOD_KEY_PATTERN } from "@/features/dailies/period";
 
 /**
  * Backup / device-transfer format (README: Data Entry). This is also the
- * planned payload for account sync — keep the two in lockstep so sync stays
+ * payload for account sync — keep the two in lockstep so sync stays
  * "upload this same JSON".
+ *
+ * `dailies` travels ONLY on the cloud-sync path: file export never includes
+ * it and file import ignores it (product decision — Dailies data is
+ * per-browser + Postgres, not part of backup files).
  */
 export interface ProgressExport {
   app: "rooc-kit";
@@ -14,11 +22,13 @@ export interface ProgressExport {
   dataVersion: number;
   exportedAt: string;
   levels: MonsterLevelRecord[];
+  dailies?: DailiesSnapshot;
 }
 
 export function buildProgressExport(
   levels: MonsterLevelRecord[],
   dataVersion: number,
+  dailies?: DailiesSnapshot,
 ): ProgressExport {
   return {
     app: "rooc-kit",
@@ -27,6 +37,7 @@ export function buildProgressExport(
     dataVersion,
     exportedAt: new Date().toISOString(),
     levels,
+    ...(dailies ? { dailies } : {}),
   };
 }
 
@@ -42,6 +53,78 @@ function isLevelRecord(value: unknown): value is MonsterLevelRecord {
     r.level <= MAX_MR_LEVEL &&
     (r.source === "estimated" || r.source === "confirmed") &&
     typeof r.updatedAt === "string"
+  );
+}
+
+/** date-only (legacy) or date-time event bound */
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/;
+
+function isGameAccount(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  return (
+    typeof r.id === "string" &&
+    r.id.length > 0 &&
+    typeof r.name === "string" &&
+    typeof r.sortOrder === "number" &&
+    Number.isFinite(r.sortOrder) &&
+    typeof r.createdAt === "string"
+  );
+}
+
+function isDailyTask(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  return (
+    typeof r.id === "string" &&
+    r.id.length > 0 &&
+    typeof r.name === "string" &&
+    (r.cadence === "daily" || r.cadence === "weekly") &&
+    typeof r.sortOrder === "number" &&
+    Number.isFinite(r.sortOrder) &&
+    (r.templateId === undefined || typeof r.templateId === "string") &&
+    (r.linkedWeeklyId === undefined || typeof r.linkedWeeklyId === "string") &&
+    (r.targetCount === undefined ||
+      (typeof r.targetCount === "number" &&
+        Number.isInteger(r.targetCount) &&
+        r.targetCount >= 1)) &&
+    (r.eventStart === undefined ||
+      (typeof r.eventStart === "string" && DATE_PATTERN.test(r.eventStart))) &&
+    (r.eventEnd === undefined ||
+      (typeof r.eventEnd === "string" && DATE_PATTERN.test(r.eventEnd))) &&
+    typeof r.createdAt === "string" &&
+    typeof r.updatedAt === "string"
+  );
+}
+
+function isTaskCompletion(value: unknown): boolean {
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  return (
+    typeof r.accountId === "string" &&
+    r.accountId.length > 0 &&
+    typeof r.taskId === "string" &&
+    r.taskId.length > 0 &&
+    typeof r.periodKey === "string" &&
+    PERIOD_KEY_PATTERN.test(r.periodKey) &&
+    (r.count === undefined ||
+      (typeof r.count === "number" &&
+        Number.isInteger(r.count) &&
+        r.count >= 1)) &&
+    typeof r.completedAt === "string"
+  );
+}
+
+function isDailiesSnapshot(value: unknown): value is DailiesSnapshot {
+  if (typeof value !== "object" || value === null) return false;
+  const r = value as Record<string, unknown>;
+  return (
+    Array.isArray(r.accounts) &&
+    r.accounts.every(isGameAccount) &&
+    Array.isArray(r.tasks) &&
+    r.tasks.every(isDailyTask) &&
+    Array.isArray(r.completions) &&
+    r.completions.every(isTaskCompletion)
   );
 }
 
@@ -62,6 +145,9 @@ export function parseProgressExport(text: string): ProgressExport {
   if (!Array.isArray(doc.levels) || !doc.levels.every(isLevelRecord)) {
     throw new Error("invalid levels payload");
   }
+  if (doc.dailies !== undefined && !isDailiesSnapshot(doc.dailies)) {
+    throw new Error("invalid dailies payload");
+  }
   return {
     app: "rooc-kit",
     kind: "progress",
@@ -69,5 +155,6 @@ export function parseProgressExport(text: string): ProgressExport {
     dataVersion: typeof doc.dataVersion === "number" ? doc.dataVersion : 0,
     exportedAt: typeof doc.exportedAt === "string" ? doc.exportedAt : "",
     levels: doc.levels,
+    ...(doc.dailies !== undefined ? { dailies: doc.dailies } : {}),
   };
 }
