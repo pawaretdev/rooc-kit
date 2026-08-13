@@ -274,7 +274,7 @@
         },
         {
           "name": "Beetle King",
-          "type": "Mini",
+          "type": "Normal",
           "baseLevel": 65,
           "locations": ["Deep Payon Forest"]
         },

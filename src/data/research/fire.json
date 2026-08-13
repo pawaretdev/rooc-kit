@@ -94,7 +94,7 @@
         },
         {
           "name": "Highest General",
-          "type": "Normal",
+          "type": "Mini",
           "baseLevel": 65,
           "locations": ["Deep Payon Forest"]
         },
