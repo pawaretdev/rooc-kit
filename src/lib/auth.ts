@@ -21,6 +21,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
+  /**
+   * Self-hosted behind a proxy (Railway): Auth.js only auto-trusts the
+   * forwarded host on Vercel, so without this every request 500s with
+   * UntrustedHost and the callback URL falls back to localhost.
+   */
+  trustHost: true,
   session: { strategy: "jwt" },
   providers: [Discord, Google],
   callbacks: {

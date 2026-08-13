@@ -8,7 +8,11 @@ import type { Monster } from "./game-data";
  *   ui/frame-{1..7}.png         level frame, tier = min(level, 6) + 1
  *   ui/mvp.png · ui/mini.png    kind badge shown at the frame's top-left
  */
-const base = (process.env.NEXT_PUBLIC_IMAGE_CDN ?? "/img").replace(/\/+$/, "");
+// An env var that exists but is empty (a blank field in a deploy dashboard)
+// must behave like "unset" — `??` alone would leave the base empty and strip
+// /img from every asset URL.
+const cdn = process.env.NEXT_PUBLIC_IMAGE_CDN?.trim();
+const base = (cdn || "/img").replace(/\/+$/, "");
 
 export function monsterImageUrl(monster: Monster): string {
   return `${base}/monsters/${monster.image ?? monster.id}.png`;
