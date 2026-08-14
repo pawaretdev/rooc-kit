@@ -66,6 +66,58 @@ export interface TaskCompletionRecord {
   completedAt: string;
 }
 
+/** Gold Shop category — shared across accounts, user-editable (e.g. Growth, Kafra Shop). */
+export interface ShopCategoryRecord {
+  id: string;
+  name: string;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** One item sold in the weekly Gold Shop — shared across accounts. */
+export interface ShopItemRecord {
+  id: string;
+  name: string;
+  categoryId: string;
+  /** units offered per week; absent = Unlimited */
+  stock?: number;
+  /** gold per unit */
+  price: number;
+  sortOrder: number;
+  /** Set when adopted from an admin template — later template edits never touch this copy. */
+  templateId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** "Buy N of this item this week" — per account, per weekly period; stale weeks stop counting. */
+export interface BuyPlanRecord {
+  accountId: string;
+  itemId: string;
+  periodKey: string;
+  /** >= 1 — a quantity of 0 deletes the row */
+  quantity: number;
+  updatedAt: string;
+}
+
+/** Average gold income estimate per account — a table (not a setting) because it syncs. */
+export interface GoldIncomeRecord {
+  accountId: string;
+  amount: number;
+  per: "day" | "week";
+  updatedAt: string;
+}
+
+/** Gold received on one game day — permanent history, never pruned. */
+export interface GoldDiaryRecord {
+  accountId: string;
+  /** game date "YYYY-MM-DD" (05:00 Asia/Bangkok boundary, not calendar midnight) */
+  date: string;
+  amount: number;
+  updatedAt: string;
+}
+
 export const localDb = new Dexie("rooc-kit") as Dexie & {
   monsterLevels: EntityTable<MonsterLevelRecord, "monsterId">;
   settings: EntityTable<SettingRecord, "key">;
@@ -73,6 +125,13 @@ export const localDb = new Dexie("rooc-kit") as Dexie & {
   dailyTasks: EntityTable<DailyTaskRecord, "id">;
   // compound PK [accountId+taskId+periodKey] — EntityTable can't express it
   taskCompletions: Table<TaskCompletionRecord, [string, string, string]>;
+  shopCategories: EntityTable<ShopCategoryRecord, "id">;
+  shopItems: EntityTable<ShopItemRecord, "id">;
+  // compound PK [accountId+itemId+periodKey]
+  buyPlans: Table<BuyPlanRecord, [string, string, string]>;
+  goldIncomes: EntityTable<GoldIncomeRecord, "accountId">;
+  // compound PK [accountId+date]
+  goldDiary: Table<GoldDiaryRecord, [string, string]>;
 };
 
 localDb.version(1).stores({
@@ -86,6 +145,19 @@ localDb.version(2).stores({
   gameAccounts: "id, sortOrder",
   dailyTasks: "id, sortOrder, templateId",
   taskCompletions: "[accountId+taskId+periodKey], accountId, taskId",
+});
+
+localDb.version(3).stores({
+  monsterLevels: "monsterId",
+  settings: "key",
+  gameAccounts: "id, sortOrder",
+  dailyTasks: "id, sortOrder, templateId",
+  taskCompletions: "[accountId+taskId+periodKey], accountId, taskId",
+  shopCategories: "id, sortOrder",
+  shopItems: "id, sortOrder, categoryId, templateId",
+  buyPlans: "[accountId+itemId+periodKey], accountId, itemId",
+  goldIncomes: "accountId",
+  goldDiary: "[accountId+date], accountId",
 });
 
 export const MAX_MR_LEVEL = 10;
@@ -141,7 +213,11 @@ export async function replaceAllLevels(
 export const SELECTED_ACCOUNT_KEY = "dailies.selectedAccountId";
 
 async function nextSortOrder(
-  table: EntityTable<GameAccountRecord, "id"> | EntityTable<DailyTaskRecord, "id">,
+  table:
+    | EntityTable<GameAccountRecord, "id">
+    | EntityTable<DailyTaskRecord, "id">
+    | EntityTable<ShopCategoryRecord, "id">
+    | EntityTable<ShopItemRecord, "id">,
 ): Promise<number> {
   const rows = await table.toArray();
   return rows.reduce((max, r) => Math.max(max, r.sortOrder), -1) + 1;
@@ -165,14 +241,24 @@ export async function renameGameAccount(
   await localDb.gameAccounts.update(id, { name });
 }
 
-/** Removes the account, its check-off history, and the selection pointing at it. */
+/** Removes the account, its per-account data (check-offs, buy plans, income, diary), and the selection pointing at it. */
 export async function deleteGameAccount(id: string): Promise<void> {
   await localDb.transaction(
     "rw",
-    [localDb.gameAccounts, localDb.taskCompletions, localDb.settings],
+    [
+      localDb.gameAccounts,
+      localDb.taskCompletions,
+      localDb.buyPlans,
+      localDb.goldIncomes,
+      localDb.goldDiary,
+      localDb.settings,
+    ],
     async () => {
       await localDb.gameAccounts.delete(id);
       await localDb.taskCompletions.where("accountId").equals(id).delete();
+      await localDb.buyPlans.where("accountId").equals(id).delete();
+      await localDb.goldIncomes.delete(id);
+      await localDb.goldDiary.where("accountId").equals(id).delete();
       const selected = await localDb.settings.get(SELECTED_ACCOUNT_KEY);
       if (selected?.value === id) {
         await localDb.settings.delete(SELECTED_ACCOUNT_KEY);
@@ -318,4 +404,289 @@ export async function readAllDailies(): Promise<DailiesSnapshot> {
     localDb.taskCompletions.toArray(),
   ]);
   return { accounts, tasks, completions };
+}
+
+// --- Shop Planner (Gold Shop) ---
+
+/**
+ * Upper bound for shop quantities — stock per item and the buy quantity of
+ * Unlimited items. In-game weekly limits reach the thousands (Mora Coin caps at
+ * 5,000), so this only exists to keep a typo from becoming a nine-digit plan.
+ */
+export const MAX_PLAN_QTY = 99_999;
+
+export async function addShopCategory(name: string): Promise<string> {
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await localDb.shopCategories.add({
+    id,
+    name,
+    sortOrder: await nextSortOrder(localDb.shopCategories),
+    createdAt: now,
+    updatedAt: now,
+  });
+  return id;
+}
+
+export async function updateShopCategory(
+  id: string,
+  patch: Partial<Pick<ShopCategoryRecord, "name" | "sortOrder">>,
+): Promise<void> {
+  await localDb.shopCategories.update(id, {
+    ...patch,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+/** Removes the category, every item in it, and those items' buy-plan rows. */
+export async function deleteShopCategory(id: string): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopCategories, localDb.shopItems, localDb.buyPlans],
+    async () => {
+      const itemIds = (
+        await localDb.shopItems.where("categoryId").equals(id).toArray()
+      ).map((item) => item.id);
+      await localDb.shopCategories.delete(id);
+      await localDb.shopItems.where("categoryId").equals(id).delete();
+      if (itemIds.length > 0) {
+        await localDb.buyPlans.where("itemId").anyOf(itemIds).delete();
+      }
+    },
+  );
+}
+
+export async function addShopItem(input: {
+  name: string;
+  categoryId: string;
+  price: number;
+  stock?: number;
+  templateId?: string;
+}): Promise<string> {
+  const id = crypto.randomUUID();
+  const now = new Date().toISOString();
+  await localDb.shopItems.add({
+    id,
+    name: input.name,
+    categoryId: input.categoryId,
+    price: input.price,
+    ...(input.stock !== undefined ? { stock: input.stock } : {}),
+    ...(input.templateId ? { templateId: input.templateId } : {}),
+    sortOrder: await nextSortOrder(localDb.shopItems),
+    createdAt: now,
+    updatedAt: now,
+  });
+  return id;
+}
+
+export async function updateShopItem(
+  id: string,
+  patch: Partial<
+    Pick<ShopItemRecord, "name" | "categoryId" | "price" | "stock" | "sortOrder">
+  >,
+): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopItems, localDb.buyPlans],
+    async () => {
+      const stock = patch.stock;
+      if (stock !== undefined) {
+        // Lowered stock must drag existing plans down with it.
+        await localDb.buyPlans
+          .where("itemId")
+          .equals(id)
+          .modify((plan) => {
+            if (plan.quantity > stock) plan.quantity = stock;
+          });
+      }
+      await localDb.shopItems.update(id, {
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      });
+    },
+  );
+}
+
+/** Setting stock back to Unlimited — Dexie's update() can't remove a field via undefined. */
+export async function clearShopItemStock(id: string): Promise<void> {
+  await localDb.shopItems
+    .where("id")
+    .equals(id)
+    .modify((item) => {
+      delete item.stock;
+      item.updatedAt = new Date().toISOString();
+    });
+}
+
+/** Removes the item and its buy-plan rows across all accounts and periods. */
+export async function deleteShopItem(id: string): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopItems, localDb.buyPlans],
+    async () => {
+      await localDb.shopItems.delete(id);
+      await localDb.buyPlans.where("itemId").equals(id).delete();
+    },
+  );
+}
+
+/** Sets this week's buy quantity; 0 removes the row. Clamps to the item's stock. */
+export async function setPlanQuantity(
+  accountId: string,
+  itemId: string,
+  periodKey: string,
+  quantity: number,
+): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopItems, localDb.buyPlans],
+    async () => {
+      if (quantity <= 0) {
+        await localDb.buyPlans.delete([accountId, itemId, periodKey]);
+        return;
+      }
+      const item = await localDb.shopItems.get(itemId);
+      const cap = item?.stock ?? MAX_PLAN_QTY;
+      await localDb.buyPlans.put({
+        accountId,
+        itemId,
+        periodKey,
+        quantity: Math.min(quantity, cap),
+        updatedAt: new Date().toISOString(),
+      });
+    },
+  );
+}
+
+export async function setGoldIncome(
+  accountId: string,
+  amount: number,
+  per: GoldIncomeRecord["per"],
+): Promise<void> {
+  await localDb.goldIncomes.put({
+    accountId,
+    amount,
+    per,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+export async function clearGoldIncome(accountId: string): Promise<void> {
+  await localDb.goldIncomes.delete(accountId);
+}
+
+/** Records gold received on one game day; 0/negative removes the entry. */
+export async function setDiaryEntry(
+  accountId: string,
+  date: string,
+  amount: number,
+): Promise<void> {
+  if (amount <= 0) {
+    await localDb.goldDiary.delete([accountId, date]);
+    return;
+  }
+  await localDb.goldDiary.put({
+    accountId,
+    date,
+    amount,
+    updatedAt: new Date().toISOString(),
+  });
+}
+
+/**
+ * Drops buy-plan rows outside the weeks worth keeping. Last week's rows survive
+ * on purpose: a weekly shop plan repeats almost unchanged, so the previous plan
+ * is the fastest way to rebuild this one. The diary is never pruned.
+ */
+export async function pruneStaleBuyPlans(keepKeys: string[]): Promise<void> {
+  const keep = new Set(keepKeys);
+  await localDb.buyPlans.filter((plan) => !keep.has(plan.periodKey)).delete();
+}
+
+/**
+ * Copies one week's plan onto another (the "repeat last week" path), clamped to
+ * each item's current stock and skipping items that no longer exist.
+ */
+export async function repeatBuyPlan(
+  accountId: string,
+  fromPeriodKey: string,
+  toPeriodKey: string,
+): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopItems, localDb.buyPlans],
+    async () => {
+      const source = (
+        await localDb.buyPlans.where("accountId").equals(accountId).toArray()
+      ).filter((plan) => plan.periodKey === fromPeriodKey);
+      if (source.length === 0) return;
+      const items = new Map(
+        (await localDb.shopItems.toArray()).map((item) => [item.id, item]),
+      );
+      const now = new Date().toISOString();
+      const rows: BuyPlanRecord[] = [];
+      for (const plan of source) {
+        const item = items.get(plan.itemId);
+        if (!item) continue;
+        const quantity = Math.min(plan.quantity, item.stock ?? MAX_PLAN_QTY);
+        if (quantity < 1) continue;
+        rows.push({
+          accountId,
+          itemId: plan.itemId,
+          periodKey: toPeriodKey,
+          quantity,
+          updatedAt: now,
+        });
+      }
+      await localDb.buyPlans.bulkPut(rows);
+    },
+  );
+}
+
+export interface GoldShopSnapshot {
+  categories: ShopCategoryRecord[];
+  items: ShopItemRecord[];
+  plans: BuyPlanRecord[];
+  incomes: GoldIncomeRecord[];
+  diary: GoldDiaryRecord[];
+}
+
+/** Import = restore: replaces ALL Shop Planner data with the snapshot's records. */
+export async function replaceAllGoldShop(
+  snapshot: GoldShopSnapshot,
+): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [
+      localDb.shopCategories,
+      localDb.shopItems,
+      localDb.buyPlans,
+      localDb.goldIncomes,
+      localDb.goldDiary,
+    ],
+    async () => {
+      await localDb.shopCategories.clear();
+      await localDb.shopItems.clear();
+      await localDb.buyPlans.clear();
+      await localDb.goldIncomes.clear();
+      await localDb.goldDiary.clear();
+      await localDb.shopCategories.bulkPut(snapshot.categories);
+      await localDb.shopItems.bulkPut(snapshot.items);
+      await localDb.buyPlans.bulkPut(snapshot.plans);
+      await localDb.goldIncomes.bulkPut(snapshot.incomes);
+      await localDb.goldDiary.bulkPut(snapshot.diary);
+    },
+  );
+}
+
+/** Read all five Shop Planner tables — the sync counterpart of replaceAllGoldShop. */
+export async function readAllGoldShop(): Promise<GoldShopSnapshot> {
+  const [categories, items, plans, incomes, diary] = await Promise.all([
+    localDb.shopCategories.toArray(),
+    localDb.shopItems.toArray(),
+    localDb.buyPlans.toArray(),
+    localDb.goldIncomes.toArray(),
+    localDb.goldDiary.toArray(),
+  ]);
+  return { categories, items, plans, incomes, diary };
 }

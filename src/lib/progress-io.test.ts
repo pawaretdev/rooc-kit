@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { DailiesSnapshot, MonsterLevelRecord } from "./local-db";
+import type {
+  DailiesSnapshot,
+  GoldShopSnapshot,
+  MonsterLevelRecord,
+} from "./local-db";
 import { buildProgressExport, parseProgressExport } from "./progress-io";
 
 const records: MonsterLevelRecord[] = [
@@ -137,6 +141,152 @@ describe("dailies in sync payload", () => {
     const doc = { app: "rooc-kit", kind: "progress", version: 1, levels: [], ...extra };
     expect(() => parseProgressExport(JSON.stringify(doc))).toThrow(
       "invalid dailies payload",
+    );
+  });
+});
+
+const goldShop: GoldShopSnapshot = {
+  categories: [
+    {
+      id: "cat-1",
+      name: "Growth",
+      sortOrder: 0,
+      createdAt: "2026-08-12T00:00:00.000Z",
+      updatedAt: "2026-08-12T00:00:00.000Z",
+    },
+  ],
+  items: [
+    {
+      id: "item-1",
+      name: "Oridecon",
+      categoryId: "cat-1",
+      stock: 5,
+      price: 100,
+      sortOrder: 0,
+      templateId: "tpl-1",
+      createdAt: "2026-08-12T00:00:00.000Z",
+      updatedAt: "2026-08-12T00:00:00.000Z",
+    },
+    {
+      id: "item-2",
+      name: "Butterfly Wing",
+      categoryId: "cat-1",
+      price: 50,
+      sortOrder: 1,
+      createdAt: "2026-08-12T00:00:00.000Z",
+      updatedAt: "2026-08-12T00:00:00.000Z",
+    },
+  ],
+  plans: [
+    {
+      accountId: "acc-1",
+      itemId: "item-1",
+      periodKey: "w:2026-08-10",
+      quantity: 3,
+      updatedAt: "2026-08-12T01:00:00.000Z",
+    },
+  ],
+  incomes: [
+    {
+      accountId: "acc-1",
+      amount: 500,
+      per: "day",
+      updatedAt: "2026-08-12T01:00:00.000Z",
+    },
+  ],
+  diary: [
+    {
+      accountId: "acc-1",
+      date: "2026-08-12",
+      amount: 450,
+      updatedAt: "2026-08-12T01:00:00.000Z",
+    },
+  ],
+};
+
+describe("goldShop in sync payload", () => {
+  it("round-trips when provided (cloud-sync path)", () => {
+    const doc = buildProgressExport(records, 1, dailies, goldShop);
+    const parsed = parseProgressExport(JSON.stringify(doc));
+    expect(parsed.goldShop).toEqual(goldShop);
+    expect(parsed.dailies).toEqual(dailies);
+  });
+
+  it("omits the field when not provided (file-export path)", () => {
+    const doc = buildProgressExport(records, 1);
+    expect("goldShop" in doc).toBe(false);
+    const parsed = parseProgressExport(JSON.stringify(doc));
+    expect(parsed.goldShop).toBeUndefined();
+  });
+
+  it("legacy payload without goldShop still parses", () => {
+    const parsed = parseProgressExport(
+      JSON.stringify({ app: "rooc-kit", kind: "progress", version: 1, levels: [] }),
+    );
+    expect(parsed.goldShop).toBeUndefined();
+  });
+
+  it.each([
+    ["goldShop not an object", { goldShop: 5 }],
+    ["missing arrays", { goldShop: { categories: [] } }],
+    [
+      "zero stock",
+      {
+        goldShop: {
+          ...goldShop,
+          items: [{ ...goldShop.items[0], stock: 0 }],
+        },
+      },
+    ],
+    [
+      "negative price",
+      {
+        goldShop: {
+          ...goldShop,
+          items: [{ ...goldShop.items[1], price: -1 }],
+        },
+      },
+    ],
+    [
+      "daily periodKey on a buy plan",
+      {
+        goldShop: {
+          ...goldShop,
+          plans: [{ ...goldShop.plans[0], periodKey: "d:2026-08-12" }],
+        },
+      },
+    ],
+    [
+      "zero quantity",
+      {
+        goldShop: {
+          ...goldShop,
+          plans: [{ ...goldShop.plans[0], quantity: 0 }],
+        },
+      },
+    ],
+    [
+      "bad income unit",
+      {
+        goldShop: {
+          ...goldShop,
+          incomes: [{ ...goldShop.incomes[0], per: "month" }],
+        },
+      },
+    ],
+    [
+      "diary date with time",
+      {
+        goldShop: {
+          ...goldShop,
+          diary: [{ ...goldShop.diary[0], date: "2026-08-12T10:00" }],
+        },
+      },
+    ],
+  ])("rejects %s", (_name, extra) => {
+    const doc = { app: "rooc-kit", kind: "progress", version: 1, levels: [], ...extra };
+    expect(() => parseProgressExport(JSON.stringify(doc))).toThrow(
+      "invalid goldShop payload",
     );
   });
 });
