@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ListChecks, Users } from "lucide-react";
+import { ListChecks, ShoppingBasket, Users } from "lucide-react";
 import { useT, type MessageKey } from "@/lib/i18n";
 
 /** Backoffice menu — one entry per admin feature; add new tools here. */
@@ -15,6 +15,11 @@ const MENU: {
     href: "/admin/templates",
     labelKey: "admin.templates",
     icon: <ListChecks className="size-4" />,
+  },
+  {
+    href: "/admin/shop-templates",
+    labelKey: "admin.shopTemplates",
+    icon: <ShoppingBasket className="size-4" />,
   },
   {
     href: "/admin/users",

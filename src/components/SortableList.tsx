@@ -16,6 +16,7 @@ import {
 import {
   SortableContext,
   arrayMove,
+  rectSortingStrategy,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
@@ -33,10 +34,13 @@ import { GripVertical } from "lucide-react";
 export function SortableList({
   ids,
   onReorder,
+  layout = "vertical",
   children,
 }: {
   ids: string[];
   onReorder: (nextIds: string[]) => void;
+  /** "grid" frees the horizontal axis so cards can move between columns */
+  layout?: "vertical" | "grid";
   children: React.ReactNode;
 }) {
   const sensors = useSensors(
@@ -59,10 +63,19 @@ export function SortableList({
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
-      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+      modifiers={
+        layout === "grid"
+          ? [restrictToParentElement]
+          : [restrictToVerticalAxis, restrictToParentElement]
+      }
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={ids}
+        strategy={
+          layout === "grid" ? rectSortingStrategy : verticalListSortingStrategy
+        }
+      >
         {children}
       </SortableContext>
     </DndContext>

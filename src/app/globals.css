@@ -266,6 +266,27 @@ input[type="number"] {
   animation: lv-pop 260ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Shop Planner's earned moment: an item's weekly quota is fully covered, so the
+   stamp lands like a rubber stamp on paper — overshoot, settle, done. Pairs with
+   the gold ring bloom above, the same completion language the tracker uses. */
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: rotate(-16deg) scale(1.6);
+  }
+  60% {
+    opacity: 1;
+    transform: rotate(-4deg) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-6deg) scale(1);
+  }
+}
+.animate-stamp-in {
+  animation: stamp-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* list rows arriving (checklist switch, admin table load) — opacity only, so
    it never fights the inline transform dnd-kit writes while dragging */
 @keyframes stagger-in {
@@ -286,6 +307,7 @@ input[type="number"] {
   .animate-lv-pop,
   .animate-row-sweep,
   .animate-row-complete,
+  .animate-stamp-in,
   .animate-stagger-in {
     animation: none;
   }

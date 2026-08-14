@@ -29,6 +29,7 @@ export function AppHeader() {
 
   const trackerActive = pathname === "/tracker";
   const dailiesActive = pathname === "/dailies";
+  const shopActive = pathname === "/shop-planner";
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur-sm">
@@ -64,6 +65,17 @@ export function AppHeader() {
             }`}
           >
             {t("nav.dailies")}
+          </Link>
+          <Link
+            href="/shop-planner"
+            aria-current={shopActive ? "page" : undefined}
+            className={`press rounded-lg px-3.5 py-1.5 ${
+              shopActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "text-sub hover:bg-surface-2 hover:text-ink"
+            }`}
+          >
+            {t("nav.shopPlanner")}
           </Link>
           <span
             aria-disabled
@@ -123,6 +135,18 @@ export function AppHeader() {
             }`}
           >
             {t("nav.dailies")}
+          </Link>
+          <Link
+            href="/shop-planner"
+            aria-current={shopActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-lg px-3 py-2.5 text-sm ${
+              shopActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "hover:bg-surface-2"
+            }`}
+          >
+            {t("nav.shopPlanner")}
           </Link>
           <span className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-sub/75">
             {t("nav.marketAlert")}

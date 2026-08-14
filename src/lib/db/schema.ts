@@ -110,6 +110,44 @@ export const taskTemplates = pgTable("task_template", {
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
+/**
+ * Gold Shop template categories — created first, then items bind to them
+ * (mirrors the in-game shop's category tabs, e.g. Growth / Kafra Shop).
+ */
+export const goldShopCategories = pgTable("gold_shop_category", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+/**
+ * Suggested Gold Shop items curated by the app owner — same copy-on-adopt
+ * semantics as taskTemplates. Adoption resolves the category by NAME on the
+ * client (matched case-insensitively against local categories, created when
+ * missing) — the FK here only keeps the admin catalog consistent.
+ */
+export const goldShopTemplates = pgTable("gold_shop_template", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name").notNull(),
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => goldShopCategories.id, { onDelete: "cascade" }),
+  /** units offered per week; null = Unlimited */
+  stock: integer("stock"),
+  /** gold per unit */
+  price: integer("price").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  published: boolean("published").notNull().default(false),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
 export const verificationTokens = pgTable(
   "verification_token",
   {

@@ -50,6 +50,13 @@
       "when": 1786483242488,
       "tag": "0006_dazzling_whirlwind",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786724617828,
+      "tag": "0007_elite_enchantress",
+      "breakpoints": true
     }
   ]
 }
