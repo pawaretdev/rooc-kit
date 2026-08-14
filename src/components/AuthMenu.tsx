@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -12,9 +11,7 @@ import {
   Settings,
   ShieldCheck,
 } from "lucide-react";
-import { dataVersion } from "@/lib/game-data";
-import { localDb, readAllDailies } from "@/lib/local-db";
-import { buildProgressExport } from "@/lib/progress-io";
+import { useAutoSyncStatus, type AutoSyncStatus } from "@/components/AutoSync";
 import { useT } from "@/lib/i18n";
 import {
   DropdownMenu,
@@ -57,12 +54,10 @@ function Avatar({
   );
 }
 
-type SyncState = "idle" | "busy" | "done" | "error";
-
 export function AuthMenu() {
   const { data: session, status } = useSession();
   const t = useT();
-  const [syncState, setSyncState] = useState<SyncState>("idle");
+  const syncStatus = useAutoSyncStatus();
 
   if (status === "loading") {
     // avatar-sized skeleton so the bar doesn't jump when the session arrives
@@ -77,34 +72,18 @@ export function AuthMenu() {
   if (!session?.user) return <SignInDialog />;
   const { user } = session;
 
-  const syncNow = async () => {
-    setSyncState("busy");
-    try {
-      const records = await localDb.monsterLevels.toArray();
-      const res = await fetch("/api/progress", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          buildProgressExport(records, dataVersion, await readAllDailies()),
-        ),
-      });
-      setSyncState(res.ok ? "done" : "error");
-    } catch {
-      setSyncState("error");
-    }
-  };
-
-  const syncLabel: Record<SyncState, string> = {
-    idle: t("sync.upload"),
-    busy: t("common.loading"),
-    done: t("sync.done"),
+  // idle only flashes before the first reconcile kicks in — read it as syncing
+  const syncLabel: Record<AutoSyncStatus, string> = {
+    idle: t("sync.syncing"),
+    syncing: t("sync.syncing"),
+    synced: t("sync.synced"),
     error: t("sync.error"),
   };
 
   return (
     // modal={false}: no body scroll-lock — locking removes the scrollbar and
     // shifts the full-width bar, which reads as the navbar "shrinking"
-    <DropdownMenu modal={false} onOpenChange={() => setSyncState("idle")}>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         aria-label={t("auth.menu")}
         className="press inline-flex items-center gap-1 rounded-full border border-transparent p-0.5 pr-1.5 text-sub hover:border-line hover:bg-surface-2 data-[state=open]:border-line data-[state=open]:bg-surface-2"
@@ -143,19 +122,21 @@ export function AuthMenu() {
             </Link>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem
-          disabled={syncState === "busy"}
-          onSelect={(e) => {
-            // keep the menu open so the result label is visible
-            e.preventDefault();
-            if (syncState !== "busy") void syncNow();
-          }}
-        >
-          <CloudUpload
-            className={syncState === "error" ? "text-danger" : undefined}
-          />
-          {syncLabel[syncState]}
-        </DropdownMenuItem>
+        <div className="flex items-center justify-between gap-3 px-2 py-1.5 text-sm">
+          <span className="flex items-center gap-2 text-sub">
+            <CloudUpload
+              className={`size-4 ${syncStatus === "error" ? "text-danger" : ""}`}
+            />
+            {t("sync.title")}
+          </span>
+          <span
+            className={`truncate text-xs font-medium ${
+              syncStatus === "error" ? "text-danger" : "text-sub"
+            }`}
+          >
+            {syncLabel[syncStatus]}
+          </span>
+        </div>
         <div className="flex items-center justify-between px-2 py-1.5 text-sm">
           <span className="text-sub">{t("locale.label")}</span>
           <LocaleSegment />
