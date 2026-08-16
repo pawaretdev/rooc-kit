@@ -198,6 +198,28 @@ describe("rows with fewer than ROW_SIZE monsters", () => {
     expect(buildRowView(partial, maxed).completed).toBe(false);
   });
 
+  it("noIncomplete hides them; demote sinks them instead", () => {
+    if (!partial) return;
+    const all = buildRowViews(new Map(), { sort: "rowOrder" });
+    const levelless = all.filter((v) => !v.hasRowLevel).length;
+
+    const hidden = buildRowViews(new Map(), {
+      sort: "rowOrder",
+      noIncomplete: true,
+      filterBehavior: "hide",
+    });
+    expect(hidden.length).toBe(all.length - levelless);
+    expect(hidden.every((v) => v.hasRowLevel)).toBe(true);
+
+    const demoted = buildRowViews(new Map(), {
+      sort: "rowOrder",
+      noIncomplete: true,
+      filterBehavior: "demote",
+    });
+    expect(demoted.length).toBe(all.length);
+    expect(demoted.slice(-levelless).every((v) => v.demoted)).toBe(true);
+  });
+
   it("sink below every row that has a level, in all sorts", () => {
     if (!partial) return;
     for (const sort of ["rowLevelAsc", "smartPriority"] as const) {

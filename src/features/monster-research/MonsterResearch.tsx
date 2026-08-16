@@ -42,6 +42,7 @@ export function MonsterResearch() {
   const rowsShown = useSetting<number>("mr.rowsShown", 5);
   const noMvp = useSetting<boolean>("mr.noMvp", false);
   const noMini = useSetting<boolean>("mr.noMini", false);
+  const noIncomplete = useSetting<boolean>("mr.noIncomplete", false);
   const filterBehavior = useSetting<"hide" | "demote">(
     "mr.filterBehavior",
     "hide",
@@ -61,10 +62,20 @@ export function MonsterResearch() {
       sort,
       noMvp,
       noMini,
+      noIncomplete,
       excludedMapIds,
       filterBehavior,
     });
-  }, [levels, element, sort, noMvp, noMini, excludedMapIds, filterBehavior]);
+  }, [
+    levels,
+    element,
+    sort,
+    noMvp,
+    noMini,
+    noIncomplete,
+    excludedMapIds,
+    filterBehavior,
+  ]);
 
   /** Tonight's pick — always ranked by smart priority, whatever sort the list uses. */
   const pick = useMemo(() => {
@@ -77,6 +88,7 @@ export function MonsterResearch() {
             sort: "smartPriority",
             noMvp,
             noMini,
+            noIncomplete,
             excludedMapIds,
             filterBehavior,
           })[0];
@@ -95,6 +107,7 @@ export function MonsterResearch() {
     element,
     noMvp,
     noMini,
+    noIncomplete,
     excludedMapIds,
     filterBehavior,
   ]);
@@ -274,6 +287,15 @@ export function MonsterResearch() {
                 />
                 {t("mr.filter.noMini")}
               </Label>
+              <Label className="font-normal">
+                <Checkbox
+                  checked={noIncomplete}
+                  onCheckedChange={(v) =>
+                    void setSetting("mr.noIncomplete", v === true)
+                  }
+                />
+                {t("mr.filter.noIncomplete")}
+              </Label>
               <MapFilter excluded={excludedMapIds} />
               {/* always visible so the hide/demote choice can be made BEFORE
                   a filter is switched on — not only after rows vanished */}
@@ -314,7 +336,7 @@ export function MonsterResearch() {
               // keyed by the query signature: a filter/sort change remounts the
               // list so the cards sweep back in staggered (levels edits don't)
               <div
-                key={`${element}|${sort}|${String(noMvp)}|${String(noMini)}|${filterBehavior}|${excludedMaps.join(",")}|${rowsShown}`}
+                key={`${element}|${sort}|${String(noMvp)}|${String(noMini)}|${String(noIncomplete)}|${filterBehavior}|${excludedMaps.join(",")}|${rowsShown}`}
                 className="space-y-3"
               >
                 {pick && (

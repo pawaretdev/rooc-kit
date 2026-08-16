@@ -136,6 +136,8 @@ export interface RowViewOptions {
   /** hide/demote rows whose best-trip map spawns an MVP / a Mini */
   noMvp?: boolean;
   noMini?: boolean;
+  /** hide/demote rows with fewer than ROW_SIZE monsters — they have no row level */
+  noIncomplete?: boolean;
   /** maps the user never wants to farm — removed from best-trip planning; rows
    * that can only advance on these maps fail the filter */
   excludedMapIds?: ReadonlySet<string>;
@@ -155,10 +157,16 @@ export function buildRowViews(
     Boolean(
       (options.noMvp && v.hasMvp) ||
         (options.noMini && v.hasMini) ||
+        (options.noIncomplete && !v.hasRowLevel) ||
         v.allMapsExcluded,
     );
 
-  if (options.noMvp || options.noMini || options.excludedMapIds?.size) {
+  if (
+    options.noMvp ||
+    options.noMini ||
+    options.noIncomplete ||
+    options.excludedMapIds?.size
+  ) {
     if (options.filterBehavior === "demote") {
       views = views.map((v) => (fails(v) ? { ...v, demoted: true } : v));
     } else {
