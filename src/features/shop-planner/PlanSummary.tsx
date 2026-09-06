@@ -1,6 +1,7 @@
 "use client";
 
-import { Coins, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { GoldCoin } from "@/components/GoldCoin";
 import type { GoldIncomeRecord } from "@/lib/local-db";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,9 @@ function Tile({
       <span className="block font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
         {label}
       </span>
-      <span className="mt-0.5 flex h-8 items-center">{children}</span>
+      {/* min-height keeps the three tiles level; the coin on the first one
+          is taller than the text and would otherwise ride up into the label */}
+      <span className="mt-1.5 flex min-h-10 items-center">{children}</span>
     </div>
   );
 }
@@ -59,7 +62,7 @@ export function PlanSummary({
       key={total}
       className="animate-lv-pop inline-flex items-center gap-1.5 font-mono font-bold text-gold tabular-nums"
     >
-      <Coins className="size-4" />
+      <GoldCoin size="lg" />
       {total.toLocaleString()}
     </span>
   );

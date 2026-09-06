@@ -1,0 +1,1 @@
+ALTER TABLE "gold_shop_template" ADD COLUMN "icon" text;

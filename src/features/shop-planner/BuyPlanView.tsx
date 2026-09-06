@@ -11,6 +11,7 @@ import {
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { clampQuantity, planTotal, type PlanMap } from "./plan-math";
+import { ItemIcon } from "./ItemIcon";
 import { CategoryTabs, ShopCardGrid, ShopItemCard } from "./ShopGrid";
 
 /**
@@ -96,7 +97,7 @@ export function BuyPlanView({
                 {visible.map((item, i) => (
                   <div
                     key={item.id}
-                    className="animate-stagger-in"
+                    className="animate-stagger-in h-full"
                     // capped so a 40-item category still finishes in ~300ms
                     style={{ "--stagger-i": Math.min(i, 10) } as React.CSSProperties}
                   >
@@ -165,6 +166,7 @@ export function BuyPlanView({
                   key={item.id}
                   className="animate-rise-in flex items-center gap-3 py-2.5"
                 >
+                  <ItemIcon icon={item.icon} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium">
                       {item.name}

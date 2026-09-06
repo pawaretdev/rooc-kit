@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  Check,
-  Coins,
-  Infinity as InfinityIcon,
-  Minus,
-  Package,
-  Plus,
-} from "lucide-react";
+import { Check, Infinity as InfinityIcon, Minus, Plus } from "lucide-react";
 import { MAX_PLAN_QTY } from "@/lib/local-db";
 import { useLocale, useT } from "@/lib/i18n";
+import { GoldCoin } from "@/components/GoldCoin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ItemIcon } from "./ItemIcon";
 
 /**
  * Game-style Gold Shop surfaces, shared between the user's planner and the
@@ -74,6 +69,8 @@ export interface ShopCardData {
   /** undefined = Unlimited */
   stock?: number;
   price: number;
+  /** ITEM_ICONS id; absent/null = generic tile */
+  icon?: string | null;
 }
 
 /** How many of an item can be planned — its stock, or the unlimited cap. */
@@ -201,8 +198,11 @@ export function ShopItemCard({
       >
         {item.name}
       </span>
-      <span className="mx-auto my-2 flex h-14 w-14 items-center justify-center rounded-lg bg-surface-2">
-        <Package className="size-7 text-sub/60" />
+      {/* the art slot absorbs the height difference between a plain card and
+          a planned one (which grows a quantity row) so a grid row stays
+          level and the extra reads as a roomier tile, not blank space */}
+      <span className="my-2 flex flex-1 items-center justify-center">
+        <ItemIcon icon={item.icon} size="lg" />
       </span>
       <span className="block min-h-4 px-2 text-center font-mono text-[10px] text-sub tabular-nums">
         {item.stock !== undefined &&
@@ -211,7 +211,7 @@ export function ShopItemCard({
             .replace("{m}", String(item.stock))}
       </span>
       <span className="mt-1 flex items-center justify-center gap-1.5 border-t border-line bg-surface-2/60 py-1.5 font-mono text-sm font-bold text-gold tabular-nums">
-        <Coins className="size-3.5" />
+        <GoldCoin size="sm" />
         {item.price.toLocaleString()}
         {item.stock === undefined && (
           <InfinityIcon className="size-3 text-sub" aria-label={t("shop.unlimited")} />
@@ -222,7 +222,7 @@ export function ShopItemCard({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border ${
+      className={`relative flex h-full flex-col overflow-hidden rounded-xl border ${
         maxed
           ? "animate-row-complete border-gold/70"
           : planned > 0
@@ -230,19 +230,19 @@ export function ShopItemCard({
             : "border-line"
       } ${maxed ? "bg-surface-2/60" : "bg-surface"} ${dimmed ? "opacity-50" : ""}`}
     >
-      <div className="relative">
+      <div className="relative flex flex-1 flex-col">
         {interactive ? (
           <button
             type="button"
             aria-label={spokenName}
             disabled={maxed}
             onClick={() => onChange(planned + 1)}
-            className="press block w-full text-left disabled:cursor-default"
+            className="press flex w-full flex-1 flex-col text-left disabled:cursor-default"
           >
             {body}
           </button>
         ) : (
-          <div>{body}</div>
+          <div className="flex flex-1 flex-col">{body}</div>
         )}
 
         {/* mission stamp over a scrim — the same "nothing left to do here"

@@ -2,6 +2,7 @@ import { asc, eq } from "drizzle-orm";
 import { requireSuperAdmin } from "@/lib/admin-api";
 import { db } from "@/lib/db/client";
 import { goldShopCategories, goldShopTemplates } from "@/lib/db/schema";
+import { isItemIconId } from "@/lib/item-icons";
 
 const MAX_NAME_LENGTH = 100;
 const MAX_PRICE = 9_999_999;
@@ -21,6 +22,7 @@ function parseTemplateInput(raw: unknown): {
   categoryId: string;
   stock: number | null;
   price: number;
+  icon: string | null;
 } | null {
   if (typeof raw !== "object" || raw === null) return null;
   const r = raw as Record<string, unknown>;
@@ -43,11 +45,13 @@ function parseTemplateInput(raw: unknown): {
   ) {
     return null;
   }
+  if (r.icon != null && !isItemIconId(r.icon)) return null;
   return {
     name: r.name.trim(),
     categoryId: r.categoryId,
     stock: (r.stock as number | undefined) ?? null,
     price: r.price,
+    icon: (r.icon as string | undefined) ?? null,
   };
 }
 

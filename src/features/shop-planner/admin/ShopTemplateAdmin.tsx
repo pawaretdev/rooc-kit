@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ItemIconPicker } from "../ItemIcon";
 import { CategoryTabs, ShopCardGrid, ShopItemCard } from "../ShopGrid";
 
 interface AdminCategory {
@@ -54,6 +55,8 @@ interface AdminTemplate {
   /** null = Unlimited */
   stock: number | null;
   price: number;
+  /** null = generic tile */
+  icon: string | null;
   sortOrder: number;
   published: boolean;
   createdAt: string;
@@ -171,6 +174,7 @@ export function ShopTemplateAdmin() {
   const [status, setStatus] = useState<Status>("loading");
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newName, setNewName] = useState("");
+  const [newIcon, setNewIcon] = useState<string | null>(null);
   const [newCategoryId, setNewCategoryId] = useState("");
   const [newPrice, setNewPrice] = useState(0);
   const [newStock, setNewStock] = useState(1);
@@ -286,11 +290,13 @@ export function ShopTemplateAdmin() {
           categoryId: newCategoryId,
           price: newPrice,
           stock: newUnlimited ? null : newStock,
+          icon: newIcon,
         }),
       }),
     );
     if (ok) {
       setNewName("");
+      setNewIcon(null);
       setNewPrice(0);
       setNewStock(1);
       setNewUnlimited(false);
@@ -438,6 +444,7 @@ export function ShopTemplateAdmin() {
                   void createTemplate();
                 }}
               >
+                <ItemIconPicker value={newIcon} onChange={setNewIcon} />
                 <Input
                   value={newName}
                   maxLength={MAX_NAME_LENGTH}
@@ -532,6 +539,9 @@ export function ShopTemplateAdmin() {
                     <thead>
                       <tr className="border-b border-line text-left">
                         <th className="w-10 px-2 py-2.5" />
+                        <th className="w-12 px-2 py-2.5">
+                          <span className="sr-only">{t("shop.icon")}</span>
+                        </th>
                         <th className="px-2 py-2.5 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
                           {t("shop.itemName")}
                         </th>
@@ -554,7 +564,7 @@ export function ShopTemplateAdmin() {
                       {templates.length === 0 && (
                         <tr>
                           <td
-                            colSpan={7}
+                            colSpan={8}
                             className="px-4 py-8 text-center text-sub"
                           >
                             {categories.length === 0
@@ -579,6 +589,14 @@ export function ShopTemplateAdmin() {
                                 <DragHandle
                                   label={t("dailies.dragToReorder")}
                                   {...handleProps}
+                                />
+                              </td>
+                              <td className="px-2 py-2">
+                                <ItemIconPicker
+                                  value={tpl.icon}
+                                  onChange={(icon) =>
+                                    updateTemplate(tpl.id, { icon })
+                                  }
                                 />
                               </td>
                               <td className="px-2 py-2">
@@ -835,7 +853,7 @@ export function ShopTemplateAdmin() {
                             <div
                               {...handleProps}
                               title={t("dailies.dragToReorder")}
-                              className={`touch-none ${
+                              className={`h-full touch-none ${
                                 isDragging ? "cursor-grabbing" : "cursor-grab"
                               }`}
                             >
@@ -845,6 +863,7 @@ export function ShopTemplateAdmin() {
                                   name: tpl.name,
                                   stock: tpl.stock ?? undefined,
                                   price: tpl.price,
+                                  icon: tpl.icon,
                                 }}
                                 dimmed={!tpl.published}
                                 badge={

@@ -283,6 +283,9 @@ const en = {
   "shop.catalog": "Shop items",
   "shop.addItem": "Add item",
   "shop.itemName": "Item name",
+  "shop.icon": "Icon",
+  "shop.pickIcon": "Choose an icon",
+  "shop.noIcon": "No icon",
   "shop.category": "Category",
   "shop.categories": "Categories",
   "shop.manageCategories": "Manage categories",
@@ -305,6 +308,10 @@ const en = {
   "shop.templates": "Suggested items",
   "shop.adopt": "Add",
   "shop.adoptAll": "Add all",
+  "shop.syncTemplates": "Update {n} from suggestions",
+  "shop.syncTemplatesHint":
+    "Items you added from suggestions have changed since — pull the latest name, price, limit, icon and category onto your copies.",
+  "shop.templatesUpToDate": "Your adopted items match the latest suggestions.",
   "shop.templatesEmpty": "No suggestions yet.",
   "shop.templatesError":
     "Couldn't load suggestions — you can still add items manually.",
@@ -656,6 +663,9 @@ const th: Messages = {
   "shop.catalog": "ของในร้าน",
   "shop.addItem": "เพิ่มของ",
   "shop.itemName": "ชื่อไอเทม",
+  "shop.icon": "ไอคอน",
+  "shop.pickIcon": "เลือกไอคอน",
+  "shop.noIcon": "ไม่ใช้ไอคอน",
   "shop.category": "หมวดหมู่",
   "shop.categories": "หมวดหมู่",
   "shop.manageCategories": "จัดการหมวดหมู่",
@@ -678,6 +688,10 @@ const th: Messages = {
   "shop.templates": "ของแนะนำ",
   "shop.adopt": "เพิ่ม",
   "shop.adoptAll": "เพิ่มทั้งหมด",
+  "shop.syncTemplates": "อัปเดต {n} รายการจากของแนะนำ",
+  "shop.syncTemplatesHint":
+    "ของที่เคยเพิ่มจากรายการแนะนำมีการแก้ไขในภายหลัง กดเพื่อดึงชื่อ ราคา จำนวน ไอคอน และหมวดหมู่ล่าสุดมาทับสำเนาของคุณ",
+  "shop.templatesUpToDate": "ของที่เพิ่มจากรายการแนะนำตรงกับเวอร์ชันล่าสุดแล้ว",
   "shop.templatesEmpty": "ยังไม่มีรายการแนะนำ",
   "shop.templatesError":
     "โหลดรายการแนะนำไม่สำเร็จ — ยังเพิ่มของเองได้ตามปกติ",

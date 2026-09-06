@@ -25,6 +25,7 @@ export async function GET() {
         categoryId: goldShopTemplates.categoryId,
         stock: goldShopTemplates.stock,
         price: goldShopTemplates.price,
+        icon: goldShopTemplates.icon,
         sortOrder: goldShopTemplates.sortOrder,
       })
       .from(goldShopTemplates)

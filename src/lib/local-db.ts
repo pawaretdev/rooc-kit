@@ -84,6 +84,8 @@ export interface ShopItemRecord {
   stock?: number;
   /** gold per unit */
   price: number;
+  /** in-game art id from ITEM_ICONS (item-icons.ts); absent = generic tile */
+  icon?: string;
   sortOrder: number;
   /** Set when adopted from an admin template — later template edits never touch this copy. */
   templateId?: string;
@@ -461,6 +463,7 @@ export async function addShopItem(input: {
   categoryId: string;
   price: number;
   stock?: number;
+  icon?: string;
   templateId?: string;
 }): Promise<string> {
   const id = crypto.randomUUID();
@@ -471,6 +474,7 @@ export async function addShopItem(input: {
     categoryId: input.categoryId,
     price: input.price,
     ...(input.stock !== undefined ? { stock: input.stock } : {}),
+    ...(input.icon ? { icon: input.icon } : {}),
     ...(input.templateId ? { templateId: input.templateId } : {}),
     sortOrder: await nextSortOrder(localDb.shopItems),
     createdAt: now,
@@ -482,7 +486,10 @@ export async function addShopItem(input: {
 export async function updateShopItem(
   id: string,
   patch: Partial<
-    Pick<ShopItemRecord, "name" | "categoryId" | "price" | "stock" | "sortOrder">
+    Pick<
+      ShopItemRecord,
+      "name" | "categoryId" | "price" | "stock" | "icon" | "sortOrder"
+    >
   >,
 ): Promise<void> {
   await localDb.transaction(
@@ -516,6 +523,70 @@ export async function clearShopItemStock(id: string): Promise<void> {
       delete item.stock;
       item.updatedAt = new Date().toISOString();
     });
+}
+
+/** null clears the icon — the record drops the key rather than storing null. */
+export async function setShopItemIcon(
+  id: string,
+  icon: string | null,
+): Promise<void> {
+  await localDb.shopItems
+    .where("id")
+    .equals(id)
+    .modify((item) => {
+      if (icon) item.icon = icon;
+      else delete item.icon;
+      item.updatedAt = new Date().toISOString();
+    });
+}
+
+/**
+ * Re-syncs an adopted item with its template: every field in the patch is
+ * overwritten, null drops stock (→ Unlimited) or icon, and a lowered stock
+ * drags existing plans down with it — one transaction per item.
+ */
+export async function applyShopTemplate(
+  id: string,
+  patch: {
+    name?: string;
+    categoryId?: string;
+    price?: number;
+    stock?: number | null;
+    icon?: string | null;
+  },
+): Promise<void> {
+  await localDb.transaction(
+    "rw",
+    [localDb.shopItems, localDb.buyPlans],
+    async () => {
+      const stock = patch.stock;
+      if (typeof stock === "number") {
+        await localDb.buyPlans
+          .where("itemId")
+          .equals(id)
+          .modify((plan) => {
+            if (plan.quantity > stock) plan.quantity = stock;
+          });
+      }
+      await localDb.shopItems
+        .where("id")
+        .equals(id)
+        .modify((item) => {
+          if (patch.name !== undefined) item.name = patch.name;
+          if (patch.categoryId !== undefined) item.categoryId = patch.categoryId;
+          if (patch.price !== undefined) item.price = patch.price;
+          if (patch.stock !== undefined) {
+            if (patch.stock === null) delete item.stock;
+            else item.stock = patch.stock;
+          }
+          if (patch.icon !== undefined) {
+            if (patch.icon === null) delete item.icon;
+            else item.icon = patch.icon;
+          }
+          item.updatedAt = new Date().toISOString();
+        });
+    },
+  );
 }
 
 /** Removes the item and its buy-plan rows across all accounts and periods. */

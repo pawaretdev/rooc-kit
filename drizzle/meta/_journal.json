@@ -57,6 +57,13 @@
       "when": 1786724617828,
       "tag": "0007_elite_enchantress",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1788719640560,
+      "tag": "0008_majestic_goblin_queen",
+      "breakpoints": true
     }
   ]
 }

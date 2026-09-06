@@ -1,11 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Infinity as InfinityIcon, Plus, Sparkles } from "lucide-react";
-import { addShopCategory, addShopItem, localDb } from "@/lib/local-db";
+import { Infinity as InfinityIcon, Plus, RefreshCw, Sparkles } from "lucide-react";
+import {
+  addShopCategory,
+  addShopItem,
+  applyShopTemplate,
+  localDb,
+} from "@/lib/local-db";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { useAdoptedShopTemplates } from "./useShopPlanner";
+import { ItemIcon } from "./ItemIcon";
+import { templateDrift } from "./template-sync";
+import {
+  useAdoptedShopTemplates,
+  useShopCategories,
+  useShopItems,
+} from "./useShopPlanner";
 
 interface ShopTemplateCategory {
   id: string;
@@ -19,6 +30,7 @@ interface ShopTemplateItem {
   categoryId: string;
   stock: number | null;
   price: number;
+  icon?: string | null;
   sortOrder: number;
 }
 
@@ -47,13 +59,48 @@ export function ShopTemplateBrowser() {
   const [status, setStatus] = useState<FetchStatus>("loading");
   const [templates, setTemplates] = useState<ShopTemplateItem[]>([]);
   const [categories, setCategories] = useState<ShopTemplateCategory[]>([]);
+  const [syncing, setSyncing] = useState(false);
   const adopted = useAdoptedShopTemplates();
+  const localItems = useShopItems();
+  const localCategories = useShopCategories();
 
   const available =
     status === "done" ? templates.filter((tpl) => !adopted?.has(tpl.id)) : [];
 
   const categoryNameOf = (tpl: ShopTemplateItem) =>
     categories.find((c) => c.id === tpl.categoryId)?.name;
+
+  // Adopted copies that fell behind their template (admin edits after adoption).
+  const drift =
+    status === "done" && localItems && localCategories
+      ? templateDrift(
+          localItems,
+          localCategories,
+          templates.flatMap((tpl) => {
+            const categoryName = categoryNameOf(tpl);
+            return categoryName ? [{ ...tpl, categoryName }] : [];
+          }),
+        )
+      : [];
+  const adoptedCount = adopted?.size ?? 0;
+
+  // Sequential like adoptAll: category creation reads the table before writing.
+  const syncAdopted = async () => {
+    setSyncing(true);
+    try {
+      for (const { itemId, patch } of drift) {
+        const { categoryName, ...rest } = patch;
+        await applyShopTemplate(itemId, {
+          ...rest,
+          ...(categoryName
+            ? { categoryId: await resolveCategoryId(categoryName) }
+            : {}),
+        });
+      }
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const adopt = async (tpl: ShopTemplateItem) => {
     const categoryName = categoryNameOf(tpl);
@@ -63,6 +110,7 @@ export function ShopTemplateBrowser() {
       categoryId: await resolveCategoryId(categoryName),
       price: tpl.price,
       stock: tpl.stock ?? undefined,
+      icon: tpl.icon ?? undefined,
       templateId: tpl.id,
     });
   };
@@ -122,6 +170,24 @@ export function ShopTemplateBrowser() {
       {status === "error" && (
         <p className="text-sm text-sub">{t("shop.templatesError")}</p>
       )}
+      {status === "done" && drift.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-accent/40 bg-accent/5 px-3 py-2">
+          <p className="min-w-0 flex-1 text-xs text-sub">
+            {t("shop.syncTemplatesHint")}
+          </p>
+          <Button
+            size="sm"
+            disabled={syncing}
+            onClick={() => void syncAdopted()}
+          >
+            <RefreshCw className={`size-3.5 ${syncing ? "animate-spin" : ""}`} />
+            {t("shop.syncTemplates").replace("{n}", String(drift.length))}
+          </Button>
+        </div>
+      )}
+      {status === "done" && drift.length === 0 && adoptedCount > 0 && (
+        <p className="mb-2 text-xs text-sub">{t("shop.templatesUpToDate")}</p>
+      )}
       {status === "done" && available.length === 0 && (
         <p className="text-sm text-sub">{t("shop.templatesEmpty")}</p>
       )}
@@ -129,6 +195,7 @@ export function ShopTemplateBrowser() {
         <ul className="divide-y divide-line/60">
           {available.map((tpl) => (
             <li key={tpl.id} className="flex items-center gap-3 py-2">
+              <ItemIcon icon={tpl.icon} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm">{tpl.name}</span>
                 <span className="font-mono text-xs text-gold tabular-nums">

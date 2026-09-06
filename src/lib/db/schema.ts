@@ -142,6 +142,8 @@ export const goldShopTemplates = pgTable("gold_shop_template", {
   stock: integer("stock"),
   /** gold per unit */
   price: integer("price").notNull(),
+  /** in-game art id from ITEM_ICONS (src/lib/item-icons.ts); null = generic tile */
+  icon: text("icon"),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(false),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
