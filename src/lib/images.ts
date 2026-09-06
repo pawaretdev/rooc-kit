@@ -9,6 +9,7 @@ import type { Monster } from "./game-data";
  *   ui/mvp.png · ui/mini.png    kind badge shown at the frame's top-left
  *   ui/gold-coin.png            Gold Shop currency mark (GoldCoin component)
  *   items/{icon-id}.png         Gold Shop item icon (ids in item-icons.ts)
+ *   events/{icon-id}.png        Dailies task/event icon (ids in task-icons.ts)
  */
 // An env var that exists but is empty (a blank field in a deploy dashboard)
 // must behave like "unset" — `??` alone would leave the base empty and strip
@@ -38,4 +39,9 @@ export function goldCoinUrl(): string {
 /** Gold Shop item icon — `icon` is an id from ITEM_ICONS (item-icons.ts). */
 export function itemIconUrl(icon: string): string {
   return `${base}/items/${icon}.png`;
+}
+
+/** Dailies task icon — `icon` is an id from TASK_ICONS (task-icons.ts). */
+export function taskIconUrl(icon: string): string {
+  return `${base}/events/${icon}.png`;
 }

@@ -49,6 +49,7 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/SortableList";
+import { TaskIconPicker } from "./TaskIcon";
 import { TemplateBrowser } from "./TemplateBrowser";
 
 const MAX_NAME_LENGTH = 100;
@@ -173,6 +174,12 @@ function TaskEditRow({
       {({ handleProps }) => (
         <>
       <DragHandle label={t("dailies.dragToReorder")} {...handleProps} />
+      <TaskIconPicker
+        value={task.icon}
+        onChange={(icon) =>
+          void updateDailyTask(task.id, { icon: icon ?? undefined })
+        }
+      />
       <Input
         defaultValue={task.name}
         maxLength={MAX_NAME_LENGTH}
@@ -318,6 +325,7 @@ export function TasksDialog({
 }) {
   const t = useT();
   const [newTask, setNewTask] = useState("");
+  const [newIcon, setNewIcon] = useState<string | null>(null);
   const [newCadence, setNewCadence] = useState<Cadence>("daily");
   const [newRounds, setNewRounds] = useState(1);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -408,8 +416,14 @@ export function TasksDialog({
   const addTask = () => {
     const name = newTask.trim();
     if (!name) return;
-    void addDailyTask({ name, cadence: newCadence, targetCount: newRounds });
+    void addDailyTask({
+      name,
+      cadence: newCadence,
+      targetCount: newRounds,
+      ...(newIcon ? { icon: newIcon } : {}),
+    });
     setNewTask("");
+    setNewIcon(null);
     setNewRounds(1);
   };
 
@@ -522,6 +536,7 @@ export function TasksDialog({
             addTask();
           }}
         >
+          <TaskIconPicker value={newIcon} onChange={setNewIcon} />
           <Input
             value={newTask}
             maxLength={MAX_NAME_LENGTH}

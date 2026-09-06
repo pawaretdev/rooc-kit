@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Ban, Package } from "lucide-react";
+import { Package } from "lucide-react";
 import { itemIconUrl } from "@/lib/images";
-import { ITEM_ICONS, itemIconLabel } from "@/lib/item-icons";
-import { useT } from "@/lib/i18n";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ITEM_ICONS } from "@/lib/item-icons";
+import { IconPicker } from "@/components/IconPicker";
 
 const SIZE = {
   /** inline in lists and the picker trigger */
@@ -55,11 +54,7 @@ export function ItemIcon({
   );
 }
 
-/**
- * Icon chooser: the trigger *is* the current icon (tap it to change), and the
- * popover shows every icon as a tile grid — art is picked by looking at it,
- * which a text dropdown of names can't offer. A "no icon" tile clears it.
- */
+/** Shop item art chooser — the shared IconPicker over ITEM_ICONS. */
 export function ItemIconPicker({
   value,
   onChange,
@@ -69,78 +64,14 @@ export function ItemIconPicker({
   onChange: (next: string | null) => void;
   disabled?: boolean;
 }) {
-  const t = useT();
-  const [open, setOpen] = useState(false);
-  const current = value ? itemIconLabel(value) : t("shop.noIcon");
-
-  const pick = (next: string | null) => {
-    if (next !== (value ?? null)) onChange(next);
-    setOpen(false);
-  };
-
-  const tileClass = (selected: boolean) =>
-    `press flex h-11 w-11 items-center justify-center rounded-lg border ${
-      selected
-        ? "border-accent ring-2 ring-accent/40"
-        : "border-line hover:border-ink/40"
-    }`;
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          disabled={disabled}
-          aria-label={`${t("shop.icon")}: ${current}`}
-          title={current}
-          className="press rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <ItemIcon
-            icon={value}
-            size="sm"
-            className="border border-line hover:border-ink/40"
-          />
-        </button>
-      </PopoverTrigger>
-      <PopoverContent align="start" className="w-auto max-w-[calc(100vw-2rem)] p-2">
-        <p className="mb-2 px-1 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
-          {t("shop.pickIcon")}
-        </p>
-        <div role="group" aria-label={t("shop.pickIcon")} className="grid grid-cols-5 gap-1.5">
-          <button
-            type="button"
-            aria-pressed={!value}
-            aria-label={t("shop.noIcon")}
-            title={t("shop.noIcon")}
-            className={`${tileClass(!value)} text-sub`}
-            onClick={() => pick(null)}
-          >
-            <Ban className="size-4" />
-          </button>
-          {ITEM_ICONS.map((icon) => {
-            const selected = icon.id === value;
-            return (
-              <button
-                key={icon.id}
-                type="button"
-                aria-pressed={selected}
-                aria-label={icon.label}
-                title={icon.label}
-                className={tileClass(selected)}
-                onClick={() => pick(icon.id)}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={itemIconUrl(icon.id)}
-                  alt=""
-                  draggable={false}
-                  className="h-9 w-9 object-contain"
-                />
-              </button>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
+    <IconPicker
+      icons={ITEM_ICONS}
+      urlOf={itemIconUrl}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      placeholder={<Package aria-hidden className="size-4 text-sub/60" />}
+    />
   );
 }

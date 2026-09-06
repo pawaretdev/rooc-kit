@@ -52,6 +52,8 @@ export interface DailyTaskRecord {
    */
   eventStart?: string;
   eventEnd?: string;
+  /** in-game event art id from TASK_ICONS (task-icons.ts); absent = none */
+  icon?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -277,6 +279,7 @@ export async function addDailyTask(input: {
   eventStart?: string;
   eventEnd?: string;
   linkedWeeklyId?: string;
+  icon?: string;
 }): Promise<string> {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -292,6 +295,7 @@ export async function addDailyTask(input: {
     ...(input.eventStart ? { eventStart: input.eventStart } : {}),
     ...(input.eventEnd ? { eventEnd: input.eventEnd } : {}),
     ...(input.linkedWeeklyId ? { linkedWeeklyId: input.linkedWeeklyId } : {}),
+    ...(input.icon ? { icon: input.icon } : {}),
     createdAt: now,
     updatedAt: now,
   });
@@ -310,6 +314,7 @@ export async function updateDailyTask(
       | "targetCount"
       | "eventStart"
       | "eventEnd"
+      | "icon"
     >
   >,
 ): Promise<void> {

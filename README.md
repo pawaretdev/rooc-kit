@@ -241,7 +241,7 @@ rooc-kit/
 │   └── components/     # app chrome, auth UI, shadcn/ui (components/ui)
 ├── docs/
 ├── drizzle/            # committed migrations
-└── public/img/         # game art: monster sprites, level frames, shop item icons (user-provided)
+└── public/img/         # game art: monster sprites, level frames, shop item + event icons (user-provided)
 ```
 
 ---

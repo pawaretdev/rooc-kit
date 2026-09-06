@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { requireSuperAdmin } from "@/lib/admin-api";
 import { db } from "@/lib/db/client";
 import { taskTemplates } from "@/lib/db/schema";
+import { isTaskIconId } from "@/lib/task-icons";
 
 const MAX_NAME_LENGTH = 100;
 const MAX_ROUNDS = 99;
@@ -19,6 +20,8 @@ type TemplatePatch = Partial<{
   eventEnd: string | null;
   /** null unlinks */
   linkedTemplateId: string | null;
+  /** null = no icon */
+  icon: string | null;
 }>;
 
 /** Partial update — only whitelisted fields, null when anything is malformed. */
@@ -74,6 +77,10 @@ function parseTemplatePatch(raw: unknown): TemplatePatch | null {
       return null;
     }
     patch.linkedTemplateId = r.linkedTemplateId;
+  }
+  if (r.icon !== undefined) {
+    if (r.icon !== null && !isTaskIconId(r.icon)) return null;
+    patch.icon = r.icon;
   }
   if (Object.keys(patch).length === 0) return null;
   return patch;

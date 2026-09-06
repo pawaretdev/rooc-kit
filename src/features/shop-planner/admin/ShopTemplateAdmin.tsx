@@ -540,7 +540,7 @@ export function ShopTemplateAdmin() {
                       <tr className="border-b border-line text-left">
                         <th className="w-10 px-2 py-2.5" />
                         <th className="w-12 px-2 py-2.5">
-                          <span className="sr-only">{t("shop.icon")}</span>
+                          <span className="sr-only">{t("common.icon")}</span>
                         </th>
                         <th className="px-2 py-2.5 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
                           {t("shop.itemName")}

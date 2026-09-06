@@ -6,6 +6,7 @@ import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { TaskIcon } from "./TaskIcon";
 
 export function TaskRow({
   task,
@@ -15,6 +16,7 @@ export function TaskRow({
   skipped = false,
   urgencyColor,
   eventLastDay = false,
+  reserveIcon = false,
 }: {
   task: DailyTaskRecord;
   accountId: string;
@@ -27,10 +29,19 @@ export function TaskRow({
   urgencyColor?: string;
   /** special event ends today — small warning dot, no text */
   eventLastDay?: boolean;
+  /** keep an empty icon slot so names align with rows that carry art */
+  reserveIcon?: boolean;
 }) {
   const t = useT();
   const target = task.targetCount ?? 1;
   const done = count >= target;
+  const icon = (
+    <TaskIcon
+      icon={task.icon}
+      reserve={reserveIcon}
+      className={done ? "opacity-60" : ""}
+    />
+  );
   const nameTone = done ? "text-sub line-through" : "";
   const nameStyle = done || !urgencyColor ? undefined : { color: urgencyColor };
   const lastDayDot = eventLastDay && !done && (
@@ -45,6 +56,7 @@ export function TaskRow({
     return (
       <div className="flex items-center gap-3 rounded-lg px-2 py-2.5 opacity-60">
         <Checkbox checked disabled />
+        {icon}
         <span className="min-w-0 flex-1 truncate text-sm text-sub line-through">
           {task.name}
         </span>
@@ -71,6 +83,7 @@ export function TaskRow({
             )
           }
         />
+        {icon}
         {lastDayDot}
         <span
           style={nameStyle}
@@ -121,6 +134,7 @@ export function TaskRow({
           void setTaskCount(accountId, task.id, periodKey, v === true ? 1 : 0)
         }
       />
+      {icon}
       {lastDayDot}
       <span
         style={nameStyle}

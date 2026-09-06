@@ -8,6 +8,7 @@ import {
   SortableList,
 } from "@/components/SortableList";
 import { StatTile } from "@/features/admin/StatTile";
+import { TaskIconPicker } from "@/features/dailies/TaskIcon";
 import type { Cadence } from "@/lib/local-db";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,8 @@ interface AdminTemplate {
   eventStart: string | null;
   eventEnd: string | null;
   linkedTemplateId: string | null;
+  /** null = no icon */
+  icon: string | null;
   sortOrder: number;
   published: boolean;
 }
@@ -151,6 +154,7 @@ export function TemplateAdmin() {
   const [templates, setTemplates] = useState<AdminTemplate[]>([]);
   const [status, setStatus] = useState<Status>("loading");
   const [newName, setNewName] = useState("");
+  const [newIcon, setNewIcon] = useState<string | null>(null);
   const [newCadence, setNewCadence] = useState<Cadence>("daily");
   const [newRounds, setNewRounds] = useState(1);
   const [confirmDelete, setConfirmDelete] = useState<AdminTemplate | null>(null);
@@ -198,11 +202,13 @@ export function TemplateAdmin() {
           name,
           cadence: newCadence,
           targetCount: newRounds,
+          icon: newIcon,
         }),
       }),
     );
     if (ok) {
       setNewName("");
+      setNewIcon(null);
       setNewRounds(1);
     }
   };
@@ -294,6 +300,7 @@ export function TemplateAdmin() {
               void create();
             }}
           >
+            <TaskIconPicker value={newIcon} onChange={setNewIcon} />
             <Input
               value={newName}
               maxLength={100}
@@ -350,6 +357,9 @@ export function TemplateAdmin() {
               <thead>
                 <tr className="border-b border-line text-left">
                   <th className="w-10 px-2 py-2.5" />
+                  <th className="w-12 px-2 py-2.5">
+                    <span className="sr-only">{t("common.icon")}</span>
+                  </th>
                   <th className="px-2 py-2.5 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
                     {t("dailies.taskName")}
                   </th>
@@ -374,7 +384,7 @@ export function TemplateAdmin() {
               <tbody className="divide-y divide-line/60">
                 {templates.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-sub">
+                    <td colSpan={9} className="px-4 py-8 text-center text-sub">
                       {t("dailies.templatesEmpty")}
                     </td>
                   </tr>
@@ -395,6 +405,12 @@ export function TemplateAdmin() {
                       <DragHandle
                         label={t("dailies.dragToReorder")}
                         {...handleProps}
+                      />
+                    </td>
+                    <td className="px-2 py-2">
+                      <TaskIconPicker
+                        value={tpl.icon}
+                        onChange={(icon) => update(tpl.id, { icon })}
                       />
                     </td>
                     <td className="px-2 py-2">

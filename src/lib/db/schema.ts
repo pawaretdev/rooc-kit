@@ -104,6 +104,8 @@ export const taskTemplates = pgTable("task_template", {
    * a dangling id is simply ignored at adoption time.
    */
   linkedTemplateId: text("linked_template_id"),
+  /** in-game event art id from TASK_ICONS (src/lib/task-icons.ts); null = none */
+  icon: text("icon"),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(false),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),

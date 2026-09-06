@@ -2,6 +2,7 @@ import { asc } from "drizzle-orm";
 import { requireSuperAdmin } from "@/lib/admin-api";
 import { db } from "@/lib/db/client";
 import { taskTemplates } from "@/lib/db/schema";
+import { isTaskIconId } from "@/lib/task-icons";
 
 const MAX_NAME_LENGTH = 100;
 const MAX_ROUNDS = 99;
@@ -27,6 +28,7 @@ function parseTemplateInput(raw: unknown): {
   targetCount: number;
   eventStart: string | null;
   eventEnd: string | null;
+  icon: string | null;
 } | null {
   if (typeof raw !== "object" || raw === null) return null;
   const r = raw as Record<string, unknown>;
@@ -41,12 +43,14 @@ function parseTemplateInput(raw: unknown): {
   if (r.targetCount !== undefined && !isValidRounds(r.targetCount)) return null;
   if (r.eventStart != null && !isValidDate(r.eventStart)) return null;
   if (r.eventEnd != null && !isValidDate(r.eventEnd)) return null;
+  if (r.icon != null && !isTaskIconId(r.icon)) return null;
   return {
     name: r.name.trim(),
     cadence: r.cadence,
     targetCount: r.targetCount ?? 1,
     eventStart: (r.eventStart as string | undefined) ?? null,
     eventEnd: (r.eventEnd as string | undefined) ?? null,
+    icon: (r.icon as string | undefined) ?? null,
   };
 }
 

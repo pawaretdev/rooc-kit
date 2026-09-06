@@ -96,6 +96,7 @@ function isDailyTask(value: unknown): boolean {
       (typeof r.eventStart === "string" && DATE_PATTERN.test(r.eventStart))) &&
     (r.eventEnd === undefined ||
       (typeof r.eventEnd === "string" && DATE_PATTERN.test(r.eventEnd))) &&
+    (r.icon === undefined || typeof r.icon === "string") &&
     typeof r.createdAt === "string" &&
     typeof r.updatedAt === "string"
   );

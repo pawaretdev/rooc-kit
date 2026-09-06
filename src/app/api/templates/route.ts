@@ -17,6 +17,7 @@ export async function GET() {
       eventStart: taskTemplates.eventStart,
       eventEnd: taskTemplates.eventEnd,
       linkedTemplateId: taskTemplates.linkedTemplateId,
+      icon: taskTemplates.icon,
       sortOrder: taskTemplates.sortOrder,
     })
     .from(taskTemplates)

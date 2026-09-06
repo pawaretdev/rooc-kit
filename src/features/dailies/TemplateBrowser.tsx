@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarRange, Plus, Sparkles } from "lucide-react";
-import { addDailyTask, type Cadence } from "@/lib/local-db";
+import { CalendarRange, Plus, RefreshCw, Sparkles } from "lucide-react";
+import { addDailyTask, updateDailyTask, type Cadence } from "@/lib/local-db";
 import { useT } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { isWithinEventWindow } from "./period";
-import { useAdoptedTemplates } from "./useDailies";
+import { TaskIcon } from "./TaskIcon";
+import { taskTemplateDrift } from "./template-sync";
+import { useAdoptedTemplates, useDailyTasks } from "./useDailies";
 
 interface TemplateItem {
   id: string;
@@ -16,6 +18,7 @@ interface TemplateItem {
   eventStart: string | null;
   eventEnd: string | null;
   linkedTemplateId: string | null;
+  icon?: string | null;
   sortOrder: number;
 }
 
@@ -31,7 +34,27 @@ export function TemplateBrowser() {
   const t = useT();
   const [status, setStatus] = useState<FetchStatus>("loading");
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
+  const [syncing, setSyncing] = useState(false);
   const adopted = useAdoptedTemplates();
+  const tasks = useDailyTasks();
+
+  // Adopted copies that fell behind their template (admin edits after adoption).
+  const drift =
+    status === "done" && tasks && adopted
+      ? taskTemplateDrift(tasks, templates, adopted)
+      : [];
+  const adoptedCount = adopted?.size ?? 0;
+
+  const syncAdopted = async () => {
+    setSyncing(true);
+    try {
+      for (const { taskId, patch } of drift) {
+        await updateDailyTask(taskId, patch);
+      }
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   // Already-adopted suggestions disappear until the local copy is deleted,
   // and event templates whose window has passed drop out on their own.
@@ -53,6 +76,7 @@ export function TemplateBrowser() {
       eventStart: tpl.eventStart ?? undefined,
       eventEnd: tpl.eventEnd ?? undefined,
       linkedWeeklyId,
+      icon: tpl.icon ?? undefined,
     });
 
   /**
@@ -131,6 +155,24 @@ export function TemplateBrowser() {
       {status === "error" && (
         <p className="text-sm text-sub">{t("dailies.templatesError")}</p>
       )}
+      {status === "done" && drift.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-accent/40 bg-accent/5 px-3 py-2">
+          <p className="min-w-0 flex-1 text-xs text-sub">
+            {t("dailies.syncTemplatesHint")}
+          </p>
+          <Button
+            size="sm"
+            disabled={syncing}
+            onClick={() => void syncAdopted()}
+          >
+            <RefreshCw className={`size-3.5 ${syncing ? "animate-spin" : ""}`} />
+            {t("dailies.syncTemplates").replace("{n}", String(drift.length))}
+          </Button>
+        </div>
+      )}
+      {status === "done" && drift.length === 0 && adoptedCount > 0 && (
+        <p className="mb-2 text-xs text-sub">{t("dailies.templatesUpToDate")}</p>
+      )}
       {status === "done" && available.length === 0 && (
         <p className="text-sm text-sub">{t("dailies.templatesEmpty")}</p>
       )}
@@ -138,6 +180,7 @@ export function TemplateBrowser() {
         <ul className="divide-y divide-line/60">
           {available.map((tpl) => (
             <li key={tpl.id} className="flex items-center gap-3 py-2">
+              <TaskIcon icon={tpl.icon} reserve />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm">{tpl.name}</span>
                 {(tpl.eventStart || tpl.eventEnd) && (

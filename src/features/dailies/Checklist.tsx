@@ -47,6 +47,8 @@ function Section({
   const rank = (task: DailyTaskRecord) =>
     skippedIds?.has(task.id) ? 2 : isTaskDone(task, counts) ? 1 : 0;
   const displayTasks = [...tasks].sort((a, b) => rank(a) - rank(b));
+  // names only shift right for art when at least one row in the section has it
+  const hasIcons = tasks.some((task) => task.icon);
 
   return (
     <section className="rounded-xl border border-line bg-surface px-3 py-1">
@@ -81,6 +83,7 @@ function Section({
             skipped={skippedIds?.has(task.id)}
             urgencyColor={urgencyColor}
             eventLastDay={lastDayIds?.has(task.id)}
+            reserveIcon={hasIcons}
           />
           </div>
         ))}

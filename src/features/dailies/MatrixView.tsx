@@ -8,6 +8,7 @@ import {
 } from "@/lib/local-db";
 import { useT } from "@/lib/i18n";
 import { isEventEndingSoon } from "./period";
+import { TaskIcon } from "./TaskIcon";
 import { isTaskDone, type CurrentPeriods } from "./useDailies";
 
 const EMPTY_COUNTS: ReadonlyMap<string, number> = new Map();
@@ -87,6 +88,7 @@ export function MatrixView({
   const weeklyById = new Map(
     tasks.filter((task) => task.cadence === "weekly").map((task) => [task.id, task]),
   );
+  const hasIcons = tasks.some((task) => task.icon);
 
   const isSkipped = (task: DailyTaskRecord, accountId: string) => {
     if (task.cadence !== "daily" || !task.linkedWeeklyId) return false;
@@ -145,6 +147,7 @@ export function MatrixView({
                           className="size-1.5 shrink-0 animate-pulse rounded-full bg-danger"
                         />
                       )}
+                      <TaskIcon icon={task.icon} reserve={hasIcons} />
                       <span className="min-w-0 truncate">{task.name}</span>
                     </span>
                   </td>

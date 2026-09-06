@@ -64,6 +64,13 @@
       "when": 1788719640560,
       "tag": "0008_majestic_goblin_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788728086952,
+      "tag": "0009_slimy_skaar",
+      "breakpoints": true
     }
   ]
 }

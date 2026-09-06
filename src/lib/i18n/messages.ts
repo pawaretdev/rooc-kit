@@ -30,6 +30,9 @@ const en = {
   "common.search": "Search",
   "common.clear": "Clear",
   "common.loading": "Loading…",
+  "common.icon": "Icon",
+  "common.pickIcon": "Choose an icon",
+  "common.noIcon": "No icon",
 
   "locale.label": "Language",
   "locale.th": "ไทย",
@@ -282,6 +285,10 @@ const en = {
   "dailies.adopt": "Add",
   "dailies.adoptAll": "Add all",
   "dailies.adopted": "Added",
+  "dailies.syncTemplates": "Update {n} from suggestions",
+  "dailies.syncTemplatesHint":
+    "Tasks you added from suggestions have changed since — pull the latest name, rounds, event window, icon and weekly link onto your copies.",
+  "dailies.templatesUpToDate": "Your adopted tasks match the latest suggestions.",
   "dailies.templatesEmpty": "No suggestions yet.",
   "dailies.templatesError":
     "Couldn't load suggestions — you can still add tasks manually.",
@@ -304,9 +311,6 @@ const en = {
   "shop.catalog": "Shop items",
   "shop.addItem": "Add item",
   "shop.itemName": "Item name",
-  "shop.icon": "Icon",
-  "shop.pickIcon": "Choose an icon",
-  "shop.noIcon": "No icon",
   "shop.category": "Category",
   "shop.categories": "Categories",
   "shop.manageCategories": "Manage categories",
@@ -422,6 +426,9 @@ const th: Messages = {
   "common.search": "ค้นหา",
   "common.clear": "ล้าง",
   "common.loading": "กำลังโหลด…",
+  "common.icon": "ไอคอน",
+  "common.pickIcon": "เลือกไอคอน",
+  "common.noIcon": "ไม่ใช้ไอคอน",
 
   "locale.label": "ภาษา",
   "locale.th": "ไทย",
@@ -673,6 +680,10 @@ const th: Messages = {
   "dailies.adopt": "เพิ่ม",
   "dailies.adoptAll": "เพิ่มทั้งหมด",
   "dailies.adopted": "เพิ่มแล้ว",
+  "dailies.syncTemplates": "อัปเดต {n} รายการจากกิจกรรมแนะนำ",
+  "dailies.syncTemplatesHint":
+    "กิจกรรมที่เคยเพิ่มจากรายการแนะนำมีการแก้ไขในภายหลัง กดเพื่อดึงชื่อ จำนวนรอบ ช่วงอีเวนต์ ไอคอน และการผูกกับรายสัปดาห์ล่าสุดมาทับสำเนาของคุณ",
+  "dailies.templatesUpToDate": "กิจกรรมที่เพิ่มจากรายการแนะนำตรงกับเวอร์ชันล่าสุดแล้ว",
   "dailies.templatesEmpty": "ยังไม่มีรายการแนะนำ",
   "dailies.templatesError":
     "โหลดรายการแนะนำไม่สำเร็จ — ยังเพิ่มกิจกรรมเองได้ตามปกติ",
@@ -695,9 +706,6 @@ const th: Messages = {
   "shop.catalog": "ของในร้าน",
   "shop.addItem": "เพิ่มของ",
   "shop.itemName": "ชื่อไอเทม",
-  "shop.icon": "ไอคอน",
-  "shop.pickIcon": "เลือกไอคอน",
-  "shop.noIcon": "ไม่ใช้ไอคอน",
   "shop.category": "หมวดหมู่",
   "shop.categories": "หมวดหมู่",
   "shop.manageCategories": "จัดการหมวดหมู่",

@@ -129,7 +129,7 @@ export function CatalogDialog({
               className={`${ROW_GRID} hidden px-1 font-mono text-[10px] font-bold tracking-wider text-sub uppercase sm:grid`}
             >
               <span />
-              <span>{t("shop.icon")}</span>
+              <span>{t("common.icon")}</span>
               <span>{t("shop.itemName")}</span>
               <span>{t("shop.category")}</span>
               <span>{t("shop.price")}</span>
