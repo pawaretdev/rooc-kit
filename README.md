@@ -60,7 +60,7 @@ Records the player's Monster Research (MR) level for every monster and ranks row
 | `Fewest Blockers` | Rows needing the fewest monsters levelled to advance. |
 | `Smart Priority` | Composite ranking described below. |
 
-In every sort except `Row order`, incomplete rows (fewer than 5 monsters in the data) sink below complete ones.
+In every sort, including `Row order`, completed rows (every monster at level 10) sink to the bottom — there is nothing left to farm. In every sort except `Row order`, incomplete rows (fewer than 5 monsters in the data) sink below rows that can still progress.
 
 **Filtering**
 
@@ -241,7 +241,7 @@ rooc-kit/
 │   └── components/     # app chrome, auth UI, shadcn/ui (components/ui)
 ├── docs/
 ├── drizzle/            # committed migrations
-└── public/img/         # game art: monster sprites + level frames (user-provided)
+└── public/img/         # game art: monster sprites, level frames, shop item icons (user-provided)
 ```
 
 ---

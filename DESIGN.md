@@ -128,7 +128,7 @@ components:
 
 **โครงหลัก (locked structure):**
 - **Element sidebar** ซ้ายมือ (desktop `lg:` sticky คอลัมน์ 200px, mobile ยุบเป็นแถบเลื่อนนอน) — ทุกธาตุ + 10 ธาตุ พร้อมตัวนับ `maxed/total` แบบ mono; ธาตุที่ครบแสดง CheckIcon ทอง; active = พื้นส้มเต็ม
-- **แถวมอนสเตอร์เป็น tile 56px** (`MonsterAvatar size="lg"`) — **กรอบเป็นรูปจากเกมตามเลเวล** (`frame-1..7.png`: เทา Lv 0 → ทอง Lv 6+, mapping ใน `frameImageUrl`), sprite อยู่ในกรอบ (fallback อักษรแรก+tint ธาตุเมื่อไฟล์หาย), badge MVP/Mini ของเกมที่มุมซ้ายบน; ชื่ออยู่ใน **tooltip** (`.tile-tip` — hover/focus-visible) + เลเวลตัวเลขเป็น badge มุมขวาล่าง
+- **แถวมอนสเตอร์เป็น tile 56px** (`MonsterAvatar size="lg"`) — **กรอบเป็นรูปจากเกมตามเลเวล** (`frame-1..7.png`: เทา Lv 0 → ทอง Lv 6+, mapping ใน `frameImageUrl`), sprite อยู่ในกรอบ ชิดขอบล่างเสมอ (`object-contain object-bottom` — รูปแนวนอนจะไม่ลอยกลางช่อง; fallback อักษรแรก+tint ธาตุเมื่อไฟล์หาย), badge MVP/Mini ของเกมที่มุมซ้ายบน; ชื่ออยู่ใน **tooltip** (`.tile-tip` — hover/focus-visible) + เลเวลตัวเลขเป็น badge มุมขวาล่าง
 - **คลิก tile → inline editor กางใต้แถว** (`animate-rise-in`): ชื่อ, KindTag, สถานะ confirmed/estimated, Base Lv, LevelStepper, รายชื่อแมพ — แทน modal เดิม (MonsterDetail ถูกลบ)
 - **หน้ากรอกรวมกับหน้าดู**: FillRowControl (เติมทั้งแถว — เขียนเป็นค่า confirmed เหมือนเครื่องมือเหมา; สถานะ estimated เหลือไว้รองรับข้อมูลเก่า/นำเข้า) อยู่ใน header ของ RowCard
 - **Landing "Live demo first"** (`src/features/landing/`): viewport แรก = headline + CTA ส้มคู่ **DemoRowCard** (แถว Earth·Row 1 จริง เล่นได้ กด tile แล้วเลเวลขึ้น/badge pop — สอนกติกา row-level จริง, state อยู่ในหน้าไม่แตะ progress ผู้ใช้, ติดป้าย `sample-tag` เส้นประทอง) → ledger 3 ฟีเจอร์ (แถวคั่น `border-t border-line` ไม่ใช่ icon cards, แต่ละแถวพิสูจน์ด้วย **proof fragment** = ชิ้น UI จริงแบบ mono chip) → แถบ privacy 3 ข้อ → CTA ปิดกลางหน้า
@@ -165,6 +165,7 @@ Recipe กลางใน `globals.css`: `.tile-tip` (tooltip ชื่อมอ
 - **Do** ให้ทุกสถานะมีรูปทรงคู่สี (ไอคอนชุด stroke 1.75 ใน `icons.tsx`)
 - **Do** เก็บลุคที่ใช้ซ้ำเป็น recipe class ใน `globals.css` ไม่ก็อปคลาสยาวใน JSX
 - **Do** ธีม: dark คือบ้านหลัก, light เป็น opt-in ผ่าน ThemeToggle (class `light` บน `<html>`, เก็บใน `localStorage["rooc.theme"]`, boot script ใน layout กัน FOUC) — ห้าม pastel
+- **Gold calendar (`GoldCalendarDialog`):** ปฏิทินรายเดือนสไตล์ PnL calendar — grid 7 คอลัมน์เริ่มวันจันทร์ (ตรงกับสัปดาห์เกม), ช่องละวันเกม: เลขวันมุมซ้ายบน + ยอด Gold แบบย่อ (`1.2K`/`2.5M`) ชิดล่าง, พื้นช่องเป็น `color-mix(gold 12–67%)` ตามสัดส่วนเทียบวันที่ได้เยอะสุดของเดือน, วันนี้ขอบ `accent/60`, วันที่ยังไม่จดเป็นเส้นประ, อนาคต `opacity-40` + disabled; แตะช่องเพื่อเปิดแถวแก้ไขใต้ grid; ท้าย dialog เป็น stat tile 4 ช่อง (รวม/จำนวนวัน/เฉลี่ย/วันที่ดีสุด) — การ์ด "Gold วันนี้" บน `/dailies` ใช้ขอบ `gold/70` + วงแหวน gold 18% เมื่อถึงช่วงเตือน (21:00 เวลาเกม) และยังไม่กรอก
 - **Do** เสิร์ฟ game art (sprite/กรอบเลเวล/badge) จาก `/public/img` ผ่าน helper ใน `src/lib/images.ts` เท่านั้น (`NEXT_PUBLIC_IMAGE_CDN` override ได้ตอนย้ายขึ้น CDN) — asset เหล่านี้ผู้ใช้เป็นคนจัดหา ห้ามดึงโลโก้/ฟอนต์ official เพิ่มเอง
 - **Do** พิสูจน์ฟีเจอร์บน surface โน้มน้าวด้วยชิ้น UI จริง (proof fragment / demo เล่นได้) ไม่ใช่ icon card หรือภาพ mock
 - **Don't** ใช้ `--danger` นอกบริบท blocker/ความล้มเหลวจริง (auth error); ส้ม/ทองห้ามสลับหน้าที่
