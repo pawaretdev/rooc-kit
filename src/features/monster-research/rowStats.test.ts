@@ -47,18 +47,24 @@ describe("row stat derivations", () => {
     expect(view.bestMapId).not.toBeNull();
   });
 
-  it("completed rows (all level 10) report completed and sink in smart priority", () => {
+  it("completed rows (all level 10) report completed and sink last in every sort", () => {
     const levels = new Map(
       rows.flatMap((r) =>
         r.monsterIds.map((id) => record(id, r.id === someRow.id ? 10 : 3)),
       ),
     );
     expect(buildRowView(someRow, levels).completed).toBe(true);
-    // level-less rows sink even deeper, so compare within rows that have a level
-    const withLevel = buildRowViews(levels, { sort: "smartPriority" }).filter(
-      (v) => v.hasRowLevel,
-    );
-    expect(withLevel[withLevel.length - 1].row.id).toBe(someRow.id);
+    for (const sort of [
+      "rowOrder",
+      "rowLevelAsc",
+      "rowLevelDesc",
+      "fewestBlockers",
+      "smartPriority",
+    ] as const) {
+      const views = buildRowViews(levels, { sort });
+      // nothing left to farm — below level-less rows too, which can still be filled in
+      expect(views[views.length - 1].row.id).toBe(someRow.id);
+    }
   });
 
   it("smart priority: fewer blockers first, bigger same-map coverage breaks ties", () => {
@@ -152,8 +158,9 @@ describe("buildRowViews", () => {
   });
 
   it("sorts by row level in both directions", () => {
+    // levels 0..9 only — completed rows (all 10) sink regardless of direction
     const levels = new Map(
-      rows.flatMap((r, i) => r.monsterIds.map((id) => record(id, i % 11))),
+      rows.flatMap((r, i) => r.monsterIds.map((id) => record(id, i % 10))),
     );
     const asc = buildRowViews(levels, { sort: "rowLevelAsc" })
       .filter((v) => v.hasRowLevel)
@@ -166,8 +173,9 @@ describe("buildRowViews", () => {
   });
 
   it("rowOrder mirrors the game listing exactly — level-less rows stay in place", () => {
+    // levels 0..9 only: a row at 10 across the board is completed and sinks
     const levels = new Map(
-      rows.flatMap((r, i) => r.monsterIds.map((id) => record(id, i % 11))),
+      rows.flatMap((r, i) => r.monsterIds.map((id) => record(id, i % 10))),
     );
     const views = buildRowViews(levels, { sort: "rowOrder" });
     expect(views.map((v) => v.row.id)).toEqual(rows.map((r) => r.id));

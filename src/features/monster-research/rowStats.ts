@@ -120,9 +120,7 @@ function compareViews(a: RowView, b: RowView, sort: RowSort): number {
     case "fewestBlockers":
       return a.blockerCount - b.blockerCount || a.rowLevel - b.rowLevel;
     case "smartPriority":
-      // completed rows have nothing left to farm — sink them regardless of stats
       return (
-        Number(a.completed) - Number(b.completed) ||
         a.blockerCount - b.blockerCount ||
         b.maxSameMapBlockers - a.maxSameMapBlockers ||
         a.rowLevel - b.rowLevel
@@ -174,14 +172,17 @@ export function buildRowViews(
     }
   }
 
-  // rows[] is in canonical element/row order, so equal keys keep it (stable sort);
-  // level-less rows (fewer than ROW_SIZE monsters) sink below rows that can
-  // progress — except in rowOrder, which mirrors the game's listing as-is —
-  // and demoted rows keep their relative order below everything.
+  // rows[] is in canonical element/row order, so equal keys keep it (stable sort).
+  // Completed rows (every monster at MAX_MR_LEVEL) have nothing left to farm,
+  // so they sink to the bottom in every sort — rowOrder included, since that is
+  // the default view. Level-less rows (fewer than ROW_SIZE monsters) sink below
+  // rows that can progress — except in rowOrder, which otherwise mirrors the
+  // game's listing as-is. Demoted rows keep their relative order below everything.
   const sinkLevelless = options.sort !== "rowOrder";
   views.sort(
     (a, b) =>
       Number(a.demoted) - Number(b.demoted) ||
+      Number(a.completed) - Number(b.completed) ||
       (sinkLevelless
         ? Number(!a.hasRowLevel) - Number(!b.hasRowLevel)
         : 0) ||

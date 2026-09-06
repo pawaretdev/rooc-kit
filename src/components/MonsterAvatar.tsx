@@ -63,6 +63,9 @@ export function MonsterAvatar({
           <ImageOffIcon size={OFF_ICON[size]} />
         </span>
       ) : (
+        // Sprites are cropped to the monster, so wide ones don't fill the slot's
+        // height — anchor them to the bottom (feet on the "ground", like the
+        // game) instead of floating mid-frame with empty space above and below.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={monsterImageUrl(monster)}
@@ -70,7 +73,7 @@ export function MonsterAvatar({
           loading="lazy"
           draggable={false}
           onError={() => setSpriteMissing(true)}
-          className="absolute inset-[9%] h-[82%] w-[82%] object-contain"
+          className="absolute inset-[9%] h-[82%] w-[82%] object-contain object-bottom"
         />
       )}
       {badge && (
