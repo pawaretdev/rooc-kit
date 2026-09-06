@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ShoppingBasket, Sparkles } from "lucide-react";
+import { CalendarDays, Plus, ShoppingBasket, Sparkles } from "lucide-react";
 import {
   addGameAccount,
   pruneStaleBuyPlans,
@@ -14,10 +14,10 @@ import { Input } from "@/components/ui/input";
 import { AccountTabs } from "@/features/dailies/AccountTabs";
 import { AccountsDialog } from "@/features/dailies/AccountsDialog";
 import { useCurrentPeriods, useGameAccounts } from "@/features/dailies/useDailies";
+import { GoldCalendar } from "@/features/gold-diary/GoldCalendar";
 import { BuyPlanView } from "./BuyPlanView";
 import { CatalogDialog } from "./CatalogDialog";
 import { CategoriesDialog } from "./CategoriesDialog";
-import { GoldDiarySection } from "./GoldDiarySection";
 import { IncomeDialog } from "./IncomeDialog";
 import { PlanSummary } from "./PlanSummary";
 import { diaryAvgPerDay, planTotal, previousWeeklyKey } from "./plan-math";
@@ -86,6 +86,10 @@ export function ShopPlanner() {
   const lastWeekPlan = useBuyPlan(selected?.id, lastWeeklyKey);
   const income = useGoldIncome(selected?.id);
   const diary = useGoldDiary(selected?.id);
+  // the shared gold-diary surfaces take the all-accounts shape; here it's one
+  const diaryByAccount =
+    selected && diary ? new Map([[selected.id, diary]]) : undefined;
+  const today = periods.daily.slice(2);
 
   // Anything older than last week is dead weight; last week's plan is kept so
   // it can be offered back as the starting point for this one.
@@ -165,8 +169,26 @@ export function ShopPlanner() {
             )
           )}
 
-          {selected && diary !== undefined && (
-            <GoldDiarySection accountId={selected.id} entries={diary} />
+          {/* the diary feeds the income estimate, so its history lives on this
+              page in full — the calendar opens on today for quick entry */}
+          {selected && diaryByAccount && (
+            <section className="space-y-4 rounded-xl border border-line bg-surface p-4">
+              <div>
+                <h2 className="flex items-center gap-2 text-sm font-bold">
+                  <CalendarDays className="size-4 text-gold" />
+                  {t("gold.calendarTitle")}
+                </h2>
+                <p className="mt-1 text-xs text-sub">{t("gold.calendarHint")}</p>
+              </div>
+              <GoldCalendar
+                key={selected.id}
+                accounts={[selected]}
+                initialAccountId={selected.id}
+                diary={diaryByAccount}
+                today={today}
+                initialSelected={today}
+              />
+            </section>
           )}
         </>
       )}

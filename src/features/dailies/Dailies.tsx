@@ -31,6 +31,9 @@ import { MatrixView } from "./MatrixView";
 import { currentLocalDateTime, isWithinEventWindow } from "./period";
 import { TasksDialog } from "./TasksDialog";
 import { UrgencyDialog } from "./UrgencyDialog";
+import { GoldCalendarDialog } from "@/features/gold-diary/GoldCalendarDialog";
+import { GoldTodayCard } from "@/features/gold-diary/GoldTodayCard";
+import { useGoldDiaryByAccount } from "@/features/gold-diary/useGoldDiary";
 import { normalizeUrgency, urgencyColor, URGENCY_KEY } from "./urgency";
 import {
   useAllCompletionCounts,
@@ -116,7 +119,7 @@ function LayoutSegment({ value }: { value: DailiesLayout }) {
   );
 }
 
-type OpenDialog = "tasks" | "accounts" | "urgency" | null;
+type OpenDialog = "tasks" | "accounts" | "urgency" | "gold" | null;
 
 export function Dailies() {
   const t = useT();
@@ -135,6 +138,9 @@ export function Dailies() {
     accounts?.find((a) => a.id === selectedSetting) ?? accounts?.[0];
   const counts = useCompletionCounts(selected?.id, periods);
   const allCounts = useAllCompletionCounts(periods);
+  const diary = useGoldDiaryByAccount();
+  // the daily period key carries the game date — same refresh-on-focus source
+  const today = periods.daily.slice(2);
 
   // Opt-in "urgency colors": pending rows tint as the reset gets close.
   // Recomputed on every render — the periods focus/visibility refresh keeps
@@ -167,6 +173,19 @@ export function Dailies() {
   // single-account view constrains width for readability; the multi-account
   // layouts get the whole page
   const containerWidth = layout === "single" ? "max-w-2xl" : "max-w-6xl";
+
+  // Gold entry sits with the checklist: the single layout logs the selected
+  // ID, the multi-ID layouts log every ID at once.
+  const goldAccounts =
+    layout === "single" ? (selected ? [selected] : []) : accounts;
+  const goldCard = diary !== undefined && goldAccounts.length > 0 && (
+    <GoldTodayCard
+      accounts={goldAccounts}
+      diary={diary}
+      today={today}
+      onOpenHistory={() => setDialog("gold")}
+    />
+  );
 
   return (
     <div className={`mx-auto w-full ${containerWidth} space-y-5`}>
@@ -230,6 +249,7 @@ export function Dailies() {
               {t("dailies.addOwnTask")}
             </Button>
           </div>
+          {goldCard && <div className="mt-5 text-left">{goldCard}</div>}
         </section>
       ) : layout === "single" ? (
         <>
@@ -251,6 +271,7 @@ export function Dailies() {
             messageKey="dailies.hint.layouts"
             show={accounts.length > 1}
           />
+          {goldCard}
           {selected && counts !== undefined && (
             /* keyed by account: switching IDs replays the row stagger, which
                reads as "this is a different ID's list" */
@@ -268,7 +289,8 @@ export function Dailies() {
       ) : allCounts === undefined ? (
         <p className="py-10 text-center text-sub">{t("common.loading")}</p>
       ) : layout === "columns" ? (
-        <div key="columns" className="animate-rise-in">
+        <div key="columns" className="animate-rise-in space-y-5">
+          {goldCard}
           <ColumnsView
             accounts={accounts}
             tasks={visibleTasks}
@@ -278,7 +300,8 @@ export function Dailies() {
           />
         </div>
       ) : (
-        <div key="matrix" className="animate-rise-in">
+        <div key="matrix" className="animate-rise-in space-y-5">
+          {goldCard}
           <MatrixView
             accounts={accounts}
             tasks={visibleTasks}
@@ -307,6 +330,16 @@ export function Dailies() {
         onClose={() => setDialog(null)}
         config={urgencyConfig}
       />
+      {diary !== undefined && (
+        <GoldCalendarDialog
+          open={dialog === "gold"}
+          onClose={() => setDialog(null)}
+          accounts={accounts}
+          initialAccountId={selected?.id}
+          diary={diary}
+          today={today}
+        />
+      )}
     </div>
   );
 }

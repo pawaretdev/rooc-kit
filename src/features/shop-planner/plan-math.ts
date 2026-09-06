@@ -66,12 +66,6 @@ export function mondayOf(gameDate: string): string {
   return isoDate(d - ((((d + 3) % 7) + 7) % 7));
 }
 
-/** The 7 game dates (Mon..Sun) of the week containing this game date. */
-export function weekDatesOf(gameDate: string): string[] {
-  const monday = dayIndexOf(mondayOf(gameDate));
-  return Array.from({ length: 7 }, (_, i) => isoDate(monday + i));
-}
-
 /**
  * The weekly period key one week before this one — the plan offered up for
  * "repeat last week". Same `w:YYYY-MM-DD` shape as period.ts produces.

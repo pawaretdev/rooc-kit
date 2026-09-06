@@ -11,7 +11,6 @@ import {
   planTotal,
   previousWeeklyKey,
   toPlanMap,
-  weekDatesOf,
   weeklyIncomeOf,
 } from "./plan-math";
 
@@ -107,7 +106,7 @@ describe("weeklyIncomeOf / balance", () => {
   });
 });
 
-describe("mondayOf / weekDatesOf", () => {
+describe("mondayOf", () => {
   it("floors any weekday to that week's Monday", () => {
     // 2026-08-10 is a Monday.
     expect(mondayOf("2026-08-10")).toBe("2026-08-10");
@@ -119,18 +118,6 @@ describe("mondayOf / weekDatesOf", () => {
   it("handles year boundaries", () => {
     // 2026-01-01 is a Thursday; its week starts Monday 2025-12-29.
     expect(mondayOf("2026-01-01")).toBe("2025-12-29");
-  });
-
-  it("lists Mon..Sun of the containing week", () => {
-    expect(weekDatesOf("2026-08-12")).toEqual([
-      "2026-08-10",
-      "2026-08-11",
-      "2026-08-12",
-      "2026-08-13",
-      "2026-08-14",
-      "2026-08-15",
-      "2026-08-16",
-    ]);
   });
 });
 
