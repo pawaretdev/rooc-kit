@@ -9,6 +9,8 @@ import type { Monster } from "./game-data";
  *   ui/mvp.png · ui/mini.png    kind badge shown at the frame's top-left
  *   ui/gold-coin.png            Gold Shop currency mark (GoldCoin component)
  *   items/{icon-id}.png         Gold Shop item icon (ids in item-icons.ts)
+ *   item-frames/bg-{01..13}.png Gold Shop rarity frame behind the icon
+ *                               (picker offers the ids in item-frames.ts)
  *   events/{icon-id}.png        Dailies task/event icon (ids in task-icons.ts)
  */
 // An env var that exists but is empty (a blank field in a deploy dashboard)
@@ -44,4 +46,9 @@ export function itemIconUrl(icon: string): string {
 /** Dailies task icon — `icon` is an id from TASK_ICONS (task-icons.ts). */
 export function taskIconUrl(icon: string): string {
   return `${base}/events/${icon}.png`;
+}
+
+/** Gold Shop item frame — `frame` is an id from ITEM_FRAMES (item-frames.ts). */
+export function itemFrameUrl(frame: string): string {
+  return `${base}/item-frames/${frame}.png`;
 }

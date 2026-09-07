@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { requireSuperAdmin } from "@/lib/admin-api";
 import { db } from "@/lib/db/client";
 import { goldShopCategories, goldShopTemplates } from "@/lib/db/schema";
+import { isItemFrameId } from "@/lib/item-frames";
 import { isItemIconId } from "@/lib/item-icons";
 
 const MAX_NAME_LENGTH = 100;
@@ -17,6 +18,8 @@ type TemplatePatch = Partial<{
   price: number;
   /** null = generic tile */
   icon: string | null;
+  /** null = plain tile */
+  frame: string | null;
   sortOrder: number;
   published: boolean;
 }>;
@@ -68,6 +71,10 @@ function parseTemplatePatch(raw: unknown): TemplatePatch | null {
   if (r.icon !== undefined) {
     if (r.icon !== null && !isItemIconId(r.icon)) return null;
     patch.icon = r.icon;
+  }
+  if (r.frame !== undefined) {
+    if (r.frame !== null && !isItemFrameId(r.frame)) return null;
+    patch.frame = r.frame;
   }
   if (r.sortOrder !== undefined) {
     if (typeof r.sortOrder !== "number" || !Number.isFinite(r.sortOrder)) {

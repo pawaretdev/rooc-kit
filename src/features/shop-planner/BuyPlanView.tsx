@@ -166,7 +166,7 @@ export function BuyPlanView({
                   key={item.id}
                   className="animate-rise-in flex items-center gap-3 py-2.5"
                 >
-                  <ItemIcon icon={item.icon} />
+                  <ItemIcon icon={item.icon} frame={item.frame} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium">
                       {item.name}

@@ -33,6 +33,9 @@ const en = {
   "common.icon": "Icon",
   "common.pickIcon": "Choose an icon",
   "common.noIcon": "No icon",
+  "common.frame": "Frame",
+  "common.pickFrame": "Choose a frame",
+  "common.noFrame": "No frame",
 
   "locale.label": "Language",
   "locale.th": "ไทย",
@@ -429,6 +432,9 @@ const th: Messages = {
   "common.icon": "ไอคอน",
   "common.pickIcon": "เลือกไอคอน",
   "common.noIcon": "ไม่ใช้ไอคอน",
+  "common.frame": "กรอบ",
+  "common.pickFrame": "เลือกกรอบ",
+  "common.noFrame": "ไม่ใช้กรอบ",
 
   "locale.label": "ภาษา",
   "locale.th": "ไทย",

@@ -37,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ItemIconPicker } from "../ItemIcon";
+import { ItemFramePicker, ItemIconPicker } from "../ItemIcon";
 import { CategoryTabs, ShopCardGrid, ShopItemCard } from "../ShopGrid";
 
 interface AdminCategory {
@@ -57,6 +57,8 @@ interface AdminTemplate {
   price: number;
   /** null = generic tile */
   icon: string | null;
+  /** null = plain tile */
+  frame: string | null;
   sortOrder: number;
   published: boolean;
   createdAt: string;
@@ -175,6 +177,7 @@ export function ShopTemplateAdmin() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newName, setNewName] = useState("");
   const [newIcon, setNewIcon] = useState<string | null>(null);
+  const [newFrame, setNewFrame] = useState<string | null>(null);
   const [newCategoryId, setNewCategoryId] = useState("");
   const [newPrice, setNewPrice] = useState(0);
   const [newStock, setNewStock] = useState(1);
@@ -291,12 +294,14 @@ export function ShopTemplateAdmin() {
           price: newPrice,
           stock: newUnlimited ? null : newStock,
           icon: newIcon,
+          frame: newFrame,
         }),
       }),
     );
     if (ok) {
       setNewName("");
       setNewIcon(null);
+      setNewFrame(null);
       setNewPrice(0);
       setNewStock(1);
       setNewUnlimited(false);
@@ -445,6 +450,7 @@ export function ShopTemplateAdmin() {
                 }}
               >
                 <ItemIconPicker value={newIcon} onChange={setNewIcon} />
+                <ItemFramePicker value={newFrame} onChange={setNewFrame} />
                 <Input
                   value={newName}
                   maxLength={MAX_NAME_LENGTH}
@@ -542,6 +548,9 @@ export function ShopTemplateAdmin() {
                         <th className="w-12 px-2 py-2.5">
                           <span className="sr-only">{t("common.icon")}</span>
                         </th>
+                        <th className="w-12 px-2 py-2.5">
+                          <span className="sr-only">{t("common.frame")}</span>
+                        </th>
                         <th className="px-2 py-2.5 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
                           {t("shop.itemName")}
                         </th>
@@ -564,7 +573,7 @@ export function ShopTemplateAdmin() {
                       {templates.length === 0 && (
                         <tr>
                           <td
-                            colSpan={8}
+                            colSpan={9}
                             className="px-4 py-8 text-center text-sub"
                           >
                             {categories.length === 0
@@ -596,6 +605,14 @@ export function ShopTemplateAdmin() {
                                   value={tpl.icon}
                                   onChange={(icon) =>
                                     updateTemplate(tpl.id, { icon })
+                                  }
+                                />
+                              </td>
+                              <td className="px-2 py-2">
+                                <ItemFramePicker
+                                  value={tpl.frame}
+                                  onChange={(frame) =>
+                                    updateTemplate(tpl.id, { frame })
                                   }
                                 />
                               </td>
@@ -864,6 +881,7 @@ export function ShopTemplateAdmin() {
                                   stock: tpl.stock ?? undefined,
                                   price: tpl.price,
                                   icon: tpl.icon,
+                                  frame: tpl.frame,
                                 }}
                                 dimmed={!tpl.published}
                                 badge={

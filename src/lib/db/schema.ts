@@ -146,6 +146,8 @@ export const goldShopTemplates = pgTable("gold_shop_template", {
   price: integer("price").notNull(),
   /** in-game art id from ITEM_ICONS (src/lib/item-icons.ts); null = generic tile */
   icon: text("icon"),
+  /** rarity frame id from ITEM_FRAMES (src/lib/item-frames.ts); null = plain tile */
+  frame: text("frame"),
   sortOrder: integer("sort_order").notNull().default(0),
   published: boolean("published").notNull().default(false),
   createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),

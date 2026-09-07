@@ -169,6 +169,7 @@ function isShopItem(value: unknown): boolean {
     Number.isFinite(r.sortOrder) &&
     (r.templateId === undefined || typeof r.templateId === "string") &&
     (r.icon === undefined || typeof r.icon === "string") &&
+    (r.frame === undefined || typeof r.frame === "string") &&
     typeof r.createdAt === "string" &&
     typeof r.updatedAt === "string"
   );

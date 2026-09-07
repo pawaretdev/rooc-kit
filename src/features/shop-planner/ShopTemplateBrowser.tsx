@@ -31,6 +31,7 @@ interface ShopTemplateItem {
   stock: number | null;
   price: number;
   icon?: string | null;
+  frame?: string | null;
   sortOrder: number;
 }
 
@@ -111,6 +112,7 @@ export function ShopTemplateBrowser() {
       price: tpl.price,
       stock: tpl.stock ?? undefined,
       icon: tpl.icon ?? undefined,
+      frame: tpl.frame ?? undefined,
       templateId: tpl.id,
     });
   };
@@ -195,7 +197,7 @@ export function ShopTemplateBrowser() {
         <ul className="divide-y divide-line/60">
           {available.map((tpl) => (
             <li key={tpl.id} className="flex items-center gap-3 py-2">
-              <ItemIcon icon={tpl.icon} />
+              <ItemIcon icon={tpl.icon} frame={tpl.frame} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm">{tpl.name}</span>
                 <span className="font-mono text-xs text-gold tabular-nums">

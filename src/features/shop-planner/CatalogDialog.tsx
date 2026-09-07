@@ -6,6 +6,7 @@ import {
   addShopItem,
   clearShopItemStock,
   deleteShopItem,
+  setShopItemFrame,
   setShopItemIcon,
   updateShopItem,
   type ShopCategoryRecord,
@@ -40,7 +41,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DragHandle, SortableItem, SortableList } from "@/components/SortableList";
-import { ItemIconPicker } from "./ItemIcon";
+import { ItemFramePicker, ItemIconPicker } from "./ItemIcon";
 import { ShopTemplateBrowser } from "./ShopTemplateBrowser";
 
 const MAX_NAME_LENGTH = 100;
@@ -54,7 +55,7 @@ const MAX_STOCK = 99_999;
  * flex — the columns don't fit a phone.
  */
 const ROW_GRID =
-  "flex flex-wrap items-center gap-2 sm:grid sm:grid-cols-[auto_auto_minmax(0,1fr)_9rem_6.5rem_7rem_6rem_auto]";
+  "flex flex-wrap items-center gap-2 sm:grid sm:grid-cols-[auto_auto_auto_minmax(0,1fr)_9rem_6.5rem_7rem_6rem_auto]";
 
 function clampInt(value: number, max: number): number {
   return Math.max(1, Math.min(max, Math.floor(value)));
@@ -130,6 +131,7 @@ export function CatalogDialog({
             >
               <span />
               <span>{t("common.icon")}</span>
+              <span>{t("common.frame")}</span>
               <span>{t("shop.itemName")}</span>
               <span>{t("shop.category")}</span>
               <span>{t("shop.price")}</span>
@@ -156,6 +158,10 @@ export function CatalogDialog({
                           <ItemIconPicker
                             value={item.icon}
                             onChange={(icon) => void setShopItemIcon(item.id, icon)}
+                          />
+                          <ItemFramePicker
+                            value={item.frame}
+                            onChange={(frame) => void setShopItemFrame(item.id, frame)}
                           />
                           <Input
                             defaultValue={item.name}
@@ -327,6 +333,7 @@ function AddItemForm({
   const t = useT();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState<string | null>(null);
+  const [frame, setFrame] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState("");
   const [price, setPrice] = useState("");
   const [unlimited, setUnlimited] = useState(false);
@@ -350,9 +357,11 @@ function AddItemForm({
       price: Math.min(parsedPrice, MAX_PRICE),
       ...(unlimited ? {} : { stock: clampInt(parsedStock, MAX_STOCK) }),
       ...(icon ? { icon } : {}),
+      ...(frame ? { frame } : {}),
     });
     setName("");
     setIcon(null);
+    setFrame(null);
     setPrice("");
   };
 
@@ -380,6 +389,7 @@ function AddItemForm({
       {/* spacer keeping the create row on the same columns as the item rows */}
       <span className="hidden sm:block sm:w-8" />
       <ItemIconPicker value={icon} onChange={setIcon} />
+      <ItemFramePicker value={frame} onChange={setFrame} />
       <Input
         value={name}
         maxLength={MAX_NAME_LENGTH}

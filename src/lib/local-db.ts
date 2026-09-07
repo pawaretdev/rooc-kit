@@ -88,6 +88,8 @@ export interface ShopItemRecord {
   price: number;
   /** in-game art id from ITEM_ICONS (item-icons.ts); absent = generic tile */
   icon?: string;
+  /** rarity frame id from ITEM_FRAMES (item-frames.ts); absent = plain tile */
+  frame?: string;
   sortOrder: number;
   /** Set when adopted from an admin template — later template edits never touch this copy. */
   templateId?: string;
@@ -469,6 +471,7 @@ export async function addShopItem(input: {
   price: number;
   stock?: number;
   icon?: string;
+  frame?: string;
   templateId?: string;
 }): Promise<string> {
   const id = crypto.randomUUID();
@@ -480,6 +483,7 @@ export async function addShopItem(input: {
     price: input.price,
     ...(input.stock !== undefined ? { stock: input.stock } : {}),
     ...(input.icon ? { icon: input.icon } : {}),
+    ...(input.frame ? { frame: input.frame } : {}),
     ...(input.templateId ? { templateId: input.templateId } : {}),
     sortOrder: await nextSortOrder(localDb.shopItems),
     createdAt: now,
@@ -493,7 +497,7 @@ export async function updateShopItem(
   patch: Partial<
     Pick<
       ShopItemRecord,
-      "name" | "categoryId" | "price" | "stock" | "icon" | "sortOrder"
+      "name" | "categoryId" | "price" | "stock" | "icon" | "frame" | "sortOrder"
     >
   >,
 ): Promise<void> {
@@ -545,6 +549,21 @@ export async function setShopItemIcon(
     });
 }
 
+/** null clears the frame — same key-dropping rule as setShopItemIcon. */
+export async function setShopItemFrame(
+  id: string,
+  frame: string | null,
+): Promise<void> {
+  await localDb.shopItems
+    .where("id")
+    .equals(id)
+    .modify((item) => {
+      if (frame) item.frame = frame;
+      else delete item.frame;
+      item.updatedAt = new Date().toISOString();
+    });
+}
+
 /**
  * Re-syncs an adopted item with its template: every field in the patch is
  * overwritten, null drops stock (→ Unlimited) or icon, and a lowered stock
@@ -558,6 +577,7 @@ export async function applyShopTemplate(
     price?: number;
     stock?: number | null;
     icon?: string | null;
+    frame?: string | null;
   },
 ): Promise<void> {
   await localDb.transaction(
@@ -587,6 +607,10 @@ export async function applyShopTemplate(
           if (patch.icon !== undefined) {
             if (patch.icon === null) delete item.icon;
             else item.icon = patch.icon;
+          }
+          if (patch.frame !== undefined) {
+            if (patch.frame === null) delete item.frame;
+            else item.frame = patch.frame;
           }
           item.updatedAt = new Date().toISOString();
         });

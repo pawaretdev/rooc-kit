@@ -37,6 +37,7 @@ function template(overrides: Partial<TemplateSnapshot> = {}): TemplateSnapshot {
 }
 
 const categories = [category("cat-growth", "growth")];
+const taskless = (drift: ReturnType<typeof templateDrift>) => drift[0]?.patch;
 
 describe("templateDrift", () => {
   it("reports nothing when the copy matches (category names compare case-insensitively)", () => {
@@ -66,6 +67,17 @@ describe("templateDrift", () => {
       [template({ stock: null, icon: null })],
     );
     expect(drift[0].patch).toEqual({ stock: null, icon: null });
+  });
+
+  it("flags a frame change and clears it with null", () => {
+    expect(
+      taskless(templateDrift([item()], categories, [template({ frame: "bg-05" })])),
+    ).toEqual({ frame: "bg-05" });
+    expect(
+      taskless(
+        templateDrift([item({ frame: "bg-05" })], categories, [template()]),
+      ),
+    ).toEqual({ frame: null });
   });
 
   it("treats an absent local icon and a null template icon as equal", () => {

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Package } from "lucide-react";
-import { itemIconUrl } from "@/lib/images";
+import { Package, Square } from "lucide-react";
+import { itemFrameUrl, itemIconUrl } from "@/lib/images";
+import { ITEM_FRAMES } from "@/lib/item-frames";
 import { ITEM_ICONS } from "@/lib/item-icons";
+import { useT } from "@/lib/i18n";
 import { IconPicker } from "@/components/IconPicker";
 
 const SIZE = {
@@ -15,40 +17,63 @@ const SIZE = {
 
 const PLACEHOLDER = { sm: "size-4", lg: "size-9" } as const;
 
+/** inset of the art inside its slot — a frame needs breathing room around the icon */
+const ART_PADDING = { sm: "p-1", lg: "p-2.5" } as const;
+
 /**
- * An item's in-game art, or the generic package tile when the item has no icon
- * (or its PNG is missing — an unknown id from an older sync payload falls back
- * the same way instead of leaving a broken image).
+ * An item's in-game art on its rarity frame. With no frame the art sits on
+ * the app's own tile; with no icon the generic package mark shows instead (a
+ * missing PNG — an unknown id from an older sync payload — falls back the
+ * same way rather than leaving a broken image).
  */
 export function ItemIcon({
   icon,
+  frame,
   size = "sm",
   className = "",
 }: {
   icon?: string | null;
+  frame?: string | null;
   size?: keyof typeof SIZE;
   className?: string;
 }) {
   const [missing, setMissing] = useState(false);
+  const [frameMissing, setFrameMissing] = useState(false);
   const showArt = Boolean(icon) && !missing;
+  const showFrame = Boolean(frame) && !frameMissing;
 
   return (
     <span
-      className={`flex shrink-0 items-center justify-center rounded-lg bg-surface-2 ${SIZE[size]} ${className}`}
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-lg ${
+        showFrame ? "" : "bg-surface-2"
+      } ${SIZE[size]} ${className}`}
     >
+      {/* Plain <img> like MonsterAvatar: pre-sized PNGs from /public or a
+          dumb CDN — the next/image optimizer buys nothing here. */}
+      {showFrame && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={itemFrameUrl(frame as string)}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 h-full w-full"
+          onError={() => setFrameMissing(true)}
+        />
+      )}
       {showArt ? (
-        // Plain <img> like MonsterAvatar: pre-sized PNGs from /public or a
-        // dumb CDN — the next/image optimizer buys nothing here.
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={itemIconUrl(icon as string)}
           alt=""
           draggable={false}
-          className="h-full w-full object-contain p-0.5"
+          className={`relative h-full w-full object-contain ${ART_PADDING[size]}`}
           onError={() => setMissing(true)}
         />
       ) : (
-        <Package aria-hidden className={`${PLACEHOLDER[size]} text-sub/60`} />
+        <Package
+          aria-hidden
+          className={`relative ${PLACEHOLDER[size]} ${showFrame ? "text-ink/40" : "text-sub/60"}`}
+        />
       )}
     </span>
   );
@@ -72,6 +97,34 @@ export function ItemIconPicker({
       onChange={onChange}
       disabled={disabled}
       placeholder={<Package aria-hidden className="size-4 text-sub/60" />}
+    />
+  );
+}
+
+/** Rarity frame chooser — the same picker over ITEM_FRAMES. */
+export function ItemFramePicker({
+  value,
+  onChange,
+  disabled = false,
+}: {
+  value?: string | null;
+  onChange: (next: string | null) => void;
+  disabled?: boolean;
+}) {
+  const t = useT();
+  return (
+    <IconPicker
+      icons={ITEM_FRAMES}
+      urlOf={itemFrameUrl}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      labels={{
+        name: t("common.frame"),
+        pick: t("common.pickFrame"),
+        none: t("common.noFrame"),
+      }}
+      placeholder={<Square aria-hidden className="size-4 text-sub/60" />}
     />
   );
 }

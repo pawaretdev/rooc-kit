@@ -9,6 +9,7 @@ export interface TemplateSnapshot {
   stock: number | null;
   price: number;
   icon?: string | null;
+  frame?: string | null;
 }
 
 /** Only the fields that differ — null clears stock/icon, matching the template. */
@@ -18,6 +19,7 @@ export interface TemplatePatch {
   stock?: number | null;
   price?: number;
   icon?: string | null;
+  frame?: string | null;
 }
 
 export interface TemplateDrift {
@@ -52,6 +54,9 @@ export function templateDrift(
     if (item.price !== tpl.price) patch.price = tpl.price;
     if ((item.stock ?? null) !== tpl.stock) patch.stock = tpl.stock;
     if ((item.icon ?? null) !== (tpl.icon ?? null)) patch.icon = tpl.icon ?? null;
+    if ((item.frame ?? null) !== (tpl.frame ?? null)) {
+      patch.frame = tpl.frame ?? null;
+    }
     const localCategory = categoryName.get(item.categoryId);
     if (localCategory === undefined || !sameName(localCategory, tpl.categoryName)) {
       patch.categoryName = tpl.categoryName;

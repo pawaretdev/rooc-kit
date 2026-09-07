@@ -71,6 +71,8 @@ export interface ShopCardData {
   price: number;
   /** ITEM_ICONS id; absent/null = generic tile */
   icon?: string | null;
+  /** ITEM_FRAMES id; absent/null = plain tile */
+  frame?: string | null;
 }
 
 /** How many of an item can be planned — its stock, or the unlimited cap. */
@@ -202,7 +204,7 @@ export function ShopItemCard({
           a planned one (which grows a quantity row) so a grid row stays
           level and the extra reads as a roomier tile, not blank space */}
       <span className="my-2 flex flex-1 items-center justify-center">
-        <ItemIcon icon={item.icon} size="lg" />
+        <ItemIcon icon={item.icon} frame={item.frame} size="lg" />
       </span>
       <span className="block min-h-4 px-2 text-center font-mono text-[10px] text-sub tabular-nums">
         {item.stock !== undefined &&

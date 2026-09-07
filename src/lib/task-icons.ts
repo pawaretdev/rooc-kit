@@ -18,6 +18,8 @@ export const TASK_ICONS = [
   { id: "draconic-cataclysm", label: "Draconic Cataclysm" },
   { id: "seidr-scorch", label: "Seidr Scorch" },
   { id: "freya-mirage", label: "Freya Mirage" },
+  { id: "love-oath", label: "Love Oath" },
+  { id: "proof-of-union", label: "Proof of Union" },
   { id: "cat-paw-caravan", label: "Cat Paw Caravan" },
 ] as const;
 

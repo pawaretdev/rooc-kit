@@ -23,6 +23,7 @@ export function IconPicker({
   onChange,
   disabled = false,
   placeholder,
+  labels,
 }: {
   icons: readonly IconOption[];
   urlOf: (id: string) => string;
@@ -31,12 +32,19 @@ export function IconPicker({
   disabled?: boolean;
   /** what the trigger shows while nothing is chosen */
   placeholder: React.ReactNode;
+  /** wording override — defaults to the "icon" set; frames pass their own */
+  labels?: { name: string; pick: string; none: string };
 }) {
   const t = useT();
   const [open, setOpen] = useState(false);
+  const wording = labels ?? {
+    name: t("common.icon"),
+    pick: t("common.pickIcon"),
+    none: t("common.noIcon"),
+  };
   const current = value
     ? (icons.find((i) => i.id === value)?.label ?? value)
-    : t("common.noIcon");
+    : wording.none;
 
   const pick = (next: string | null) => {
     if (next !== (value ?? null)) onChange(next);
@@ -56,7 +64,7 @@ export function IconPicker({
         <button
           type="button"
           disabled={disabled}
-          aria-label={`${t("common.icon")}: ${current}`}
+          aria-label={`${wording.name}: ${current}`}
           title={current}
           className="press flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line bg-surface-2 outline-none hover:border-ink/40 focus-visible:ring-2 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -75,14 +83,14 @@ export function IconPicker({
       </PopoverTrigger>
       <PopoverContent align="start" className="w-auto max-w-[calc(100vw-2rem)] p-2">
         <p className="mb-2 px-1 font-mono text-[10px] font-bold tracking-wider text-sub uppercase">
-          {t("common.pickIcon")}
+          {wording.pick}
         </p>
-        <div role="group" aria-label={t("common.pickIcon")} className="grid grid-cols-5 gap-1.5">
+        <div role="group" aria-label={wording.pick} className="grid grid-cols-5 gap-1.5">
           <button
             type="button"
             aria-pressed={!value}
-            aria-label={t("common.noIcon")}
-            title={t("common.noIcon")}
+            aria-label={wording.none}
+            title={wording.none}
             className={`${tileClass(!value)} text-sub`}
             onClick={() => pick(null)}
           >
