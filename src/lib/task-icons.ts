@@ -20,6 +20,9 @@ export const TASK_ICONS = [
   { id: "freya-mirage", label: "Freya Mirage" },
   { id: "love-oath", label: "Love Oath" },
   { id: "proof-of-union", label: "Proof of Union" },
+  { id: "festival", label: "Festival" },
+  { id: "funfair", label: "Funfair" },
+  { id: "special-event", label: "Special Event" },
   { id: "cat-paw-caravan", label: "Cat Paw Caravan" },
 ] as const;
 
