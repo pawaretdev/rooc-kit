@@ -39,6 +39,12 @@
    * both themes, so this stays dark and does not flip with the theme */
   --frame-ink: oklch(0.42 0.02 255);
 
+  /* World Map spawn outline — drawn ON the game's map art, which is entirely
+   * yellow-olive, so gold and orange both sink into it. Cyan is the opposite
+   * hue and the only thing that survives on that background; it stays the same
+   * in both themes because the artwork underneath does not change. */
+  --pin-line: oklch(0.82 0.15 205);
+
   /* element hues — always paired with a letter/icon, never color alone */
   --el-neutral: oklch(0.75 0.02 20);
   --el-wind: oklch(0.75 0.1 145);
@@ -76,6 +82,9 @@
 
   --tip-bg: oklch(0.24 0.02 255);
   --tip-ink: oklch(0.96 0.005 250);
+
+  /* unchanged from dark: it sits on the map art, not on the app surface */
+  --pin-line: oklch(0.62 0.16 225);
 
   --el-neutral: oklch(0.45 0.02 20);
   --el-wind: oklch(0.45 0.1 145);

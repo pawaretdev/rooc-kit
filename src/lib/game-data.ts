@@ -1,4 +1,5 @@
 import meta from "@/data/meta.json";
+import worldMapRaw from "@/data/world-map.json";
 import neutralRaw from "@/data/research/neutral.json";
 import windRaw from "@/data/research/wind.json";
 import earthRaw from "@/data/research/earth.json";
@@ -34,6 +35,24 @@ export interface GameMap {
   area?: string;
   /** lowest baseLevel among monsters spawning here — groups maps by level bracket */
   level?: number;
+  /** where the map sits on the world map, 0..1 of the image on both axes */
+  anchor?: MapAnchor;
+}
+
+/**
+ * A map's spot on the world map, stored as a fraction of the image so it stays
+ * correct at any rendered size. `source` records how the spot was derived:
+ * `cell` = its own cell in WorldMap.prefab, `cave:<pinyin>` = a dungeon-entrance
+ * label in the prefab, `near:<place>` = a sub-area placed by hand next to its host.
+ */
+export interface MapAnchor {
+  /** 0..1 across the image */
+  x: number;
+  /** 0..1 down the image */
+  y: number;
+  /** the prefab cell this map sits in — maps sharing a cell share a pin */
+  cell: string;
+  source: string;
 }
 
 export interface Monster {
@@ -101,6 +120,29 @@ function deriveArea(mapName: string): string | undefined {
   return area === mapName ? undefined : area;
 }
 
+interface RawWorldMap {
+  image: { file: string; width: number; height: number; sourceWidth: number };
+  cellPx: number;
+  maps: Record<
+    string,
+    { x: number; y: number; cell: string; source: string }
+  >;
+}
+const worldMap = worldMapRaw as RawWorldMap;
+
+/** Anchors ship in source-image pixels; store fractions so any render size works. */
+const SOURCE_PX = worldMap.image.sourceWidth;
+const anchorsByMapName = new Map<string, MapAnchor>(
+  Object.entries(worldMap.maps).map(([name, a]) => [
+    name,
+    { x: a.x / SOURCE_PX, y: a.y / SOURCE_PX, cell: a.cell, source: a.source },
+  ]),
+);
+
+/** One clickable zone, as a fraction of the world-map image. */
+export const worldMapCellSize = worldMap.cellPx / SOURCE_PX;
+export const worldMapImageFile = worldMap.image.file;
+
 const mapsById = new Map<string, GameMap>();
 const monstersById = new Map<string, Monster>();
 const rowsList: ResearchRow[] = [];
@@ -116,7 +158,12 @@ for (const elementId of ELEMENTS) {
       const mapIds = raw.locations.map((loc) => {
         const mapId = slugify(loc);
         if (!mapsById.has(mapId)) {
-          mapsById.set(mapId, { id: mapId, name: loc, area: deriveArea(loc) });
+          mapsById.set(mapId, {
+            id: mapId,
+            name: loc,
+            area: deriveArea(loc),
+            anchor: anchorsByMapName.get(loc),
+          });
         }
         const inMap = monsterIdsByMap.get(mapId) ?? [];
         if (!inMap.includes(id)) monsterIdsByMap.set(mapId, [...inMap, id]);
@@ -159,6 +206,18 @@ for (const monster of monstersById.values()) {
           : Math.min(map.level, monster.baseLevel);
     }
   }
+}
+
+/**
+ * Every map sharing a world-map cell, keyed by cell id. Orc Village and Orc Cave
+ * are one place on the map, so one pin opens both.
+ */
+export const mapIdsByCell = new Map<string, string[]>();
+for (const map of mapsById.values()) {
+  if (!map.anchor) continue;
+  const inCell = mapIdsByCell.get(map.anchor.cell);
+  if (inCell) inCell.push(map.id);
+  else mapIdsByCell.set(map.anchor.cell, [map.id]);
 }
 
 export function getMonster(id: string): Monster {

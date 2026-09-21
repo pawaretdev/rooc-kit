@@ -12,6 +12,7 @@ import {
   MAX_MR_LEVEL,
   type MonsterLevelRecord,
 } from "@/lib/local-db";
+import { useState } from "react";
 import { useT } from "@/lib/i18n";
 import { kindBadgeUrl } from "@/lib/images";
 import { MonsterAvatar } from "@/components/MonsterAvatar";
@@ -27,6 +28,7 @@ import {
 import { levelOf } from "./rowStats";
 import { LevelStepper } from "./LevelStepper";
 import { RowMeter } from "./RowMeter";
+import { WorldMapDialog } from "../world-map/WorldMapDialog";
 
 const mvpBadge = kindBadgeUrl("mvp");
 const miniBadge = kindBadgeUrl("mini");
@@ -61,6 +63,11 @@ export function MonsterDetailDialog({
   onClose,
 }: MonsterDetailDialogProps) {
   const t = useT();
+  // which map row opened the world map — null means "the button in the header"
+  const [worldMap, setWorldMap] = useState<{
+    monster: Monster;
+    mapId: string | null;
+  } | null>(null);
   const level = monster ? levelOf(monster.id, levels) : 0;
   const maxed = level >= MAX_MR_LEVEL;
 
@@ -128,21 +135,32 @@ export function MonsterDetailDialog({
 
           {/* ── spawn maps ── */}
           <div className="text-sm">
-            <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[9.5px] font-bold tracking-[0.13em] text-sub uppercase">
-              <MapPinIcon size={12} className="shrink-0 text-accent" />
-              {t("mr.detail.maps")}
-            </p>
+            <div className="mb-1.5 flex items-center gap-2">
+              <p className="flex items-center gap-1.5 font-mono text-[9.5px] font-bold tracking-[0.13em] text-sub uppercase">
+                <MapPinIcon size={12} className="shrink-0 text-accent" />
+                {t("mr.detail.maps")}
+              </p>
+              <button
+                type="button"
+                onClick={() => setWorldMap({ monster, mapId: null })}
+                className="press ml-auto rounded-md border border-line px-2 py-0.5 text-[11px] font-medium text-sub hover:border-accent hover:text-accent"
+              >
+                {t("wm.open")}
+              </button>
+            </div>
             <ul className="divide-y divide-line overflow-hidden rounded-lg border border-line">
               {monster.mapIds.map((mapId) => {
                 const map = getMap(mapId);
                 return (
-                  <li
-                    key={mapId}
-                    className="flex items-center gap-2 bg-surface-2/50 px-3 py-2"
-                  >
-                    <span className="truncate">{map.name}</span>
-                    {/* kind badges sit right-aligned, just before the level */}
-                    <span className="ml-auto flex shrink-0 items-center gap-1.5">
+                  <li key={mapId}>
+                    <button
+                      type="button"
+                      onClick={() => setWorldMap({ monster, mapId: null })}
+                      className="flex w-full items-center gap-2 bg-surface-2/50 px-3 py-2 text-left hover:bg-surface-2"
+                    >
+                      <span className="truncate">{map.name}</span>
+                      {/* kind badges sit right-aligned, just before the level */}
+                      <span className="ml-auto flex shrink-0 items-center gap-1.5">
                       {mapsWithMvp.has(mapId) && mvpBadge && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -168,7 +186,8 @@ export function MonsterDetailDialog({
                           {t("mr.lvShort")} {map.level}
                         </span>
                       )}
-                    </span>
+                      </span>
+                    </button>
                   </li>
                 );
               })}
@@ -176,6 +195,17 @@ export function MonsterDetailDialog({
           </div>
         </DialogContent>
       )}
+
+      {/* Portals bubble events through the REACT tree, so a click inside the
+          world map would otherwise re-reach this dialog's own handlers. */}
+      <div className="contents" onClick={(event) => event.stopPropagation()}>
+        <WorldMapDialog
+          monster={worldMap?.monster ?? null}
+          focusMapId={worldMap?.mapId ?? null}
+          levels={levels}
+          onClose={() => setWorldMap(null)}
+        />
+      </div>
     </Dialog>
   );
 }

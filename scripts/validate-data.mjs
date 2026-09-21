@@ -102,6 +102,46 @@ for (const file of files) {
   }
 }
 
+// world-map.json — every map a monster spawns on needs a pin, or it vanishes
+// from the World Map view with no visible error.
+const worldMapPath = join(dataDir, 'world-map.json');
+if (!existsSync(worldMapPath)) {
+  errors.push('src/data/world-map.json is missing');
+} else {
+  let wm;
+  try {
+    wm = JSON.parse(readFileSync(worldMapPath, 'utf8'));
+  } catch (e) {
+    errors.push(`world-map.json: invalid JSON — ${e.message}`);
+  }
+  if (wm) {
+    const src = wm.image?.sourceWidth;
+    if (!Number.isFinite(src) || src <= 0) errors.push('world-map.json: image.sourceWidth must be a positive number');
+    if (!Number.isFinite(wm.cellPx) || wm.cellPx <= 0) errors.push('world-map.json: "cellPx" must be a positive number');
+    if (!wm.maps || typeof wm.maps !== 'object') {
+      errors.push('world-map.json: "maps" must be an object');
+    } else {
+      for (const [name, a] of Object.entries(wm.maps)) {
+        const where = `world-map.json · ${name}`;
+        if (!a || typeof a !== 'object') { errors.push(`${where}: anchor must be an object`); continue; }
+        for (const axis of ['x', 'y']) {
+          if (!Number.isFinite(a[axis])) errors.push(`${where}: "${axis}" must be a number`);
+          else if (src && (a[axis] < 0 || a[axis] > src)) errors.push(`${where}: "${axis}" (${a[axis]}) is outside the ${src}px map`);
+        }
+        if (typeof a.cell !== 'string' || !a.cell.trim()) errors.push(`${where}: missing "cell" (the prefab cell id)`);
+        if (typeof a.source !== 'string' || !a.source.trim()) errors.push(`${where}: missing "source" (cell | cave:<name> | area)`);
+      }
+      // the check that actually matters: no spawn map without a pin
+      for (const spellings of seenMaps.values()) {
+        const name = [...spellings][0];
+        if (!wm.maps[name]) errors.push(`world-map.json: no anchor for map "${name}" — it would be invisible on the World Map`);
+      }
+      const unused = Object.keys(wm.maps).filter((n) => !seenMaps.has(slug(n)));
+      if (unused.length) warnings.push(`world-map.json: ${unused.length} anchor(s) for maps no monster spawns on: ${unused.join(', ')}`);
+    }
+  }
+}
+
 for (const [id, spellings] of seenMaps) {
   if (spellings.size > 1) {
     warnings.push(`map "${id}" is spelled ${spellings.size} ways: ${[...spellings].map((s) => `"${s}"`).join(', ')} — pick one`);

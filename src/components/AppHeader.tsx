@@ -28,6 +28,7 @@ export function AppHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const trackerActive = pathname === "/tracker";
+  const worldMapActive = pathname === "/world-map";
   const dailiesActive = pathname === "/dailies";
   const shopActive = pathname === "/shop-planner";
 
@@ -54,6 +55,17 @@ export function AppHeader() {
             }`}
           >
             {t("nav.monsterResearch")}
+          </Link>
+          <Link
+            href="/world-map"
+            aria-current={worldMapActive ? "page" : undefined}
+            className={`press rounded-lg px-3.5 py-1.5 ${
+              worldMapActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "text-sub hover:bg-surface-2 hover:text-ink"
+            }`}
+          >
+            {t("nav.worldMap")}
           </Link>
           <Link
             href="/dailies"
@@ -123,6 +135,18 @@ export function AppHeader() {
             }`}
           >
             {t("nav.monsterResearch")}
+          </Link>
+          <Link
+            href="/world-map"
+            aria-current={worldMapActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-lg px-3 py-2.5 text-sm ${
+              worldMapActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "hover:bg-surface-2"
+            }`}
+          >
+            {t("nav.worldMap")}
           </Link>
           <Link
             href="/dailies"

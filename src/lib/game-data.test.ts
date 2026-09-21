@@ -6,8 +6,10 @@ import {
   maps,
   monsters,
   monsterIdsByMapId,
+  mapIdsByCell,
   rows,
   slugify,
+  worldMapCellSize,
 } from "./game-data";
 
 describe("slugify", () => {
@@ -46,6 +48,44 @@ describe("game data integrity", () => {
         expect(monsterIdsByMapId.get(mapId)).toContain(monster.id);
       }
     }
+  });
+
+  it("anchors every spawn map on the world map", () => {
+    // A map without an anchor silently disappears from the World Map view,
+    // so this is a hard requirement, not a nicety.
+    for (const map of maps.values()) {
+      expect(map.anchor, `${map.name} has no world-map anchor`).toBeDefined();
+    }
+  });
+
+  it("keeps anchors inside the image as 0..1 fractions", () => {
+    for (const map of maps.values()) {
+      const a = map.anchor!;
+      expect(a.x).toBeGreaterThanOrEqual(0);
+      expect(a.x).toBeLessThanOrEqual(1);
+      expect(a.y).toBeGreaterThanOrEqual(0);
+      expect(a.y).toBeLessThanOrEqual(1);
+      expect(a.source).toMatch(/^(cell|cave:.+|area)$/);
+      expect(a.cell).toMatch(/^\S+$/);
+    }
+  });
+
+  it("groups every anchored map under its cell", () => {
+    // Orc Village and Orc Cave are the same place on the world map — one pin
+    // has to open both, so the cell index must list them together.
+    const orc = mapIdsByCell.get(getMap("orc-cave").anchor!.cell);
+    expect(orc).toContain("orc-cave");
+    expect(orc).toContain("orc-village");
+
+    // and nothing is lost: every map appears in exactly one cell bucket
+    const listed = [...mapIdsByCell.values()].flat();
+    expect(new Set(listed).size).toBe(listed.length);
+    expect(listed.length).toBe(maps.size);
+  });
+
+  it("exposes a sane world-map cell size", () => {
+    expect(worldMapCellSize).toBeGreaterThan(0);
+    expect(worldMapCellSize).toBeLessThan(0.2);
   });
 
   it("derives floor areas from map names", () => {

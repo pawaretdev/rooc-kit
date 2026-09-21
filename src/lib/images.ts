@@ -48,6 +48,11 @@ export function taskIconUrl(icon: string): string {
   return `${base}/events/${icon}.png`;
 }
 
+/** World Map background — `file` comes from world-map.json (`worldMapImageFile`). */
+export function worldMapImageUrl(file: string): string {
+  return `${base}/world/${file}`;
+}
+
 /** Gold Shop item frame — `frame` is an id from ITEM_FRAMES (item-frames.ts). */
 export function itemFrameUrl(frame: string): string {
   return `${base}/item-frames/${frame}.png`;

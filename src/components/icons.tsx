@@ -22,6 +22,25 @@ function base(size: number, props: SVGProps<SVGSVGElement>) {
   } as const;
 }
 
+/** Magnifier — the World Map's monster search. */
+export function SearchIcon({ size = 14, ...props }: IconProps) {
+  return (
+    <svg {...base(size, props)}>
+      <circle cx="7.2" cy="7.2" r="4.4" />
+      <path d="M10.4 10.4 13.5 13.5" />
+    </svg>
+  );
+}
+
+/** Four corners pointing out — "fit everything in view". */
+export function FitIcon({ size = 14, ...props }: IconProps) {
+  return (
+    <svg {...base(size, props)}>
+      <path d="M6 2.5H2.5V6M10 2.5h3.5V6M6 13.5H2.5V10M10 13.5h3.5V10" />
+    </svg>
+  );
+}
+
 /** Map pin — spawn locations, best-trip recommendation. */
 export function MapPinIcon({ size = 14, ...props }: IconProps) {
   return (
