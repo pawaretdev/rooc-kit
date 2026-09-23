@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getMap,
@@ -34,6 +35,8 @@ import { levelOf } from "../monster-research/rowStats";
 import { LevelStepper } from "../monster-research/LevelStepper";
 import {
   allPins,
+  caveLabelWidth,
+  caveArrow,
   cellsOf,
   floorLabel,
   mapProgress,
@@ -41,6 +44,8 @@ import {
   type MapPin,
 } from "./mapGroups";
 import { useMapCamera } from "./useMapCamera";
+import { CAVE_LAYOUT_STORAGE_KEY, CAVE_ARROWS_STORAGE_KEY, caveLayoutKey, readCaveLayout, readCaveArrows, type CaveArrowPosition } from "./caveLayout";
+import { CaveArrowHandle } from "./CaveArrowHandle";
 
 /** CSS pixels of the map layer at scale 1 — the art is 1536². */
 const MAP_SIZE = 1536;
@@ -48,7 +53,7 @@ const CELL_PX = worldMapCellSize * MAP_SIZE;
 /**
  * Ceiling for the opening zoom: close enough to read the terrain when only a
  * map or two is in frame. `fitPoints` zooms out below this whenever the content
- * needs it — with every cave label on screen the fit lands near 90%.
+ * needs it to frame the map cells. Cave visibility never changes the camera.
  */
 const OPEN_SCALE = 1.2;
 /** Below this the cells are too small to hold a legible sprite and name. */
@@ -129,22 +134,22 @@ export function WorldMapBody({
   levels,
   onClose,
 }: {
-  initial: Monster;
+  initial: Monster | null;
   focusMapId: string | null;
   levels: ReadonlyMap<string, MonsterLevelRecord>;
   onClose?: () => void;
 }) {
   const t = useT();
   // null = nothing pinned: the map shows no monster at all
-  const [selectedId, setSelectedId] = useState<string | null>(initial.id);
+  const [selectedId, setSelectedId] = useState<string | null>(initial?.id ?? null);
   const [kind, setKind] = useState<KindFilter>(
-    initial.kind === "normal" ? "normal" : "boss",
+    !initial || initial.kind === "normal" ? "normal" : "boss",
   );
   const [bracket, setBracket] = useState<BracketId | "All">("All");
   const [query, setQuery] = useState("");
   // which map's roster is open — seeded from the row the user clicked
   const [activeMapId, setActiveMapId] = useState<string | null>(
-    focusMapId ?? initial.mapIds[0] ?? null,
+    focusMapId ?? initial?.mapIds[0] ?? null,
   );
   const [tab, setTab] = useState<MobileTab>("map");
   // mirrors the in-game world map's "Hide Cave" / "ตรวจสอบ Cave" button: it
@@ -174,36 +179,25 @@ export function WorldMapBody({
     () => {
       const chosen = pins.filter((pin) => spawnCells.has(pin.id));
       const frame = chosen.length > 0 ? chosen : pins;
-      // With the cave names on, a label can sit two cells out — Glast Heim's
-      // six fan that far — so they have to be framed as well or they land off
-      // screen. Off, the cells alone give a tighter, closer view.
-      return frame.flatMap((pin) => [
-        pin.anchor,
-        ...(showDungeons
-          ? pin.callouts.map((callout) => ({
-              x: pin.anchor.x + callout.dx * worldMapCellSize,
-              y: pin.anchor.y + callout.dy * worldMapCellSize,
-            }))
-          : []),
-      ]);
+      return frame.map((pin) => pin.anchor);
     },
-    [pins, spawnCells, showDungeons],
+    [pins, spawnCells],
   );
   // Opening on a specific map centres it; otherwise frame every spawn cell.
   // Only the monster the dialog opened with honours focusMapId — once the user
   // picks someone else in the rail, framing their whole spread is what helps.
   const framing = useMemo(() => {
     const focus =
-      selectedId === initial.id && focusMapId
+      selectedId === initial?.id && focusMapId
         ? getMap(focusMapId).anchor
         : undefined;
     return focus ? { focus } : { anchors: spawnAnchors };
-  }, [selectedId, initial.id, focusMapId, spawnAnchors]);
+  }, [selectedId, initial?.id, focusMapId, spawnAnchors]);
 
   useEffect(() => {
     const apply = () => {
       if (framing.focus) centerOn(framing.focus.x, framing.focus.y, OPEN_SCALE);
-      // nothing pinned means nothing to frame — leave the view where it is
+      // With no selection, frame the world on initial entry.
       else if (framing.anchors?.length) fitPoints(framing.anchors, 90, OPEN_SCALE);
     };
     // two frames: the first lands after layout, the second after a mobile tab
@@ -556,6 +550,77 @@ function MapStage({
 }) {
   const t = useT();
   const [artMissing, setArtMissing] = useState(false);
+  const { data: session } = useSession();
+  const canArrange = session?.user?.isSuperAdmin === true;
+  const [arranging, setEditing] = useState(false);
+  const editing = canArrange && arranging;
+  const [offsets, setOffsets] = useState(readCaveLayout);
+  const offsetsRef = useRef(offsets);
+  const [layoutStatus, setLayoutStatus] = useState("");
+  const [arrows, setArrows] = useState(readCaveArrows);
+  const arrowsRef = useRef(arrows);
+  const [activeArrow, setActiveArrow] = useState<string | null>(null);
+  const moveArrow = (key: string, arrow: CaveArrowPosition, commit: boolean) => {
+    if (!canArrange) return;
+    const next = { ...arrowsRef.current, [key]: arrow };
+    arrowsRef.current = next;
+    setArrows(next);
+    if (commit) {
+      try {
+        localStorage.setItem(CAVE_ARROWS_STORAGE_KEY, JSON.stringify(next));
+        setLayoutStatus(t("wm.layoutSaved"));
+      } catch { setLayoutStatus(t("wm.layoutSaveFailed")); }
+    }
+  };
+  const moveLabel = (pinId: string, name: string, dx: number, dy: number, commit: boolean) => {
+    if (!canArrange) return;
+    const next = { ...offsetsRef.current, [caveLayoutKey(pinId, name)]: { dx, dy } };
+    offsetsRef.current = next;
+    setOffsets(next);
+    if (commit) {
+      try {
+        localStorage.setItem(CAVE_LAYOUT_STORAGE_KEY, JSON.stringify(next));
+        setLayoutStatus(t("wm.layoutSaved"));
+      } catch {
+        setLayoutStatus(t("wm.layoutSaveFailed"));
+      }
+    }
+  };
+  const layoutJson = () => JSON.stringify({
+    version: 2,
+    coordinateSystem: "cell-relative",
+    labels: pins.flatMap((pin) => pin.callouts.map((callout) => {
+      const key = caveLayoutKey(pin.id, callout.name);
+      const position = offsetsRef.current[key] ?? callout;
+      const automatic = caveArrow({ ...callout, ...position });
+      return {
+        pinId: pin.id, name: callout.name, dx: position.dx, dy: position.dy,
+        arrow: arrowsRef.current[key] ?? callout.arrow ?? {
+          startX: automatic.startX + position.dx, startY: automatic.startY + position.dy,
+          endX: automatic.endX + position.dx, endY: automatic.endY + position.dy,
+        },
+      };
+    })),
+  }, null, 2);
+  const copyLayout = async () => {
+    if (!canArrange) return;
+    try {
+      await navigator.clipboard.writeText(layoutJson());
+      setLayoutStatus(t("wm.layoutCopied"));
+    } catch {
+      setLayoutStatus(t("wm.layoutCopyFailed"));
+    }
+  };
+  const downloadLayout = () => {
+    if (!canArrange) return;
+    const url = URL.createObjectURL(new Blob([layoutJson()], { type: "application/json" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "world-map-cave-layout.json";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
 
   return (
     <div
@@ -620,16 +685,20 @@ function MapStage({
           {/* Cave callouts ride above every cell so a label can never be
               painted over by the next cell's border or name. */}
           {showDungeons &&
-            pins.flatMap((pin) =>
-              pin.callouts.map((callout) => (
-                <CaveCallout
-                  key={`cave-${pin.id}-${callout.name}`}
-                  pin={pin}
-                  callout={callout}
-                  scale={camera.scale}
-                />
-              )),
-            )}
+            pins.flatMap((pin) => pin.callouts.map((callout) => (
+              <CaveCallout
+                key={`cave-${pin.id}-${callout.name}`}
+                pin={pin}
+                callout={{ ...callout, ...(canArrange ? offsets[caveLayoutKey(pin.id, callout.name)] : {}) }}
+                scale={camera.scale}
+                editing={editing}
+                arrowOverride={canArrange ? arrows[caveLayoutKey(pin.id, callout.name)] : undefined}
+                arrowSelected={activeArrow === caveLayoutKey(pin.id, callout.name)}
+                onSelectArrow={() => setActiveArrow(caveLayoutKey(pin.id, callout.name))}
+                onArrowMove={(arrow, commit) => moveArrow(caveLayoutKey(pin.id, callout.name), arrow, commit)}
+                onMove={(dx, dy, commit) => moveLabel(pin.id, callout.name, dx, dy, commit)}
+              />
+            )))}
         </div>
       </div>
 
@@ -646,7 +715,7 @@ function MapStage({
         )}
       </div>
 
-      <div className="absolute top-3 right-3">
+      <div className="absolute top-3 right-3 flex max-w-[70%] flex-wrap justify-end gap-1.5">
         <button
           type="button"
           aria-pressed={!showDungeons}
@@ -659,7 +728,26 @@ function MapStage({
         >
           {showDungeons ? t("wm.hideDungeons") : t("wm.showDungeons")}
         </button>
+        {showDungeons && canArrange && (
+          <button type="button" aria-pressed={editing} onClick={() => setEditing((value) => !value)}
+            className="rounded-md border border-accent bg-surface px-2.5 py-1 text-[11.5px] font-medium text-accent">
+            {editing ? t("wm.finishLayout") : t("wm.arrangeLabels")}
+          </button>
+        )}
+        {showDungeons && canArrange && (editing || Object.keys(offsets).length > 0 || Object.keys(arrows).length > 0) && (
+          <>
+            <button type="button" onClick={() => void copyLayout()} className="rounded-md border border-line bg-surface px-2.5 py-1 text-[11.5px] text-ink">{t("wm.copyLayout")}</button>
+            <button type="button" onClick={downloadLayout} className="rounded-md border border-line bg-surface px-2.5 py-1 text-[11.5px] text-ink">{t("wm.downloadLayout")}</button>
+          </>
+        )}
       </div>
+
+      {showDungeons && canArrange && (editing || layoutStatus) && (
+        <div className="pointer-events-none absolute bottom-3 left-3 max-w-[calc(100%-4.5rem)] rounded-md border border-line bg-surface px-3 py-2 text-xs text-sub">
+          {editing && <p>{t("wm.layoutHint")}</p>}
+          <p role="status" aria-live="polite">{layoutStatus}</p>
+        </div>
+      )}
 
       <div className="absolute right-3 bottom-3 flex flex-col gap-1.5">
         {[
@@ -792,76 +880,161 @@ function MapCell({
 }
 
 /**
- * A floating name for the dungeons inside a cell, with a leader line down to
- * the square — the shape the game's own world map uses to reveal caves.
+ * Each dungeon has its own short arrow, measured edge-to-edge in map space.
  */
 function CaveCallout({
   pin,
   callout,
   scale,
+  editing,
+  arrowOverride,
+  arrowSelected,
+  onSelectArrow,
+  onArrowMove,
+  onMove,
 }: {
   pin: MapPin;
   callout: Callout;
   scale: number;
+  editing: boolean;
+  arrowOverride?: CaveArrowPosition;
+  arrowSelected: boolean;
+  onSelectArrow: () => void;
+  onArrowMove: (arrow: CaveArrowPosition, commit: boolean) => void;
+  onMove: (dx: number, dy: number, commit: boolean) => void;
 }) {
+  const drag = useRef<{ id: number; x: number; y: number; dx: number; dy: number } | null>(null);
+  const positionAt = (clientX: number, clientY: number) => {
+    const origin = drag.current!;
+    return {
+      dx: Math.max(-pin.anchor.x / worldMapCellSize, Math.min((1 - pin.anchor.x) / worldMapCellSize, origin.dx + (clientX - origin.x) / (scale * CELL_PX))),
+      dy: Math.max(-pin.anchor.y / worldMapCellSize, Math.min((1 - pin.anchor.y) / worldMapCellSize, origin.dy + (clientY - origin.y) / (scale * CELL_PX))),
+    };
+  };
   const cellX = pin.anchor.x * MAP_SIZE;
   const cellY = pin.anchor.y * MAP_SIZE;
   const labelX = cellX + callout.dx * CELL_PX;
   const labelY = cellY + callout.dy * CELL_PX;
-  const dx = cellX - labelX;
-  const dy = cellY - labelY;
-  const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
-
+  const t = useT();
+  const automatic = caveArrow(callout);
+  const absoluteArrow = arrowOverride ?? callout.arrow ?? {
+    startX: automatic.startX + callout.dx, startY: automatic.startY + callout.dy,
+    endX: automatic.endX + callout.dx, endY: automatic.endY + callout.dy,
+  };
+  const arrow = {
+    startX: absoluteArrow.startX - callout.dx, startY: absoluteArrow.startY - callout.dy,
+    endX: absoluteArrow.endX - callout.dx, endY: absoluteArrow.endY - callout.dy,
+  };
+  const dx = (arrow.endX - arrow.startX) * CELL_PX;
+  const dy = (arrow.endY - arrow.startY) * CELL_PX;
+  const distance = Math.hypot(dx, dy);
+  const ux = dx / (distance || 1);
+  const uy = dy / (distance || 1);
   const font = CELL_PX * 0.15;
-  // the chip's own box, so the line can start where the chip actually ends
-  const halfW = (callout.name.length * font * 0.55) / 2 + font * 0.55;
-  const halfH = font * 0.65 + font * 0.2;
-
-  // Distance from the label's centre to its edge along the line's direction —
-  // a fixed gap left the first stretch of the line hidden under a wide chip,
-  // so it looked like the arrow floated free of the text it belongs to.
-  const ux = dx / (Math.hypot(dx, dy) || 1);
-  const uy = dy / (Math.hypot(dx, dy) || 1);
-  const edge = Math.min(
-    Math.abs(ux) > 1e-3 ? Math.abs(halfW / ux) : Infinity,
-    Math.abs(uy) > 1e-3 ? Math.abs(halfH / uy) : Infinity,
-  );
-  const start = edge + font * 0.25;
-  const line = Math.max(
-    CELL_PX * 0.1,
-    Math.hypot(dx, dy) - CELL_PX * 0.5 - start,
-  );
-  const thickness = Math.max(1 / scale, CELL_PX * 0.03);
-  const head = CELL_PX * 0.15;
+  // Same clearance at both ends; the shortest edge-to-edge route avoids long
+  // diagonal tails caused by aiming every label through the cell's centre.
+  const clearance = Math.min(CELL_PX * 0.06, distance * 0.15);
+  const start = clearance;
+  const end = distance - clearance;
+  const head = Math.min(CELL_PX * 0.145, (end - start) * 0.6);
+  const thickness = Math.max(1 / scale, CELL_PX * 0.022);
+  const point = (along: number, across = 0) =>
+    `${arrow.startX * CELL_PX + ux * along - uy * across},${arrow.startY * CELL_PX + uy * along + ux * across}`;
 
   return (
     <span
-      aria-hidden
       style={{ left: labelX, top: labelY }}
       className="pointer-events-none absolute z-10"
     >
-      {/* the connector rotates as one piece, so any offset angle works */}
-      <span
-        style={{ transform: `rotate(${angle}deg)`, transformOrigin: "0 50%" }}
-        className="absolute top-0 left-0 flex items-center"
-      >
-        <span style={{ width: start }} />
-        <span style={{ width: line, height: thickness }} className="bg-gold" />
-        {/* solid arrowhead: a filled triangle, not an outline */}
+      {end > start && (
         <svg
-          width={head}
-          height={head}
-          viewBox="0 0 10 10"
-          style={{ marginLeft: -0.5 }}
-          className="fill-gold"
+          width="1"
+          height="1"
+          overflow="visible"
+          className="absolute top-0 left-0 text-gold"
         >
-          <path d="M0 0.8 L10 5 L0 9.2 Z" />
+          <path
+            d={`M ${point(start)}
+              Q ${point(start, head * 0.06)} ${point(end - head, head * 0.24)}
+              L ${point(end - head * 1.08, head * 0.62)}
+              Q ${point(end - head * 1.12, head * 0.76)} ${point(end - head * 0.9, head * 0.62)}
+              L ${point(end - head * 0.08, head * 0.1)}
+              Q ${point(end + head * 0.06)} ${point(end - head * 0.08, -head * 0.1)}
+              L ${point(end - head * 0.9, -head * 0.62)}
+              Q ${point(end - head * 1.12, -head * 0.76)} ${point(end - head * 1.08, -head * 0.62)}
+              L ${point(end - head, -head * 0.24)}
+              Q ${point(start, -head * 0.06)} ${point(start)} Z`}
+            fill="currentColor"
+            stroke="var(--surface)"
+            strokeWidth={thickness * 0.5}
+            strokeLinejoin="round"
+            paintOrder="stroke fill"
+          />
         </svg>
-      </span>
+      )}
+
+      {editing && (["whole", "start", "end"] as const).filter((part) => part === "whole" || arrowSelected).map((part) => (
+        <CaveArrowHandle
+          key={part}
+          part={part}
+          label={`${callout.name}: ${t(part === "whole" ? "wm.moveArrow" : part === "start" ? "wm.arrowTail" : "wm.arrowTip")}`}
+          arrow={absoluteArrow}
+          x={part === "whole" ? (arrow.startX + arrow.endX) / 2 : part === "start" ? arrow.startX : arrow.endX}
+          y={part === "whole" ? (arrow.startY + arrow.endY) / 2 : part === "start" ? arrow.startY : arrow.endY}
+          scale={scale}
+          cellSize={CELL_PX}
+          onSelect={onSelectArrow}
+          onChange={onArrowMove}
+        />
+      ))}
 
       <span
-        style={{ fontSize: font }}
-        className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded border border-gold/70 bg-black/85 px-1.5 leading-[1.3] font-semibold whitespace-nowrap text-gold"
+        data-cave-label
+        role={editing ? "button" : undefined}
+        tabIndex={editing ? 0 : undefined}
+        aria-label={callout.name}
+        onPointerDown={(event) => {
+          if (!editing || event.button !== 0) return;
+          event.stopPropagation();
+          event.preventDefault();
+          event.currentTarget.focus({ preventScroll: true });
+          onSelectArrow();
+          drag.current = { id: event.pointerId, x: event.clientX, y: event.clientY, dx: callout.dx, dy: callout.dy };
+          event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          if (drag.current?.id !== event.pointerId) return;
+          const next = positionAt(event.clientX, event.clientY);
+          onMove(next.dx, next.dy, false);
+        }}
+        onPointerUp={(event) => {
+          if (drag.current?.id !== event.pointerId) return;
+          const next = positionAt(event.clientX, event.clientY);
+          onMove(next.dx, next.dy, true);
+          drag.current = null;
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        }}
+        onPointerCancel={() => {
+          if (!drag.current) return;
+          onMove(drag.current.dx, drag.current.dy, true);
+          drag.current = null;
+        }}
+        onLostPointerCapture={() => {
+          if (!drag.current) return;
+          onMove(callout.dx, callout.dy, true);
+          drag.current = null;
+        }}
+        onKeyDown={(event) => {
+          if (!editing) return;
+          const direction = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+          if (!direction) return;
+          event.preventDefault();
+          event.stopPropagation();
+          const step = event.shiftKey ? 0.1 : 0.025;
+          onMove(callout.dx + direction[0] * step, callout.dy + direction[1] * step, true);
+        }}
+        style={{ pointerEvents: editing ? "auto" : "none", cursor: editing ? "move" : undefined, touchAction: "none", userSelect: "none", fontSize: font, width: caveLabelWidth(callout.name) * CELL_PX, height: CELL_PX * 0.32, lineHeight: `${CELL_PX * 0.32 - 2}px`, textAlign: "center" }}
+        className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded border border-gold/50 bg-surface leading-[1.3] font-semibold whitespace-nowrap text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {callout.name}
       </span>

@@ -53,7 +53,7 @@ const BIND = {
   'Prontera North Gate':   ['5',  'cell'],
 
   // — dungeons: the cell holding the entrance (pinyin caption in the prefab) —
-  'Ant Hell':              ['38',  'cave:Mayidong'],
+  'Ant Hell':              ['19',  'cave:Mayidong'],
   'Pyramid F1':            ['25',  'cave:Jinzita'],
   'Pyramid F2':            ['25',  'cave:Jinzita'],
   'Pyramid F3':            ['25',  'cave:Jinzita'],
@@ -84,7 +84,7 @@ const BIND = {
   'Geffen Underground F3': ['16', 'area'],
   'Southern Morroc':       ['28', 'area'],
   'Sograt Desert':         ['19', 'cell'],
-  'Southern Sograt':       ['28', 'area'],
+  'Southern Sograt':       ['38', 'cell'],
   'Sphinx Crypt':          ['25', 'cave:Sphinx'],
   'Sphinx Crypt F2':       ['25', 'cave:Sphinx'],
   // Glast Heim is the place you walk to; everything else in its cell is an

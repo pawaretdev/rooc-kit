@@ -159,7 +159,7 @@ export function useMapCamera(size: number) {
 
     const onPointerDown = (event: PointerEvent) => {
       // let the pins handle their own taps
-      if ((event.target as HTMLElement).closest("[data-map-pin]")) return;
+      if ((event.target as HTMLElement).closest("[data-map-pin], [data-cave-label], [data-cave-arrow]")) return;
       dragging = { x: event.clientX, y: event.clientY, id: event.pointerId };
       node.setPointerCapture(event.pointerId);
       node.dataset.dragging = "true";

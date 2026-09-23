@@ -2,11 +2,12 @@ import {
   getMap,
   mapIdsByCell,
   monsterIdsByMapId,
-  worldMapCellSize,
   type GameMap,
   type MapAnchor,
 } from "@/lib/game-data";
 import { MAX_MR_LEVEL, type MonsterLevelRecord } from "@/lib/local-db";
+import type { CaveArrowPosition } from "./caveLayout";
+import cavePositions from "./cave-label-positions.json";
 import { levelOf } from "../monster-research/rowStats";
 
 /** Research progress for one map's roster. */
@@ -61,17 +62,13 @@ export interface MapPin {
   hasSurface: boolean;
 }
 
-/**
- * One dungeon's floating name. Each cave gets its own label and its own leader
- * line back to the square — Glast Heim hides six, and collapsing them into one
- * line said nothing about which is which. The offset is in cells and may be
- * diagonal or several out: the label goes wherever it finds empty terrain.
- */
+/** One dungeon label and its own arrow; offsets are in map cells. */
 export interface Callout {
   /** the dungeon's area name, e.g. "Glast Heim Castle" */
   name: string;
   dx: number;
   dy: number;
+  arrow?: CaveArrowPosition;
 }
 
 /** One place inside a cell, with its floors if it has more than one. */
@@ -215,177 +212,37 @@ function pinFor(
   };
 }
 
-/**
- * Candidate spots for a callout, nearest and most readable first: straight up,
- * then the diagonals, then further out. A label may float anywhere it fits, so
- * a crowded corner of the map can still place every name.
- */
-/**
- * Candidate spots for a label, nearest first and straight-out before diagonal.
- * Generated rather than hand-listed because a cell hiding six dungeons needs
- * six free spots, and the near ring alone does not have them.
- */
-const SLOTS: readonly { dx: number; dy: number }[] = (() => {
-  const slots: { dx: number; dy: number }[] = [];
-  for (let ring = 1; ring <= 3; ring += 1) {
-    for (let dy = -ring; dy <= ring; dy += 1) {
-      for (let dx = -ring; dx <= ring; dx += 1) {
-        // only the ring's edge; inner rings were emitted already
-        if (Math.max(Math.abs(dx), Math.abs(dy)) !== ring) continue;
-        slots.push({ dx, dy });
-      }
-    }
-  }
-  // prefer spots close to the cell, and straight lines over diagonals
-  return slots.sort(
-    (a, b) =>
-      Math.hypot(a.dx, a.dy) - Math.hypot(b.dx, b.dy) ||
-      Number(a.dx !== 0 && a.dy !== 0) - Number(b.dx !== 0 && b.dy !== 0),
-  );
-})();
-
-/** Roughly how many cells wide a label renders at the map's label size. */
-function labelWidthInCells(name: string): number {
-  // ~5.6px per character at CELL_PX * 0.15, plus the chip's padding
-  return Math.max(1, Math.round((name.length * 0.55 * 0.15 + 0.18) * 10) / 10);
+/** Shared map-space dimensions keep placement and arrow geometry in sync. */
+export function caveLabelWidth(name: string): number {
+  return name.length * 0.6 * 0.15 + 0.24;
 }
 
-/**
- * Floats every dungeon name over empty terrain: never over a square that holds
- * maps, and never over a label already placed. Labels are wider than one cell,
- * so the strip each one covers is reserved rather than just its centre.
- */
-function assignCallouts(pins: MapPin[], cellSize: number): void {
-  const key = (gx: number, gy: number) => `${gx},${gy}`;
-  const occupied = new Set(
-    pins.map((pin) =>
-      key(
-        Math.round(pin.anchor.x / cellSize),
-        Math.round(pin.anchor.y / cellSize),
-      ),
-    ),
-  );
-  const claimed = new Set<string>();
-
-  // The view frames the cells that hold maps, so a label placed outside that
-  // box sits on blank art off the edge of the screen. Keep labels inside it,
-  // with one cell of slack.
-  const gridX = pins.map((p) => Math.round(p.anchor.x / cellSize));
-  const gridY = pins.map((p) => Math.round(p.anchor.y / cellSize));
-  // Two cells of slack around the squares that hold maps: Glast Heim sits on
-  // the left edge and hides six dungeons, which simply do not fit in one ring.
-  // Turning the cave names on re-fits the camera to include them.
-  const bounds = {
-    minX: Math.min(...gridX) - 2,
-    maxX: Math.max(...gridX) + 2,
-    minY: Math.min(...gridY) - 2,
-    maxY: Math.max(...gridY) + 2,
-  };
-  const inView = (gx: number, gy: number) =>
-    gx >= bounds.minX &&
-    gx <= bounds.maxX &&
-    gy >= bounds.minY &&
-    gy <= bounds.maxY;
-
-  // place the busiest cells first — they have the least room to manoeuvre
-  const ordered = [...pins]
-    .filter((pin) => pin.dungeonNames.length > 0)
-    .sort((a, b) => b.dungeonNames.length - a.dungeonNames.length);
-
-  for (const pin of ordered) {
-    const gx = Math.round(pin.anchor.x / cellSize);
-    const gy = Math.round(pin.anchor.y / cellSize);
-    pin.callouts = [];
-
-    // Fan the labels of one cell around it instead of letting each grab the
-    // nearest free slot: six names all reaching for "straight up" is what made
-    // the leader lines cross each other. Each name gets its own arc of sky, and
-    // its slots are tried in order of how close they sit to that direction.
-    const count = pin.dungeonNames.length;
-    // directions this cell has already sent a label in — two labels on the same
-    // bearing stack one behind the other and their lines run together
-    const used: number[] = [];
-    pin.dungeonNames.forEach((name, index) => {
-      const reach = Math.ceil(labelWidthInCells(name) / 2);
-      const strip = (slot: { dx: number; dy: number }) => {
-        const cells: string[] = [];
-        for (let d = -reach; d <= reach; d += 1) {
-          cells.push(key(gx + slot.dx + d, gy + slot.dy));
-        }
-        return cells;
-      };
-
-      const fits = (candidate: { dx: number; dy: number }) =>
-        inView(gx + candidate.dx - reach, gy + candidate.dy) &&
-        inView(gx + candidate.dx + reach, gy + candidate.dy);
-
-      // start at the top and sweep clockwise, one share of the circle each
-      const wanted = -Math.PI / 2 + (index / count) * Math.PI * 2;
-      const byDirection = [...SLOTS].sort((a, b) => {
-        const da = Math.abs(
-          Math.atan2(
-            Math.sin(Math.atan2(a.dy, a.dx) - wanted),
-            Math.cos(Math.atan2(a.dy, a.dx) - wanted),
-          ),
-        );
-        const db = Math.abs(
-          Math.atan2(
-            Math.sin(Math.atan2(b.dy, b.dx) - wanted),
-            Math.cos(Math.atan2(b.dy, b.dx) - wanted),
-          ),
-        );
-        // closest to the wanted direction first, then nearest to the cell
-        return da - db || Math.hypot(a.dx, a.dy) - Math.hypot(b.dx, b.dy);
-      });
-
-      // keep at least ~25° between this cell's labels
-      const clear = (candidate: { dx: number; dy: number }) => {
-        const bearing = Math.atan2(candidate.dy, candidate.dx);
-        return used.every((taken) => {
-          const delta = Math.abs(
-            Math.atan2(
-              Math.sin(bearing - taken),
-              Math.cos(bearing - taken),
-            ),
-          );
-          return delta > 0.44;
-        });
-      };
-
-      const slot =
-        byDirection.find(
-          (candidate) =>
-            clear(candidate) &&
-            fits(candidate) &&
-            strip(candidate).every(
-              (cell) => !occupied.has(cell) && !claimed.has(cell),
-            ),
-        ) ??
-        byDirection.find(
-          (candidate) =>
-            fits(candidate) &&
-            strip(candidate).every(
-              (cell) => !occupied.has(cell) && !claimed.has(cell),
-            ),
-        ) ??
-        // crowded: still on screen and still off the maps, just closer in
-        byDirection.find(
-          (candidate) =>
-            fits(candidate) &&
-            strip(candidate).every((cell) => !occupied.has(cell)),
-        ) ??
-        byDirection.find(
-          (candidate) =>
-            fits(candidate) &&
-            !occupied.has(key(gx + candidate.dx, gy + candidate.dy)),
-        ) ??
-        SLOTS[0];
-
-      for (const cell of strip(slot)) claimed.add(cell);
-      used.push(Math.atan2(slot.dy, slot.dx));
-      pin.callouts.push({ name, dx: slot.dx, dy: slot.dy });
+/** User-arranged positions are authoritative; never run automatic placement. */
+function assignCallouts(pins: MapPin[]): void {
+  for (const pin of pins) {
+    pin.callouts = pin.dungeonNames.map((name) => {
+      const position = cavePositions.labels.find((label) => label.pinId === pin.id && label.name === name);
+      return { name, dx: position?.dx ?? 0, dy: position?.dy ?? -1, arrow: position?.arrow };
     });
   }
+}
+
+/** Closest points on the label and cell edges, in cell-relative coordinates. */
+export function caveArrow(callout: Callout) {
+  const axis = (offset: number, halfLabel: number) => {
+    if (Math.abs(offset) > 0.5 + halfLabel) {
+      const sign = Math.sign(offset);
+      return { label: offset - sign * halfLabel, cell: sign * 0.5 };
+    }
+    const shared = Math.max(-0.5, Math.min(0.5, offset));
+    return { label: shared, cell: shared };
+  };
+  const x = axis(callout.dx, caveLabelWidth(callout.name) / 2);
+  const y = axis(callout.dy, 0.16);
+  return {
+    startX: x.label - callout.dx, startY: y.label - callout.dy,
+    endX: x.cell - callout.dx, endY: y.cell - callout.dy,
+  };
 }
 
 /** Every cell on the world map that holds at least one tracker map. */
@@ -397,7 +254,7 @@ export function allPins(
     const pin = pinFor(cell, levels);
     if (pin) pins.push(pin);
   }
-  assignCallouts(pins, worldMapCellSize);
+  assignCallouts(pins);
   return pins;
 }
 

@@ -1,3 +1,4 @@
+import cavePositions from "./cave-label-positions.json";
 import { describe, expect, it } from "vitest";
 import {
   getMap,
@@ -8,7 +9,7 @@ import {
   worldMapCellSize,
 } from "@/lib/game-data";
 import { MAX_MR_LEVEL, type MonsterLevelRecord } from "@/lib/local-db";
-import { allPins, areaLabel, cellsOf, mapProgress } from "./mapGroups";
+import { allPins, areaLabel, cellsOf, mapProgress, caveArrow } from "./mapGroups";
 
 function levels(
   entries: readonly (readonly [string, number])[],
@@ -73,6 +74,17 @@ describe("allPins", () => {
     // Orc Village and Orc Cave are the same square on the world map.
     const pin = pins.find((p) => p.maps.some((m) => m.id === "orc-cave"))!;
     expect(pin.maps.map((m) => m.id).sort()).toEqual(["orc-cave", "orc-village"]);
+  });
+
+  it("places Ant Hell inside Sograt Desert and Southern Sograt in its former cell", () => {
+    const desert = pins.find((pin) => pin.id === "19")!;
+    expect(desert.maps.map((map) => map.id).sort()).toEqual(["ant-hell", "sograt-desert"]);
+    expect(desert.label).toBe("Sograt Desert");
+    expect(desert.callouts.map((callout) => callout.name)).toEqual(["Ant Hell"]);
+    const south = pins.find((pin) => pin.id === "38")!;
+    expect(south.maps.map((map) => map.id)).toEqual(["southern-sograt"]);
+    expect(south.label).toBe("Southern Sograt");
+    expect(south.callouts).toEqual([]);
   });
 
   it("names a floor group after the area they share", () => {
@@ -154,12 +166,31 @@ describe("allPins", () => {
   });
 
   it("gives every hidden dungeon its own floating label", () => {
-    // Glast Heim hides six — one shared line said nothing about which is which
+    // All six Glast Heim names retain their own arrow.
     const pin = pins.find((p) => p.maps.some((m) => m.id === "catacomb"))!;
     expect(pin.callouts.map((c) => c.name).sort()).toEqual(
       [...pin.dungeonNames].sort(),
     );
     expect(pin.callouts.length).toBeGreaterThan(1);
+  });
+
+  it("keeps every dungeon label and separates their full footprints", () => {
+    const boxes = pins.flatMap((pin) => {
+      expect(pin.callouts.map((c) => c.name).sort()).toEqual([...pin.dungeonNames].sort());
+      return pin.callouts.map((c) => ({
+        x: pin.anchor.x / worldMapCellSize + c.dx,
+        y: pin.anchor.y / worldMapCellSize + c.dy,
+        halfW: (c.name.length * 0.6 * 0.15 + 0.24) / 2,
+      }));
+    });
+    for (let i = 0; i < boxes.length; i += 1) {
+      for (let j = i + 1; j < boxes.length; j += 1) {
+        const a = boxes[i];
+        const b = boxes[j];
+        expect(Math.abs(a.x - b.x) >= a.halfW + b.halfW ||
+          Math.abs(a.y - b.y) >= 0.319).toBe(true);
+      }
+    }
   });
 
   it("floats every label over terrain that holds no maps", () => {
@@ -182,27 +213,21 @@ describe("allPins", () => {
     }
   });
 
-  it("fans one cell's labels around it without crossing leader lines", () => {
-    // Glast Heim hides six: if they all reach the same way the lines cross
-    const pin = pins.find((p) => p.maps.some((m) => m.id === "catacomb"))!;
-    const angles = pin.callouts.map((c) => Math.atan2(c.dy, c.dx));
+  it("preserves every user-approved position exactly", () => {
+    const actual = pins.flatMap((pin) => pin.callouts.map((c) => ({ pinId: pin.id, ...c })));
+    expect(actual).toHaveLength(cavePositions.labels.length);
+    for (const label of cavePositions.labels) expect(actual).toContainEqual(label);
+  });
 
-    // two labels sharing a direction is what produced the tangle
-    const seen = new Set(angles.map((a) => Math.round(a * 8)));
-    expect(seen.size).toBe(pin.callouts.length);
-
-    // and no two of this cell's lines may intersect
-    const segments = pin.callouts.map((c) => ({ x: c.dx, y: c.dy }));
-    for (let i = 0; i < segments.length; i += 1) {
-      for (let j = i + 1; j < segments.length; j += 1) {
-        // both start at the cell centre, so they can only cross if collinear
-        // and pointing the same way — the angle check above already excludes it
-        const cross = segments[i].x * segments[j].y - segments[i].y * segments[j].x;
-        const sameRay =
-          cross === 0 &&
-          segments[i].x * segments[j].x + segments[i].y * segments[j].y > 0;
-        expect(sameRay).toBe(false);
-      }
+  it("takes a short edge-to-edge route for every approved label", () => {
+    for (const pin of pins) for (const callout of pin.callouts) {
+      const arrow = caveArrow(callout);
+      const length = Math.hypot(arrow.endX - arrow.startX, arrow.endY - arrow.startY);
+      expect(length).toBeGreaterThan(0.1);
+      expect(length).toBeLessThan(1);
+      const x = arrow.endX + callout.dx;
+      const y = arrow.endY + callout.dy;
+      expect(Math.max(Math.abs(x), Math.abs(y))).toBeCloseTo(0.5);
     }
   });
 

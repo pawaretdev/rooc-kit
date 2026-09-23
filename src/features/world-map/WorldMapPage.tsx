@@ -1,11 +1,7 @@
 "use client";
 
-import { monsters, type Monster } from "@/lib/game-data";
 import { useMonsterLevels } from "../monster-research/useProgress";
 import { WorldMapBody } from "./WorldMapDialog";
-
-/** Opening pick for the standalone page — the first monster in data order. */
-const FIRST: Monster = [...monsters.values()][0];
 
 /**
  * The World Map as its own page. Same component the tracker's dialog mounts,
@@ -28,7 +24,7 @@ export function WorldMapPage() {
 
   return (
     <div className={frame}>
-      <WorldMapBody initial={FIRST} focusMapId={null} levels={levels} />
+      <WorldMapBody initial={null} focusMapId={null} levels={levels} />
     </div>
   );
 }

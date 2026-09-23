@@ -10,8 +10,8 @@
   "maps": {
     "Ant Hell": {
       "x": 1071.5,
-      "y": 1620.1,
-      "cell": "38",
+      "y": 1528.8,
+      "cell": "19",
       "source": "cave:Mayidong"
     },
     "Bridge of Desert": {
@@ -309,10 +309,10 @@
       "source": "cell"
     },
     "Southern Sograt": {
-      "x": 980.1,
+      "x": 1071.5,
       "y": 1620.1,
-      "cell": "28",
-      "source": "area"
+      "cell": "38",
+      "source": "cell"
     },
     "Sphinx Crypt": {
       "x": 888.8,
