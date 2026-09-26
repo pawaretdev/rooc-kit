@@ -38,7 +38,8 @@ export function BuyPlanView({
   plan: PlanMap;
   /** last week's quantities — offered back when this week is still empty */
   lastWeekPlan: PlanMap;
-  onEditShop: () => void;
+  /** receives the open category so the editor can start on the same shelf */
+  onEditShop: (activeCategoryId?: string) => void;
 }) {
   const t = useT();
   const withItems = categories.filter((category) =>
@@ -71,7 +72,7 @@ export function BuyPlanView({
             variant="outline"
             size="sm"
             className="ml-auto"
-            onClick={onEditShop}
+            onClick={() => onEditShop(activeId)}
           >
             <Pencil className="size-3.5" />
             {t("shop.editShop")}

@@ -17,9 +17,9 @@ import { useCurrentPeriods, useGameAccounts } from "@/features/dailies/useDailie
 import { GoldCalendar } from "@/features/gold-diary/GoldCalendar";
 import { BuyPlanView } from "./BuyPlanView";
 import { CatalogDialog } from "./CatalogDialog";
-import { CategoriesDialog } from "./CategoriesDialog";
 import { IncomeDialog } from "./IncomeDialog";
 import { PlanSummary } from "./PlanSummary";
+import { openCatalog } from "./catalog-groups";
 import { diaryAvgPerDay, planTotal, previousWeeklyKey } from "./plan-math";
 import {
   useBuyPlan,
@@ -63,7 +63,7 @@ function FirstRunCard() {
   );
 }
 
-type OpenDialog = "catalog" | "categories" | "accounts" | "income" | null;
+type OpenDialog = "catalog" | "accounts" | "income" | null;
 
 export function ShopPlanner() {
   const t = useT();
@@ -72,6 +72,8 @@ export function ShopPlanner() {
   const items = useShopItems();
   const periods = useCurrentPeriods();
   const [dialog, setDialog] = useState<OpenDialog>(null);
+  // the category the shop was showing when "Edit shop" was pressed
+  const [editCategoryId, setEditCategoryId] = useState<string | undefined>();
 
   // Same key as Dailies — one notion of "current account" across the app.
   const selectedSetting = useSetting<string | undefined>(
@@ -102,6 +104,9 @@ export function ShopPlanner() {
   }
 
   const hasCatalog = items.length > 0;
+  // Limited-time categories past their end leave every planner surface at
+  // once — tabs, cards, totals, last week's offer; the editor still has them.
+  const shop = openCatalog(categories, items);
 
   return (
     /* wide enough for a five-card shop row, like the in-game grid; the bottom
@@ -151,7 +156,7 @@ export function ShopPlanner() {
                  reads as "this is a different ID's plan" */
               <div key={selected.id} className="animate-rise-in space-y-4">
                 <PlanSummary
-                  total={planTotal(items, plan)}
+                  total={planTotal(shop.items, plan)}
                   income={income}
                   onEditIncome={() => setDialog("income")}
                 />
@@ -159,11 +164,14 @@ export function ShopPlanner() {
                   accountId={selected.id}
                   weeklyKey={periods.weekly}
                   lastWeeklyKey={lastWeeklyKey}
-                  categories={categories}
-                  items={items}
+                  categories={shop.categories}
+                  items={shop.items}
                   plan={plan}
                   lastWeekPlan={lastWeekPlan}
-                  onEditShop={() => setDialog("catalog")}
+                  onEditShop={(categoryId) => {
+                    setEditCategoryId(categoryId);
+                    setDialog("catalog");
+                  }}
                 />
               </div>
             )
@@ -200,13 +208,7 @@ export function ShopPlanner() {
         onClose={() => setDialog(null)}
         categories={categories}
         items={items}
-        onManageCategories={() => setDialog("categories")}
-      />
-      <CategoriesDialog
-        open={dialog === "categories"}
-        onClose={() => setDialog(null)}
-        categories={categories}
-        items={items}
+        initialCategoryId={editCategoryId}
       />
       <AccountsDialog
         open={dialog === "accounts"}

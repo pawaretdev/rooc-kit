@@ -73,6 +73,13 @@ export interface ShopCategoryRecord {
   id: string;
   name: string;
   sortOrder: number;
+  /**
+   * Sale end for limited-time shops (Bangkok wall clock, "YYYY-MM-DD" or
+   * "YYYY-MM-DDTHH:mm" — the task event-bound format). Past it the category
+   * and its items leave the planner; the editor still lists it so it can be
+   * extended or deleted.
+   */
+  eventEnd?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -439,7 +446,7 @@ export async function addShopCategory(name: string): Promise<string> {
 
 export async function updateShopCategory(
   id: string,
-  patch: Partial<Pick<ShopCategoryRecord, "name" | "sortOrder">>,
+  patch: Partial<Pick<ShopCategoryRecord, "name" | "sortOrder" | "eventEnd">>,
 ): Promise<void> {
   await localDb.shopCategories.update(id, {
     ...patch,

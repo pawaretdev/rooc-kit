@@ -363,6 +363,17 @@ const en = {
   "shop.itemName": "Item name",
   "shop.category": "Category",
   "shop.categories": "Categories",
+  "shop.noCategory": "No category",
+  "shop.orphanItemsHint":
+    "These items lost their category — pick one for each, or delete them.",
+  "shop.sellsUntil": "On sale until",
+  "shop.sellsUntilHint":
+    "Past this time the category is hidden from the planner (Bangkok time).",
+  "shop.categoryEnded": "Sale ended — hidden from the planner.",
+  "shop.categoryEndsToday": "Last day of this sale!",
+  "shop.clearEndDate": "Clear end date",
+  "shop.moveCategoryLeft": "Move category earlier",
+  "shop.moveCategoryRight": "Move category later",
   "shop.manageCategories": "Manage categories",
   "shop.deleteItem": "Delete item",
   "shop.deleteItemConfirm":
@@ -808,6 +819,17 @@ const th: Messages = {
   "shop.itemName": "ชื่อไอเทม",
   "shop.category": "หมวดหมู่",
   "shop.categories": "หมวดหมู่",
+  "shop.noCategory": "ไม่มีหมวดหมู่",
+  "shop.orphanItemsHint":
+    "ของเหล่านี้ไม่มีหมวดหมู่แล้ว เลือกหมวดให้ใหม่หรือลบทิ้ง",
+  "shop.sellsUntil": "ขายถึง",
+  "shop.sellsUntilHint":
+    "พ้นเวลานี้แล้ว หมวดนี้จะถูกซ่อนจากหน้า planner (เวลาไทย)",
+  "shop.categoryEnded": "หมดเวลาขายแล้ว ถูกซ่อนจากหน้า planner",
+  "shop.categoryEndsToday": "วันสุดท้ายของร้านนี้แล้ว!",
+  "shop.clearEndDate": "ล้างวันสิ้นสุด",
+  "shop.moveCategoryLeft": "เลื่อนหมวดไปข้างหน้า",
+  "shop.moveCategoryRight": "เลื่อนหมวดไปข้างหลัง",
   "shop.manageCategories": "จัดการหมวดหมู่",
   "shop.deleteItem": "ลบของชิ้นนี้",
   "shop.deleteItemConfirm":

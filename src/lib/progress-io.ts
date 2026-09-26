@@ -144,6 +144,8 @@ function isShopCategory(value: unknown): boolean {
     typeof r.name === "string" &&
     typeof r.sortOrder === "number" &&
     Number.isFinite(r.sortOrder) &&
+    (r.eventEnd === undefined ||
+      (typeof r.eventEnd === "string" && DATE_PATTERN.test(r.eventEnd))) &&
     typeof r.createdAt === "string" &&
     typeof r.updatedAt === "string"
   );
