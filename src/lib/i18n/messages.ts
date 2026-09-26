@@ -18,6 +18,7 @@ const en = {
   "nav.worldMap": "World Map",
   "nav.dailies": "Dailies",
   "nav.shopPlanner": "Shop Planner",
+  "nav.guide": "Guide",
   "nav.marketAlert": "Market Alert",
   "nav.settings": "Settings",
 
@@ -459,6 +460,7 @@ const th: Messages = {
   "app.title": "ROOC Kit",
   "app.tagline": "วันนี้ไปฟาร์มไหนดี?",
 
+  "nav.guide": "คู่มือ",
   "nav.monsterResearch": "Monster Research",
   "nav.worldMap": "World Map",
   "nav.dailies": "Dailies",

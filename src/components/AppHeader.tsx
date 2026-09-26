@@ -31,6 +31,7 @@ export function AppHeader() {
   const worldMapActive = pathname === "/world-map";
   const dailiesActive = pathname === "/dailies";
   const shopActive = pathname === "/shop-planner";
+  const guideActive = pathname === "/guide" || pathname.startsWith("/guide/");
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-surface/95 backdrop-blur-sm">
@@ -44,7 +45,7 @@ export function AppHeader() {
         </Link>
 
         {/* desktop nav */}
-        <nav className="hidden items-center gap-1 text-sm sm:flex">
+        <nav className="hidden items-center gap-1 text-sm xl:flex">
           <Link
             href="/tracker"
             aria-current={trackerActive ? "page" : undefined}
@@ -88,6 +89,13 @@ export function AppHeader() {
             }`}
           >
             {t("nav.shopPlanner")}
+          </Link>
+          <Link
+            href="/guide"
+            aria-current={guideActive ? "page" : undefined}
+            className={`press rounded-lg px-3.5 py-1.5 ${guideActive ? "bg-accent font-semibold text-accent-ink" : "text-sub hover:bg-surface-2 hover:text-ink"}`}
+          >
+            {t("nav.guide")}
           </Link>
           <span
             aria-disabled
@@ -114,7 +122,7 @@ export function AppHeader() {
             aria-expanded={menuOpen}
             aria-label={t("nav.menu")}
             onClick={() => setMenuOpen((o) => !o)}
-            className="press inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line text-sub hover:bg-surface-2 hover:text-ink sm:hidden"
+            className="press inline-flex h-8 w-8 items-center justify-center rounded-lg border border-line text-sub hover:bg-surface-2 hover:text-ink xl:hidden"
           >
             {menuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
           </button>
@@ -123,7 +131,7 @@ export function AppHeader() {
 
       {/* mobile menu sheet */}
       {menuOpen && (
-        <nav className="animate-rise-in border-t border-line px-3 py-2 sm:hidden">
+        <nav className="animate-rise-in border-t border-line px-3 py-2 xl:hidden">
           <Link
             href="/tracker"
             aria-current={trackerActive ? "page" : undefined}
@@ -171,6 +179,14 @@ export function AppHeader() {
             }`}
           >
             {t("nav.shopPlanner")}
+          </Link>
+          <Link
+            href="/guide"
+            aria-current={guideActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-lg px-3 py-2.5 text-sm ${guideActive ? "bg-accent font-semibold text-accent-ink" : "hover:bg-surface-2"}`}
+          >
+            {t("nav.guide")}
           </Link>
           <span className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-sub/75">
             {t("nav.marketAlert")}
