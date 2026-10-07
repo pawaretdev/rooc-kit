@@ -1,4 +1,9 @@
 import Dexie, { type EntityTable, type Table } from "dexie";
+import {
+  mergeHistory,
+  type DefenseHistoryEntry,
+  type DefenseSnapshot,
+} from "@/features/defense/history";
 
 /**
  * User progress lives here (IndexedDB) — never in the static game data and
@@ -145,6 +150,8 @@ export const localDb = new Dexie("rooc-kit") as Dexie & {
   goldIncomes: EntityTable<GoldIncomeRecord, "accountId">;
   // compound PK [accountId+date]
   goldDiary: Table<GoldDiaryRecord, [string, string]>;
+  // snapshots + tombstones (see features/defense/history.ts)
+  defenseHistory: Table<DefenseHistoryEntry, string>;
 };
 
 localDb.version(1).stores({
@@ -171,6 +178,20 @@ localDb.version(3).stores({
   buyPlans: "[accountId+itemId+periodKey], accountId, itemId",
   goldIncomes: "accountId",
   goldDiary: "[accountId+date], accountId",
+});
+
+localDb.version(4).stores({
+  monsterLevels: "monsterId",
+  settings: "key",
+  gameAccounts: "id, sortOrder",
+  dailyTasks: "id, sortOrder, templateId",
+  taskCompletions: "[accountId+taskId+periodKey], accountId, taskId",
+  shopCategories: "id, sortOrder",
+  shopItems: "id, sortOrder, categoryId, templateId",
+  buyPlans: "[accountId+itemId+periodKey], accountId, itemId",
+  goldIncomes: "accountId",
+  goldDiary: "[accountId+date], accountId",
+  defenseHistory: "id",
 });
 
 export const MAX_MR_LEVEL = 10;
@@ -796,4 +817,72 @@ export async function readAllGoldShop(): Promise<GoldShopSnapshot> {
     localDb.goldDiary.toArray(),
   ]);
   return { categories, items, plans, incomes, diary };
+}
+
+// --- DEF Planner history ---
+
+/**
+ * Per-device opt-in for syncing defense history: holds the id of the account
+ * that turned it on (absent/null = off, the default). A local setting on
+ * purpose — never part of any synced payload, so every browser decides for
+ * itself, and only for the account that opted in.
+ */
+export const DEFENSE_SYNC_KEY = "defense.cloudSync";
+
+export async function addDefenseSnapshot(
+  snapshot: Omit<DefenseSnapshot, "id" | "updatedAt">,
+): Promise<string> {
+  const id = crypto.randomUUID();
+  await localDb.defenseHistory.add({
+    ...snapshot,
+    id,
+    updatedAt: new Date().toISOString(),
+  });
+  return id;
+}
+
+/** Rename / re-note one snapshot; a blank note drops the key. */
+export async function updateDefenseSnapshot(
+  id: string,
+  patch: { name: string; note: string },
+): Promise<void> {
+  await localDb.defenseHistory
+    .where("id")
+    .equals(id)
+    .modify((entry) => {
+      if ("deletedAt" in entry) return;
+      entry.name = patch.name;
+      if (patch.note) entry.note = patch.note;
+      else delete entry.note;
+      entry.updatedAt = new Date().toISOString();
+    });
+}
+
+/**
+ * Deletes by leaving a tombstone, so the delete also wins the merge on every
+ * device that syncs. Tombstones carry no stats.
+ */
+export async function deleteDefenseSnapshot(id: string): Promise<void> {
+  const now = new Date().toISOString();
+  await localDb.defenseHistory.put({ id, deletedAt: now, updatedAt: now });
+}
+
+/**
+ * Folds a remote history into the local table (per-record last write wins)
+ * inside one transaction, so a save made while a sync was in flight is never
+ * overwritten. Returns the merged list as it now stands locally.
+ */
+export async function mergeIntoDefenseHistory(
+  remote: readonly DefenseHistoryEntry[],
+): Promise<DefenseHistoryEntry[]> {
+  return localDb.transaction("rw", localDb.defenseHistory, async () => {
+    const local = await localDb.defenseHistory.toArray();
+    const merged = mergeHistory(local, remote);
+    const version = (entry: DefenseHistoryEntry) =>
+      `${entry.updatedAt}${"deletedAt" in entry ? "x" : ""}`;
+    const before = new Map(local.map((entry) => [entry.id, version(entry)]));
+    const changed = merged.filter((entry) => before.get(entry.id) !== version(entry));
+    if (changed.length > 0) await localDb.defenseHistory.bulkPut(changed);
+    return merged;
+  });
 }

@@ -2,7 +2,7 @@
 
 > **R**agnarok **O**rigin **C**lassic **Kit** — a companion web app for planning daily activities in Ragnarok Origin (Classic).
 
-The game exposes no public API, so players end up memorising their Monster Research progress or tracking it in a spreadsheet, and setting phone alarms for market restock times. ROOC Kit keeps that data in one place and turns it into an answer to the question *"where should I farm today?"*
+The game exposes no public API, so players end up memorising their Monster Research progress or tracking it in a spreadsheet. ROOC Kit keeps that data in one place and turns it into an answer to the question *"where should I farm today?"*
 
 The name is deliberately generic — Monster Research is the first tool, not the only one planned.
 
@@ -85,14 +85,13 @@ Rows are ordered by:
 
 *Example:* a row at levels `4, 4, 5, 5, 5` has two blockers. If both share a map, the row ranks near the top. If a filter such as *"no MVP on the map"* is active and that map has an MVP, the row is either hidden or demoted — this is a per-filter toggle between **hard filter** and **soft penalty**.
 
-### 2. Card Market Alert
+### 2. DEF Planner (`/defense`)
 
-The in-game market restocks cards at **12:00, 16:00 and 19:30 (UTC+7)**, and purchases open five minutes after each restock (**12:05 / 16:05 / 19:35**).
+Estimates how much a character's defensive stats cut an opponent's damage in **PvP**, layer by layer — the DEF curve (Equipment / DEF% / Refine vs Flat Ignore + Ignore%, capped at 40%), the PvP DMG rating difference, and PDMG Bonus vs Reduction — with MDMG shown separately against its test baseline. One build is enough; any saved build can be picked as a comparison. Every layer carries its model and evidence status; totals only multiply complete layers and are never presented as final damage or a "you'll survive" verdict. Formulas and evidence: [`docs/defense-formulas.md`](docs/defense-formulas.md).
 
-- Configurable restock times and timezone, seeded with the defaults above.
-- Configurable lead time before purchases open, so there is time to launch the game.
-- Countdown to the next window on the home screen.
-- Delivery via in-app notification, PWA push, or a user-supplied Discord webhook.
+- **History** — save the current stats as a named snapshot; a chart shows damage-through (re-computed for every snapshot against the same opponent, so the line compares like with like) or any single stat over time, and each saved build lists what changed since the previous one.
+- **Local by default, sync is opt-in** — history lives in the browser; a signed-in user can turn on history sync per device. It merges per record (deletes leave tombstones), so opting in on a second device never wipes the first one's history; turning it off can also delete the cloud copy.
+- Export the evaluation as JSON (inputs, per-layer results, model ids, formula version, `inGameVerified: false`).
 
 ---
 
@@ -172,7 +171,7 @@ Data is split into two layers:
 | Layer | Contents | Location |
 |---|---|---|
 | **Static data** | Monsters, rows, elements, maps | JSON in the repo, updated alongside game patches |
-| **User progress** | MR levels, filter settings, webhook URL | LocalStorage / IndexedDB, exportable as JSON |
+| **User progress** | MR levels, filter settings | LocalStorage / IndexedDB, exportable as JSON |
 
 ---
 
@@ -196,7 +195,7 @@ Progress can be exported to and imported from JSON for backup and device transfe
 
 ## Privacy
 
-ROOC Kit is an out-of-game planning tool. It does not read game memory, automate any in-game action, or modify game files. All user data is stored locally in the browser and the tracker is fully usable without an account; data is uploaded only when the user signs in to sync progress or explicitly configures a Discord webhook.
+ROOC Kit is an out-of-game planning tool. It does not read game memory, automate any in-game action, or modify game files. All user data is stored locally in the browser and the tracker is fully usable without an account; data is uploaded only when the user signs in to sync progress, or turns on DEF Planner history sync (off by default, per device).
 
 ---
 
@@ -212,10 +211,9 @@ Decided 2026-08-09, implemented 2026-08-10 — see [`docs/PROPOSALS.md`](docs/PR
 | Auth | Auth.js (NextAuth) — Sign in with Discord / Google, JWT session strategy |
 | Online DB | PostgreSQL on Railway, accessed via Drizzle ORM |
 | i18n | In-house dictionary (`src/lib/i18n`, th/en) |
-| Notifications | Discord webhook, with Web Push planned |
-| Hosting | Vercel (web app) + Railway (Postgres; alert cron in Phase 3) |
+| Hosting | Vercel (web app) + Railway (Postgres) |
 
-The tracker itself is local-first and runs client-side. The server layer is Next.js route handlers / server actions on Vercel, used for auth and progress sync only. The market-alert scheduler (Phase 3) runs as a small cron service on Railway, next to the database.
+The tracker itself is local-first and runs client-side. The server layer is Next.js route handlers / server actions on Vercel, used for auth and progress sync only.
 
 **Production notes**
 
@@ -230,10 +228,11 @@ The tracker itself is local-first and runs client-side. The server layer is Next
 ```
 rooc-kit/
 ├── src/
-│   ├── app/            # routes: / (landing), /tracker, /setup, /terms, /privacy,
-│   │                   #         /api/auth/*, /api/progress
+│   ├── app/            # routes: / (landing), /tracker, /defense, /setup, /terms, /privacy,
+│   │                   #         /api/auth/*, /api/progress, /api/defense-history
 │   ├── data/           # static game data (JSON, validated by pnpm data:check)
 │   ├── features/
+│   │   ├── defense/            # DEF Planner: formula model, history, opt-in history sync
 │   │   ├── landing/            # landing page + playable demo row
 │   │   └── monster-research/   # tracker UI, row stats, setup/backup, sync
 │   ├── lib/            # game-data loader, local-db (Dexie), db (Drizzle),

@@ -55,34 +55,9 @@ Tauri หรือ Electron เลือก capture เฉพาะ window ข�
 
 ---
 
-## 2. ช่องทางแจ้งเตือนรอบตลาด
+## 2. ~~ช่องทางแจ้งเตือนรอบตลาด~~
 
-**ปัญหา:** ต้องเตือนได้ตรงเวลาแม้ปิดเว็บ/ปิดแอปอยู่
-
-### สถานะการรองรับ Web Push
-
-- **Android (Chrome):** ใช้งานได้ปกติ
-- **iOS (Safari 16.4+):** รองรับ แต่ user **ต้องกด "Add to Home Screen"** ติดตั้งเป็น PWA ก่อนเท่านั้น ถ้าเปิดผ่าน browser ธรรมดาจะไม่ได้รับ
-- **ข้อจำกัดสำคัญ:** เว็บไม่มี API ตั้งเวลาเตือนแบบ local ที่เชื่อถือได้ (`Notification Triggers` ยังไม่ผ่านมาตรฐาน) ดังนั้นจะเตือนตอนปิดแอปได้ **ต้องมี server ยิง push เข้ามา** อยู่ดี
-
-### เปรียบเทียบ
-
-| ช่องทาง | ต้องมี server | ความยุ่งยาก | ครอบคลุม |
-|---|---|---|---|
-| In-app notification | ไม่ | ต่ำมาก | เฉพาะตอนเปิดเว็บค้างไว้ |
-| Discord webhook | ใช่ (cron) | ต่ำ | ทุกแพลตฟอร์มที่มีแอป Discord |
-| Web Push | ใช่ (cron + push server) | กลาง–สูง | ดี แต่ iOS ต้องติดตั้ง PWA ก่อน |
-
-### ข้อเสนอ
-
-เริ่มจาก **in-app countdown + Discord webhook** เพราะ:
-
-- ทั้งสองทางต้องมี cron ฝั่ง server เหมือนกันอยู่แล้ว (Cloudflare Worker + Cron Trigger)
-- Discord ไม่ต้องจัดการ VAPID key, push subscription, หรือ subscription ที่หมดอายุ
-- คนเล่นเกมนี้ส่วนใหญ่มี Discord และเปิดแจ้งเตือนบนมือถืออยู่แล้ว
-- user เป็นคนกรอก webhook URL เอง ควบคุมได้เต็มที่ ปิดเมื่อไหร่ก็ได้
-
-ทำ **Web Push** ตามมาทีหลังเพื่อคนที่ไม่ใช้ Discord
+**❌ ยกเลิก (2026-10-08):** ไม่ทำ Card Market Alert แล้ว (เดิมเสนอ in-app countdown + Discord webhook ก่อน แล้วค่อย Web Push) — ตัดออกจาก ROADMAP และ README; คงหัวข้อไว้เพื่อไม่ให้เลข §3–§5 ที่เอกสารอื่นอ้างถึงเลื่อน
 
 ---
 
@@ -107,7 +82,7 @@ Tauri หรือ Electron เลือก capture เฉพาะ window ข�
 **ข้อสรุปเพิ่มเติม (2026-08-09 คุยรอบสอง — เคาะ stack ทั้งชุด):**
 
 - **ORM: Drizzle** — เบา, TypeScript-first, ไม่มี codegen step, เหมาะกับ schema เล็ก ๆ ของเรา
-- **Hosting: Vercel (free) สำหรับตัวเว็บ + Railway เฉพาะ Postgres** — cron ของ Phase 3 จะเป็น service เล็ก ๆ บน Railway (Vercel Hobby cron จำกัดที่รายวัน ไม่พอสำหรับเวลารอบตลาด)
+- **Hosting: Vercel (free) สำหรับตัวเว็บ + Railway เฉพาะ Postgres** (เดิมวางไว้ให้ cron ของ Market Alert รันบน Railway ด้วย — ยกเลิกไปพร้อม Phase 3 เมื่อ 2026-10-08)
 - **Auth: Auth.js (NextAuth) ใน Next.js เอง** — Sign in with Discord / Google, session แบบ JWT, เก็บ user ลง Postgres ผ่าน Drizzle **ไม่แยก BE** เพราะ Next.js route handlers / server actions คือ server layer อยู่แล้ว
 - **ไม่ใช้ Supabase** — เหตุผลหลักคือ cost (Postgres บน Railway ที่มีอยู่ ~$1/เดือน) และ Auth.js ปิดช่องว่างเรื่อง OAuth ได้ฟรี
 - **ทำ auth เป็นงานแรกของ Phase 1** (เจ้าของโปรเจกต์ยืนยัน) โดยมีเงื่อนไขคงเดิม: account เป็น optional — tracker ต้องใช้ได้เต็มรูปแบบโดยไม่ login ตาม privacy stance
@@ -164,3 +139,16 @@ Tauri หรือ Electron เลือก capture เฉพาะ window ข�
 ข้อเสนอ: ทำระดับ row ก่อนตามที่ออกแบบไว้ แล้วลองใช้จริงสักพัก ถ้าพบว่ากรองแล้วเหลือแถวน้อยเกินไปจนใช้ไม่ได้ ค่อยเพิ่มเป็น option
 
 **✅ ใช้จริงแล้ว (2026-08-10)** — ทำเป็น "แมพที่ไม่ไป" (avoid-list) ตัดสินที่ระดับทริปของแถว: แมพที่เลี่ยงจะถูกข้ามตอนคำนวณทริปคุ้มสุด และแถวที่อัปได้เฉพาะบนแมพที่เลี่ยงจะถูกซ่อน/ลดอันดับตาม toggle เดียวกับ filter อื่น (`MapFilter.tsx` — modal จัดกลุ่มแมพตามช่วงเลเวล 20)
+
+---
+
+## 6. ประวัติ DEF Planner — เก็บที่ไหน และ sync อย่างไร
+
+**✅ ตัดสินใจและใช้จริงแล้ว (2026-10-08)** — ผู้ใช้ขอให้ประวัติอยู่ในเครื่องเป็นค่าเริ่มต้น และเลือกเองได้ว่าจะ sync เข้า DB หรือไม่
+
+- **Local-first:** snapshot อยู่ใน Dexie ตาราง `defenseHistory` (v4) เก็บเฉพาะ input ไม่เก็บผล — กราฟคำนวณใหม่ทุกจุดกับคู่ต่อสู้ชุดเดียวกัน จึงเทียบกันได้และอัปเดตสูตรย้อนหลังได้
+- **Opt-in ต่อเครื่องและต่อบัญชี:** setting `defense.cloudSync` เก็บ user id ของบัญชีที่เปิดไว้ (ไม่ sync ไปกับ payload ใด) — คนอื่นที่ login บนเบราว์เซอร์เดียวกันจะไม่ได้ upload ประวัตินี้เข้าบัญชีตัวเองโดยไม่ได้ตั้งใจ
+- **แยกจาก progress sync:** ตาราง Postgres `defense_history` (หนึ่งแถวต่อ user) + `/api/defense-history` (GET/PUT/DELETE) ไม่ปนกับ `progress_snapshot`
+- **Merge ราย record แทน last-write-wins ทั้งก้อน:** เหตุผลคือการเปิด sync บนเครื่องที่สองต้องไม่ลบประวัติจากเครื่องแรก — PUT ให้ server merge (ล็อกแถวด้วย `SELECT … FOR UPDATE`) แล้วตอบรายการที่ merge แล้วกลับมา; การลบเป็น tombstone เพื่อให้ชนะการ merge ด้วย (`mergeHistory` ใน `src/features/defense/history.ts`, มี test)
+- **ปิด sync:** เลือกได้ว่าจะเก็บหรือลบสำเนาใน cloud; ข้อมูลในเครื่องไม่หาย
+- ข้อจำกัด: สูงสุด 500 snapshot ต่อคน (ปุ่มบันทึกปิดเมื่อเต็ม), tombstone ยังไม่ถูก prune — ถ้าเริ่มสะสมเยอะค่อยเพิ่มการ prune ตามอายุ

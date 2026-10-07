@@ -6,20 +6,11 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Archive, Menu, Settings, X } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { brandLogoUrl } from "@/lib/images";
 import { AuthMenu } from "./AuthMenu";
 import { LocaleSegment } from "./LocaleSegment";
 import { LocaleSwitch } from "./LocaleSwitch";
 import { ThemeSegment, ThemeToggle } from "./ThemeToggle";
-import { BlobMark } from "./icons";
-
-function SoonChip() {
-  const t = useT();
-  return (
-    <span className="rounded-[5px] border border-line px-1.5 py-px font-mono text-[9px] font-bold tracking-wider text-gold uppercase">
-      {t("nav.soon")}
-    </span>
-  );
-}
 
 export function AppHeader() {
   const t = useT();
@@ -31,6 +22,7 @@ export function AppHeader() {
   const worldMapActive = pathname === "/world-map";
   const dailiesActive = pathname === "/dailies";
   const shopActive = pathname === "/shop-planner";
+  const defenseActive = pathname === "/defense";
   const guideActive = pathname === "/guide" || pathname.startsWith("/guide/");
 
   return (
@@ -40,7 +32,15 @@ export function AppHeader() {
           href="/"
           className="inline-flex items-center gap-2 font-bold tracking-tight"
         >
-          <BlobMark size={20} className="text-accent" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={brandLogoUrl()}
+            alt=""
+            width={32}
+            height={32}
+            draggable={false}
+            className="size-8 shrink-0"
+          />
           ROOC Kit
         </Link>
 
@@ -91,19 +91,23 @@ export function AppHeader() {
             {t("nav.shopPlanner")}
           </Link>
           <Link
+            href="/defense"
+            aria-current={defenseActive ? "page" : undefined}
+            className={`press rounded-lg px-3.5 py-1.5 ${
+              defenseActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "text-sub hover:bg-surface-2 hover:text-ink"
+            }`}
+          >
+            {t("nav.defense")}
+          </Link>
+          <Link
             href="/guide"
             aria-current={guideActive ? "page" : undefined}
             className={`press rounded-lg px-3.5 py-1.5 ${guideActive ? "bg-accent font-semibold text-accent-ink" : "text-sub hover:bg-surface-2 hover:text-ink"}`}
           >
             {t("nav.guide")}
           </Link>
-          <span
-            aria-disabled
-            className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sub/75"
-          >
-            {t("nav.marketAlert")}
-            <SoonChip />
-          </span>
         </nav>
 
         <div className="ml-auto flex items-center gap-2.5">
@@ -181,6 +185,18 @@ export function AppHeader() {
             {t("nav.shopPlanner")}
           </Link>
           <Link
+            href="/defense"
+            aria-current={defenseActive ? "page" : undefined}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-lg px-3 py-2.5 text-sm ${
+              defenseActive
+                ? "bg-accent font-semibold text-accent-ink"
+                : "hover:bg-surface-2"
+            }`}
+          >
+            {t("nav.defense")}
+          </Link>
+          <Link
             href="/guide"
             aria-current={guideActive ? "page" : undefined}
             onClick={() => setMenuOpen(false)}
@@ -188,10 +204,6 @@ export function AppHeader() {
           >
             {t("nav.guide")}
           </Link>
-          <span className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-sub/75">
-            {t("nav.marketAlert")}
-            <SoonChip />
-          </span>
           <hr className="my-1.5 border-line" />
           <Link
             href="/setup"

@@ -27,7 +27,7 @@ const notoThai = Noto_Sans_Thai({
 export const metadata: Metadata = {
   title: "ROOC Kit",
   description:
-    "Companion planner for Ragnarok Origin Classic — Monster Research tracker and market restock alerts.",
+    "Companion planner for Ragnarok Origin Classic — Monster Research tracker, dailies, Gold Shop planner and DEF Planner.",
 };
 
 const DIRECTION_CONTRACT = `<!--

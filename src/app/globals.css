@@ -45,6 +45,12 @@
    * in both themes because the artwork underneath does not change. */
   --pin-line: oklch(0.82 0.15 205);
 
+  /* DEF Planner damage types — chart lines + identity dots, always beside
+   * a "Physical"/"Magic" label. Validated as a categorical pair (dataviz
+   * validator: lightness band, CVD ΔE ≥ 12, ≥ 3:1 on surface) in both themes. */
+  --chart-phys: oklch(0.66 0.12 180);
+  --chart-mag: oklch(0.62 0.16 295);
+
   /* element hues — always paired with a letter/icon, never color alone */
   --el-neutral: oklch(0.75 0.02 20);
   --el-wind: oklch(0.75 0.1 145);
@@ -86,6 +92,9 @@
   /* unchanged from dark: it sits on the map art, not on the app surface */
   --pin-line: oklch(0.62 0.16 225);
 
+  --chart-phys: oklch(0.55 0.12 175);
+  --chart-mag: oklch(0.5 0.17 295);
+
   --el-neutral: oklch(0.45 0.02 20);
   --el-wind: oklch(0.45 0.1 145);
   --el-earth: oklch(0.47 0.09 85);
@@ -111,6 +120,8 @@
   --color-gold-ink: var(--gold-ink);
   --color-danger: var(--danger);
   --color-frame-ink: var(--frame-ink);
+  --color-chart-phys: var(--chart-phys);
+  --color-chart-mag: var(--chart-mag);
 
   --color-el-neutral: var(--el-neutral);
   --color-el-wind: var(--el-wind);

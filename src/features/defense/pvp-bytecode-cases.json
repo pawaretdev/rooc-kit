@@ -1,0 +1,1056 @@
+{
+ "source": "PvpDamProcess from the ROOC client bytecode damage_calculator (641270636), run under LuaJIT with player-only mocks and every other layer neutral — result = baseCoefficient × ratingMultiplier",
+ "generatedAt": "2026-10-08",
+ "cases": [
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.3,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.3,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 220,
+   "mode": "common",
+   "result": 0.6880649999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 220,
+   "mode": "physical",
+   "result": 0.58977,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 220,
+   "mode": "magic",
+   "result": 0.294885,
+   "base": 0.3
+  },
+  {
+   "bonus": 220,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.711935,
+   "base": 0.7
+  },
+  {
+   "bonus": 220,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6102299999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 220,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.30511499999999997,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 299,
+   "mode": "common",
+   "result": 0.68377925,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 299,
+   "mode": "physical",
+   "result": 0.5860964999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 299,
+   "mode": "magic",
+   "result": 0.29304824999999995,
+   "base": 0.3
+  },
+  {
+   "bonus": 299,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.71622075,
+   "base": 0.7
+  },
+  {
+   "bonus": 299,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6139035,
+   "base": 0.6
+  },
+  {
+   "bonus": 299,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.30695175,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 300,
+   "mode": "common",
+   "result": 0.6719999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 300,
+   "mode": "physical",
+   "result": 0.576,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 300,
+   "mode": "magic",
+   "result": 0.288,
+   "base": 0.3
+  },
+  {
+   "bonus": 300,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.728,
+   "base": 0.7
+  },
+  {
+   "bonus": 300,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.624,
+   "base": 0.6
+  },
+  {
+   "bonus": 300,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.312,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 500,
+   "mode": "common",
+   "result": 0.66675,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 500,
+   "mode": "physical",
+   "result": 0.5715,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 500,
+   "mode": "magic",
+   "result": 0.28575,
+   "base": 0.3
+  },
+  {
+   "bonus": 500,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7332500000000001,
+   "base": 0.7
+  },
+  {
+   "bonus": 500,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6285000000000001,
+   "base": 0.6
+  },
+  {
+   "bonus": 500,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.31425000000000003,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 599,
+   "mode": "common",
+   "result": 0.66415125,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 599,
+   "mode": "physical",
+   "result": 0.5692725,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 599,
+   "mode": "magic",
+   "result": 0.28463625,
+   "base": 0.3
+  },
+  {
+   "bonus": 599,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.73584875,
+   "base": 0.7
+  },
+  {
+   "bonus": 599,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6307275,
+   "base": 0.6
+  },
+  {
+   "bonus": 599,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.31536375,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 600,
+   "mode": "common",
+   "result": 0.6579999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 600,
+   "mode": "physical",
+   "result": 0.564,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 600,
+   "mode": "magic",
+   "result": 0.282,
+   "base": 0.3
+  },
+  {
+   "bonus": 600,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.742,
+   "base": 0.7
+  },
+  {
+   "bonus": 600,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.636,
+   "base": 0.6
+  },
+  {
+   "bonus": 600,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.318,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 899,
+   "mode": "common",
+   "result": 0.64701175,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 899,
+   "mode": "physical",
+   "result": 0.5545815,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 899,
+   "mode": "magic",
+   "result": 0.27729075,
+   "base": 0.3
+  },
+  {
+   "bonus": 899,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7529882499999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 899,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6454185,
+   "base": 0.6
+  },
+  {
+   "bonus": 899,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.32270925,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 900,
+   "mode": "common",
+   "result": 0.644,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 900,
+   "mode": "physical",
+   "result": 0.552,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 900,
+   "mode": "magic",
+   "result": 0.276,
+   "base": 0.3
+  },
+  {
+   "bonus": 900,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.756,
+   "base": 0.7
+  },
+  {
+   "bonus": 900,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.648,
+   "base": 0.6
+  },
+  {
+   "bonus": 900,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.324,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1000,
+   "mode": "common",
+   "result": 0.6424249999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1000,
+   "mode": "physical",
+   "result": 0.55065,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1000,
+   "mode": "magic",
+   "result": 0.275325,
+   "base": 0.3
+  },
+  {
+   "bonus": 1000,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7575749999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 1000,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.64935,
+   "base": 0.6
+  },
+  {
+   "bonus": 1000,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.324675,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1199,
+   "mode": "common",
+   "result": 0.63929075,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1199,
+   "mode": "physical",
+   "result": 0.5479635,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1199,
+   "mode": "magic",
+   "result": 0.27398175,
+   "base": 0.3
+  },
+  {
+   "bonus": 1199,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.76070925,
+   "base": 0.7
+  },
+  {
+   "bonus": 1199,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6520365,
+   "base": 0.6
+  },
+  {
+   "bonus": 1199,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.32601825,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1200,
+   "mode": "common",
+   "result": 0.63,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1200,
+   "mode": "physical",
+   "result": 0.54,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1200,
+   "mode": "magic",
+   "result": 0.27,
+   "base": 0.3
+  },
+  {
+   "bonus": 1200,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.77,
+   "base": 0.7
+  },
+  {
+   "bonus": 1200,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.66,
+   "base": 0.6
+  },
+  {
+   "bonus": 1200,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.33,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1499,
+   "mode": "common",
+   "result": 0.6226744999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1499,
+   "mode": "physical",
+   "result": 0.533721,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1499,
+   "mode": "magic",
+   "result": 0.2668605,
+   "base": 0.3
+  },
+  {
+   "bonus": 1499,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7773255,
+   "base": 0.7
+  },
+  {
+   "bonus": 1499,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.666279,
+   "base": 0.6
+  },
+  {
+   "bonus": 1499,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.3331395,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1500,
+   "mode": "common",
+   "result": 0.616,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1500,
+   "mode": "physical",
+   "result": 0.528,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1500,
+   "mode": "magic",
+   "result": 0.264,
+   "base": 0.3
+  },
+  {
+   "bonus": 1500,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.784,
+   "base": 0.7
+  },
+  {
+   "bonus": 1500,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.672,
+   "base": 0.6
+  },
+  {
+   "bonus": 1500,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.336,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1799,
+   "mode": "common",
+   "result": 0.6128605,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1799,
+   "mode": "physical",
+   "result": 0.525309,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1799,
+   "mode": "magic",
+   "result": 0.2626545,
+   "base": 0.3
+  },
+  {
+   "bonus": 1799,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.7871394999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 1799,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6746909999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 1799,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.33734549999999996,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 1800,
+   "mode": "common",
+   "result": 0.595,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 1800,
+   "mode": "physical",
+   "result": 0.51,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 1800,
+   "mode": "magic",
+   "result": 0.255,
+   "base": 0.3
+  },
+  {
+   "bonus": 1800,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.8049999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 1800,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.69,
+   "base": 0.6
+  },
+  {
+   "bonus": 1800,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.345,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2000,
+   "mode": "common",
+   "result": 0.59255,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2000,
+   "mode": "physical",
+   "result": 0.5079,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2000,
+   "mode": "magic",
+   "result": 0.25395,
+   "base": 0.3
+  },
+  {
+   "bonus": 2000,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.8074499999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 2000,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6920999999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 2000,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.34604999999999997,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2099,
+   "mode": "common",
+   "result": 0.5913372499999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2099,
+   "mode": "physical",
+   "result": 0.5068604999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2099,
+   "mode": "magic",
+   "result": 0.25343024999999997,
+   "base": 0.3
+  },
+  {
+   "bonus": 2099,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.8086627499999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 2099,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.6931394999999999,
+   "base": 0.6
+  },
+  {
+   "bonus": 2099,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.34656974999999995,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2100,
+   "mode": "common",
+   "result": 0.574,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2100,
+   "mode": "physical",
+   "result": 0.492,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2100,
+   "mode": "magic",
+   "result": 0.246,
+   "base": 0.3
+  },
+  {
+   "bonus": 2100,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.826,
+   "base": 0.7
+  },
+  {
+   "bonus": 2100,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.708,
+   "base": 0.6
+  },
+  {
+   "bonus": 2100,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.354,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2175,
+   "mode": "common",
+   "result": 0.57360625,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2175,
+   "mode": "physical",
+   "result": 0.4916625,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2175,
+   "mode": "magic",
+   "result": 0.24583125,
+   "base": 0.3
+  },
+  {
+   "bonus": 2175,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.8263937499999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 2175,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.7083375,
+   "base": 0.6
+  },
+  {
+   "bonus": 2175,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.35416875,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2399,
+   "mode": "common",
+   "result": 0.57243025,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2399,
+   "mode": "physical",
+   "result": 0.4906545,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2399,
+   "mode": "magic",
+   "result": 0.24532725,
+   "base": 0.3
+  },
+  {
+   "bonus": 2399,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.82756975,
+   "base": 0.7
+  },
+  {
+   "bonus": 2399,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.7093455000000001,
+   "base": 0.6
+  },
+  {
+   "bonus": 2399,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.35467275000000004,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 2400,
+   "mode": "common",
+   "result": 0.5599999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 2400,
+   "mode": "physical",
+   "result": 0.48,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 2400,
+   "mode": "magic",
+   "result": 0.24,
+   "base": 0.3
+  },
+  {
+   "bonus": 2400,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.84,
+   "base": 0.7
+  },
+  {
+   "bonus": 2400,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.72,
+   "base": 0.6
+  },
+  {
+   "bonus": 2400,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.36,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 3000,
+   "mode": "common",
+   "result": 0.5599999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 3000,
+   "mode": "physical",
+   "result": 0.48,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 3000,
+   "mode": "magic",
+   "result": 0.24,
+   "base": 0.3
+  },
+  {
+   "bonus": 3000,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.84,
+   "base": 0.7
+  },
+  {
+   "bonus": 3000,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.72,
+   "base": 0.6
+  },
+  {
+   "bonus": 3000,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.36,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 4000,
+   "mode": "common",
+   "result": 0.5599999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 4000,
+   "mode": "physical",
+   "result": 0.48,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 4000,
+   "mode": "magic",
+   "result": 0.24,
+   "base": 0.3
+  },
+  {
+   "bonus": 4000,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.84,
+   "base": 0.7
+  },
+  {
+   "bonus": 4000,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.72,
+   "base": 0.6
+  },
+  {
+   "bonus": 4000,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.36,
+   "base": 0.3
+  },
+  {
+   "bonus": 0,
+   "reduction": 6020,
+   "mode": "common",
+   "result": 0.5599999999999999,
+   "base": 0.7
+  },
+  {
+   "bonus": 0,
+   "reduction": 6020,
+   "mode": "physical",
+   "result": 0.48,
+   "base": 0.6
+  },
+  {
+   "bonus": 0,
+   "reduction": 6020,
+   "mode": "magic",
+   "result": 0.24,
+   "base": 0.3
+  },
+  {
+   "bonus": 6020,
+   "reduction": 0,
+   "mode": "common",
+   "result": 0.84,
+   "base": 0.7
+  },
+  {
+   "bonus": 6020,
+   "reduction": 0,
+   "mode": "physical",
+   "result": 0.72,
+   "base": 0.6
+  },
+  {
+   "bonus": 6020,
+   "reduction": 0,
+   "mode": "magic",
+   "result": 0.36,
+   "base": 0.3
+  }
+ ]
+}

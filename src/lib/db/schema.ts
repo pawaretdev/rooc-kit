@@ -8,6 +8,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
+import type { DefenseHistoryEntry } from "@/features/defense/history";
 import type { ProgressExport } from "@/lib/progress-io";
 
 /**
@@ -78,6 +79,21 @@ export const progressSnapshots = pgTable("progress_snapshot", {
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
   data: jsonb("data").$type<ProgressExport>().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+/**
+ * DEF Planner history — only for users who turned history sync on (it is
+ * off by default, per device). One row per user holding every snapshot and
+ * tombstone; unlike progress_snapshot the server MERGES each upload into the
+ * stored list per record, so opting in on a second device never wipes the
+ * history the first one saved.
+ */
+export const defenseHistories = pgTable("defense_history", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  entries: jsonb("entries").$type<DefenseHistoryEntry[]>().notNull(),
   updatedAt: timestamp("updated_at", { mode: "date" }).notNull().defaultNow(),
 });
 
