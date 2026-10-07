@@ -3,7 +3,7 @@
 import { LegalPage } from "@/components/LegalPage";
 import { useT } from "@/lib/i18n";
 
-const LAST_UPDATED = "2026-08-09";
+const LAST_UPDATED = "2026-10-08";
 
 export function PrivacyContent() {
   const t = useT();
@@ -21,7 +21,7 @@ export function PrivacyContent() {
               filters, and language preference are stored in your own browser
               (IndexedDB / localStorage) and never leave your device unless you
               explicitly use a feature that sends them somewhere — signing in to
-              sync, exporting a file, or configuring an alert webhook.
+              sync or exporting a file.
             </p>
           </section>
           <section>
@@ -39,14 +39,6 @@ export function PrivacyContent() {
             <p>
               We use only an essential session cookie to keep you signed in.
               There are no advertising, analytics, or tracking cookies.
-            </p>
-          </section>
-          <section>
-            <h2>Alert webhooks</h2>
-            <p>
-              If you configure a Discord webhook URL for market alerts, it is
-              stored solely to deliver the alerts you asked for. You can remove
-              it at any time.
             </p>
           </section>
           <section>
@@ -90,7 +82,7 @@ export function PrivacyContent() {
               ตัวกรอง และภาษาที่เลือก ถูกเก็บในเบราว์เซอร์ของคุณเอง (IndexedDB /
               localStorage) และไม่ถูกส่งออกจากเครื่อง
               เว้นแต่คุณใช้ฟีเจอร์ที่ส่งข้อมูลเองอย่างชัดเจน — เช่น เข้าสู่ระบบเพื่อ
-              sync, ส่งออกไฟล์ หรือตั้งค่า webhook แจ้งเตือน
+              sync หรือส่งออกไฟล์
             </p>
           </section>
           <section>
@@ -108,13 +100,6 @@ export function PrivacyContent() {
             <p>
               ใช้เฉพาะ session cookie ที่จำเป็นต่อการคงสถานะเข้าสู่ระบบ
               ไม่มีคุกกี้โฆษณา analytics หรือติดตามพฤติกรรมใด ๆ
-            </p>
-          </section>
-          <section>
-            <h2>Webhook แจ้งเตือน</h2>
-            <p>
-              หากคุณตั้งค่า Discord webhook สำหรับแจ้งเตือนรอบตลาด URL
-              นั้นถูกเก็บไว้เพื่อส่งการแจ้งเตือนที่คุณขอเท่านั้น และลบออกได้ทุกเมื่อ
             </p>
           </section>
           <section>

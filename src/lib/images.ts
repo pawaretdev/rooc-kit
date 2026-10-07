@@ -8,6 +8,7 @@ import type { Monster } from "./game-data";
  *   ui/frame-{1..7}.png         level frame, tier = min(level, 6) + 1
  *   ui/mvp.png · ui/mini.png    kind badge shown at the frame's top-left
  *   ui/gold-coin.png            Gold Shop currency mark (GoldCoin component)
+ *   ui/rooc-kit.png             brand logo shown in the navbar
  *   items/{icon-id}.png         Gold Shop item icon (ids in item-icons.ts)
  *   item-frames/bg-{01..13}.png Gold Shop rarity frame behind the icon
  *                               (picker offers the ids in item-frames.ts)
@@ -36,6 +37,11 @@ export function kindBadgeUrl(kind: Monster["kind"]): string | null {
 /** The gold coin shown next to every gold amount in the Shop Planner. */
 export function goldCoinUrl(): string {
   return `${base}/ui/gold-coin.png`;
+}
+
+/** The ROOC Kit app-icon art, pre-masked to a rounded square (navbar brand). */
+export function brandLogoUrl(): string {
+  return `${base}/ui/rooc-kit.png`;
 }
 
 /** Gold Shop item icon — `icon` is an id from ITEM_ICONS (item-icons.ts). */

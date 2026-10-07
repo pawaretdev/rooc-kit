@@ -12,6 +12,6 @@ related_targets: ["src/features/landing/Landing.tsx","src/features/landing/DemoR
 - Action: primary CTA "Open Tracker" → `/tracker` (AuthGate: Discord / Google / anonymous). Secondary: anchor to #how-it-works.
 - Proof/content: playable DemoRowCard (real Earth · Row 1 data + sprites, local state only, labeled sample data); ledger rows proved by real UI fragments (element counter, trip chip, JSON export line) — no icon cards.
 - Structure: "Live demo first" (seed b835a12f, candidate 3 of grounded list; approved by user 2026-08-10 after artifact mockup review).
-- Constraints: locale-pure copy via useT (no mixed th/en lines — user requirement); canonical English monster/map/element names; no uninventable claims — cross-device sync always labeled "in development" until shipped; market alerts not mentioned until built.
+- Constraints: locale-pure copy via useT (no mixed th/en lines — user requirement); canonical English monster/map/element names; no uninventable claims — cross-device sync always labeled "in development" until shipped; market alerts were dropped (2026-10-08) — never mention them.
 - Memorable moment: tapping blockers until the row-level badge pops (lv-pop) and the trip recommendation changes.
 - Unresolved: real screenshots/OG image; whether landing gets its own hero art later.
