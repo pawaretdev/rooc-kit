@@ -35,7 +35,7 @@
           "name": "Argiope",
           "type": "Normal",
           "baseLevel": 75,
-          "locations": ["Larva Canyon"]
+          "locations": ["Larva Canyon", "Mt.Mjolnir"]
         },
         {
           "name": "Side winder",
