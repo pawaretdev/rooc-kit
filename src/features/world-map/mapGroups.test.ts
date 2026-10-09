@@ -273,8 +273,48 @@ describe("allPins", () => {
     const maxedAll = allPins(
       levels(pin.progress.monsterIds.map((id) => [id, MAX_MR_LEVEL] as const)),
     ).find((p) => p.id === pin.id)!;
+    expect(pin.progress.complete).toBe(false);
     expect(maxedAll.progress.remaining).toBe(0);
     expect(maxedAll.progress.levelsLeft).toBe(0);
+    expect(maxedAll.progress.complete).toBe(true);
+
+    const oneShort = allPins(
+      levels(
+        pin.progress.monsterIds.map(
+          (id, i) => [id, i === 0 ? MAX_MR_LEVEL - 1 : MAX_MR_LEVEL] as const,
+        ),
+      ),
+    ).find((p) => p.id === pin.id)!;
+    expect(oneShort.progress.complete).toBe(false);
+  });
+
+  it("marks a place complete on its own, before the cell around it", () => {
+    // Glast Heim holds nine maps: finishing Catacomb should show on Catacomb's
+    // chip and callout long before the whole square is done
+    const cell = pins.find((p) => p.maps.some((m) => m.id === "catacomb"))!.id;
+    const roster = (mapId: string) => monsterIdsByMapId.get(mapId) ?? [];
+    const maxOut = (ids: readonly string[]) =>
+      allPins(levels(ids.map((id) => [id, MAX_MR_LEVEL] as const))).find(
+        (p) => p.id === cell,
+      )!;
+
+    const pin = maxOut(roster("catacomb"));
+    const area = (name: string) => pin.areas.find((a) => a.name === name)!;
+    expect(area("Catacomb").complete).toBe(true);
+    expect(area("Underground Prison").complete).toBe(false);
+    expect(pin.progress.complete).toBe(false);
+
+    // a place with floors is complete only once every floor is
+    const castle = area("Glast Heim Castle");
+    const [f1, f2] = castle.maps.map((m) => m.id);
+    const firstFloorOnly = maxOut(roster(f1)).areas.find(
+      (a) => a.name === castle.name,
+    )!;
+    expect(firstFloorOnly.complete).toBe(false);
+    const bothFloors = maxOut([...roster(f1), ...roster(f2)]).areas.find(
+      (a) => a.name === castle.name,
+    )!;
+    expect(bothFloors.complete).toBe(true);
   });
 });
 

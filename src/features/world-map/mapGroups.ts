@@ -21,6 +21,8 @@ export interface MapProgress {
   remaining: number;
   /** levels still to gain before the whole map is maxed */
   levelsLeft: number;
+  /** every monster here is maxed — nothing left to farm, so no reason to go */
+  complete: boolean;
 }
 
 /**
@@ -77,6 +79,8 @@ export interface MapArea {
   name: string;
   /** its maps, in floor order — a single entry when the place has no floors */
   maps: GameMap[];
+  /** every floor of this place is complete */
+  complete: boolean;
 }
 
 export function mapProgress(
@@ -103,6 +107,8 @@ function progressFor(
     maxed,
     remaining: monsterIds.length - maxed,
     levelsLeft,
+    // an empty roster has nothing to finish, so it is never "done"
+    complete: monsterIds.length > 0 && maxed === monsterIds.length,
   };
 }
 
@@ -187,9 +193,12 @@ function pinFor(
   const areas: MapArea[] = [];
   for (const map of maps) {
     const name = areaLabel(map.name);
+    const done = mapProgress(map.id, levels).complete;
     const area = areas.find((a) => a.name === name);
-    if (area) area.maps.push(map);
-    else areas.push({ name, maps: [map] });
+    if (area) {
+      area.maps.push(map);
+      area.complete &&= done;
+    } else areas.push({ name, maps: [map], complete: done });
   }
 
   return {

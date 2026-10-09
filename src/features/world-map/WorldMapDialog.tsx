@@ -19,6 +19,7 @@ import { useT } from "@/lib/i18n";
 import { monsterImageUrl, worldMapImageUrl } from "@/lib/images";
 import { MonsterAvatar } from "@/components/MonsterAvatar";
 import {
+  CheckIcon,
   FitIcon,
   MapPinIcon,
   MinusIcon,
@@ -689,6 +690,9 @@ function MapStage({
               <CaveCallout
                 key={`cave-${pin.id}-${callout.name}`}
                 pin={pin}
+                complete={
+                  pin.areas.find((area) => area.name === callout.name)?.complete ?? false
+                }
                 callout={{ ...callout, ...(canArrange ? offsets[caveLayoutKey(pin.id, callout.name)] : {}) }}
                 scale={camera.scale}
                 editing={editing}
@@ -799,11 +803,17 @@ function MapCell({
   // with the square they belong to — the cell is the frame, and its contents
   // stay inside it at every zoom. Below `CROWDED` the squares are smaller than
   // legible text, so the contents drop out and the coloured box carries it.
+  const t = useT();
   const tooSmall = scale < CROWDED;
   // The box is sized in map units, so a CSS border is multiplied by the camera
   // too: 2px reads as a 9px slab at 460% and the dashes stretch with it.
   // Dividing by the scale keeps every outline the same weight on screen.
   const hairline = `${2 / scale}px`;
+  const done = pin.progress.complete;
+  // The check is the one mark that must survive zooming all the way out, since
+  // that is when the map is scanned for where to go next — so unlike the name
+  // it never drops out; it just claims more of the cell once squares get small.
+  const badge = Math.min(CELL_PX * 0.5, Math.max(CELL_PX * 0.26, 14 / scale));
 
   return (
     <button
@@ -811,7 +821,9 @@ function MapCell({
       data-map-pin
       onClick={onPick}
       aria-pressed={active}
-      aria-label={`${pin.label} — ${pin.progress.maxed}/${pin.progress.total}`}
+      aria-label={`${pin.label} — ${pin.progress.maxed}/${pin.progress.total}${
+        done ? ` — ${t("wm.complete")}` : ""
+      }`}
       style={{
         left: pin.anchor.x * MAP_SIZE,
         top: pin.anchor.y * MAP_SIZE,
@@ -834,6 +846,16 @@ function MapCell({
             : "border-white/15 hover:border-[var(--pin-line)] hover:bg-white/15"
       }`}
     >
+      {/* Nothing left to farm here: a scrim lets the square recede, the same
+          "nothing left to do" vocabulary as the Shop Planner's sold-out cards.
+          A spawn of the pinned monster stays lit — that is why it was picked. */}
+      {done && !spawns && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-black/45"
+        />
+      )}
+
       {/* lifts this cell out of the dimming layer below, so the places the
           monster actually lives look lit while the rest of the map recedes */}
       {spawns && (
@@ -875,6 +897,24 @@ function MapCell({
           </span>
         </span>
       )}
+
+      {/* gold check = maxed, as everywhere else in the app; the dark rim keeps
+          it off the yellow-olive terrain, which swallows plain gold */}
+      {done && (
+        <span
+          aria-hidden
+          style={{
+            width: badge,
+            height: badge,
+            top: CELL_PX * 0.05,
+            right: CELL_PX * 0.05,
+            borderWidth: `${1.5 / scale}px`,
+          }}
+          className="pointer-events-none absolute grid place-items-center rounded-full border-black/70 bg-gold text-gold-ink shadow-[0_1px_3px_rgba(0,0,0,0.6)]"
+        >
+          <CheckIcon size={badge * 0.62} strokeWidth={2.5} />
+        </span>
+      )}
     </button>
   );
 }
@@ -884,6 +924,7 @@ function MapCell({
  */
 function CaveCallout({
   pin,
+  complete,
   callout,
   scale,
   editing,
@@ -894,6 +935,8 @@ function CaveCallout({
   onMove,
 }: {
   pin: MapPin;
+  /** every floor of this dungeon is maxed */
+  complete: boolean;
   callout: Callout;
   scale: number;
   editing: boolean;
@@ -992,7 +1035,7 @@ function CaveCallout({
         data-cave-label
         role={editing ? "button" : undefined}
         tabIndex={editing ? 0 : undefined}
-        aria-label={callout.name}
+        aria-label={complete ? `${callout.name} — ${t("wm.complete")}` : callout.name}
         onPointerDown={(event) => {
           if (!editing || event.button !== 0) return;
           event.stopPropagation();
@@ -1037,6 +1080,22 @@ function CaveCallout({
         className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded border border-gold/50 bg-surface leading-[1.3] font-semibold whitespace-nowrap text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {callout.name}
+        {/* hangs off the corner so the chip keeps the width its saved layout
+            was arranged for */}
+        {complete && (
+          <span
+            aria-hidden
+            style={{
+              width: CELL_PX * 0.2,
+              height: CELL_PX * 0.2,
+              top: -CELL_PX * 0.09,
+              right: -CELL_PX * 0.09,
+            }}
+            className="absolute grid place-items-center rounded-full border border-black/70 bg-gold text-gold-ink"
+          >
+            <CheckIcon size={CELL_PX * 0.13} strokeWidth={2.5} />
+          </span>
+        )}
       </span>
     </span>
   );
@@ -1092,7 +1151,17 @@ function RosterPanel({
       } w-full min-w-0 flex-col border-line lg:flex lg:w-[340px] lg:flex-none lg:border-l`}
     >
       <div className="flex-none border-b border-line px-4 pt-3 pb-2.5">
-        <h3 className="text-[15px] font-bold">{activeMap.name}</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="min-w-0 truncate text-[15px] font-bold">
+            {activeMap.name}
+          </h3>
+          {progress.complete && (
+            <span className="inline-flex flex-none items-center gap-1 rounded-md border border-gold/60 px-1.5 py-px text-[10.5px] font-semibold text-gold">
+              <CheckIcon size={11} />
+              {t("wm.complete")}
+            </span>
+          )}
+        </div>
         <p className="mt-0.5 text-[11.5px] text-sub">{t("wm.editHint")}</p>
 
         {/* Two levels, not one long row: pick the place first, then its floor.
@@ -1128,6 +1197,16 @@ function RosterPanel({
                   >
                     {maxed}/{total}
                   </span>
+                  {area.complete && (
+                    <CheckIcon
+                      size={11}
+                      aria-label={t("wm.complete")}
+                      aria-hidden={false}
+                      className={`ml-1 inline align-[-1px] ${
+                        on ? "text-accent-ink" : "text-gold"
+                      }`}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -1163,6 +1242,16 @@ function RosterPanel({
                   >
                     {stats.maxed}/{stats.total}
                   </span>
+                  {stats.complete && (
+                    <CheckIcon
+                      size={10}
+                      aria-label={t("wm.complete")}
+                      aria-hidden={false}
+                      className={`ml-1 inline align-[-1px] ${
+                        on ? "text-accent-ink" : "text-gold"
+                      }`}
+                    />
+                  )}
                 </button>
               );
             })}
@@ -1200,8 +1289,13 @@ function RosterPanel({
         ))}
       </div>
 
-      <p className="flex-none border-t border-line px-4 py-2 text-[11.5px] text-sub">
-        {progress.levelsLeft === 0
+      <p
+        className={`flex flex-none items-center gap-1.5 border-t border-line px-4 py-2 text-[11.5px] ${
+          progress.complete ? "font-semibold text-gold" : "text-sub"
+        }`}
+      >
+        {progress.complete && <CheckIcon size={12} className="flex-none" />}
+        {progress.complete
           ? t("wm.mapComplete")
           : t("wm.levelsLeft").replace("{n}", String(progress.levelsLeft))}
       </p>
