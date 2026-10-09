@@ -11,7 +11,7 @@
  * NaN = entered but unreadable, which blocks the result instead of guessing.
  */
 
-export const FORMULA_VERSION = "2026-10-08.1";
+export const FORMULA_VERSION = "2026-10-09.1";
 
 export const MODEL_IDS = {
   def: "C01-excel-roog-candidate",
@@ -19,6 +19,7 @@ export const MODEL_IDS = {
   pvp: "F10-pvp-rating-client",
   pdmg: "BV-PDMG-0.5-cap25-candidate",
   mdmg: "BV-MDMG-relative-50.47-candidate",
+  dmgLinear: "client-lua-dmg-linear-comparison",
 } as const;
 
 export type DamageKind = "physical" | "magic";
@@ -156,7 +157,12 @@ export interface DefAssumption {
   refine: "after" | "before";
 }
 
-/** C01's own ordering: flat off Raw DEF, DEF% restored, Refine added after Ignore%. */
+/**
+ * C01's own ordering: flat off Raw DEF, DEF% restored, Refine added after
+ * Ignore%. The PvP branch of an older ROO server source (damage_def.cpp)
+ * computes exactly this; ROOC's own producer hasn't been found, so the other
+ * three orderings stay as an "if ROOC differs" spread.
+ */
 export const PRIMARY_ASSUMPTION: DefAssumption = { flat: "raw", refine: "after" };
 
 export const DEF_ASSUMPTIONS: readonly DefAssumption[] = [
@@ -245,6 +251,22 @@ export function mdmgRelative(diff: number): number | null {
   return relative > 0 ? relative : null;
 }
 
+// ── comparison only: the client's own PDMG/MDMG term ──
+
+/** Floor the client Lua puts on the bonus/reduction term. */
+export const DMG_LINEAR_FLOOR = 0.1;
+
+/**
+ * The client Lua's skill formulas multiply by
+ * `max(1 + (bonus − reduction)/100, 0.1)` (328 physical / 97 magic sites), and
+ * an older ROO server source feeds the raw stats in unscaled and uncapped.
+ * ROOC's own producer is unseen, so this is shown beside the BV estimate and
+ * never multiplied into a total.
+ */
+export function dmgLinearMultiplier(diff: number): number {
+  return Math.max(1 + diff / 100, DMG_LINEAR_FLOOR);
+}
+
 // ── evaluation ──
 
 export type LayerId = "def" | "pvp" | "dmg";
@@ -267,12 +289,16 @@ export interface DmgLayerResult {
   diff: number;
   multiplier: number;
   capped: boolean;
+  /** client-Lua linear form, for comparison — never part of `total` */
+  linear: number;
 }
 
 export interface MdmgPanelResult {
   diff: number;
   /** null = the model line is ≤0 here — no estimate */
   relative: number | null;
+  /** client-Lua linear form, for comparison — never part of `total` */
+  linear: number;
 }
 
 export type KindEvaluation =
@@ -392,8 +418,9 @@ export function evaluateKind(
     if (kind === "physical") missing.dmg = dmgMissing;
   } else {
     const diff = v(fields.dmgBonus) - v(fields.dmgReduction);
-    if (kind === "physical") dmg = { diff, ...pdmgMultiplier(diff) };
-    else mdmg = { diff, relative: mdmgRelative(diff) };
+    const linear = dmgLinearMultiplier(diff);
+    if (kind === "physical") dmg = { diff, ...pdmgMultiplier(diff), linear };
+    else mdmg = { diff, relative: mdmgRelative(diff), linear };
   }
 
   const layerValues: Record<LayerId, number | null> = {

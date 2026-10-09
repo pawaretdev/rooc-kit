@@ -38,15 +38,15 @@ const MODELS: { title: MessageKey; tag: ModelTagKind; formula: string[]; note: M
     formula: ["relative = 1 + (MDMG Bonus% − MDMG Reduction% − 50.47) × 0.72%"],
     note: "def.formula.mdmgNote",
   },
+  {
+    title: "def.formula.dmgLinear",
+    tag: "estimate",
+    formula: ["× max(1 + (Bonus% − Reduction%) ÷ 100, 0.1)"],
+    note: "def.formula.dmgLinearNote",
+  },
 ];
 
-const GAPS: MessageKey[] = [
-  "def.gap.refine",
-  "def.gap.flat",
-  "def.gap.curve",
-  "def.gap.dmg",
-  "def.gap.scope",
-];
+const GAPS: MessageKey[] = ["def.gap.order", "def.gap.dmg", "def.gap.retained", "def.gap.scope"];
 
 export function FormulaNotes() {
   const t = useT();

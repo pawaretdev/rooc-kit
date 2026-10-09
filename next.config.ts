@@ -8,6 +8,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
     ],
   },
+  async redirects() {
+    return [
+      // DEF Planner shipped at /defense for a day before moving — keep old links alive.
+      { source: "/defense", destination: "/def-planner", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

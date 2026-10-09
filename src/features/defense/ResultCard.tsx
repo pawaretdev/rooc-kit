@@ -231,13 +231,14 @@ export function ResultCard({
                     {t("def.compare.layers")}{" "}
                     {baseline.comparison.layers.map((id) => t(LAYER_NAME[id][kind])).join(" · ")}
                   </p>
-                  {baseline.defRange && (
-                    <p className="mt-0.5 text-[11px] text-sub">
-                      {t("def.compare.defRange")
-                        .replace("{a}", changeText(baseline.defRange.min))
-                        .replace("{b}", changeText(baseline.defRange.max))}
-                    </p>
-                  )}
+                  {baseline.defRange &&
+                    baseline.defRange.max - baseline.defRange.min >= SAME_THRESHOLD && (
+                      <p className="mt-0.5 text-[11px] text-sub">
+                        {t("def.compare.defRange")
+                          .replace("{a}", changeText(baseline.defRange.min))
+                          .replace("{b}", changeText(baseline.defRange.max))}
+                      </p>
+                    )}
                 </>
               ) : (
                 <p className="mt-0.5 text-xs text-sub">{t("def.compare.none")}</p>
@@ -258,11 +259,13 @@ export function ResultCard({
                     .replace("{eff}", formatStat(Math.round(evaluation.def.effectiveDef)))
                     .replace("{raw}", formatStat(Math.round(evaluation.def.rawDef)))}
                 </p>
-                <p>
-                  {t("def.detail.range")
-                    .replace("{a}", formatPercent(1 - evaluation.def.range.max))
-                    .replace("{b}", formatPercent(1 - evaluation.def.range.min))}
-                </p>
+                {evaluation.def.range.max - evaluation.def.range.min >= SAME_THRESHOLD && (
+                  <p>
+                    {t("def.detail.range")
+                      .replace("{a}", formatPercent(1 - evaluation.def.range.max))
+                      .replace("{b}", formatPercent(1 - evaluation.def.range.min))}
+                  </p>
+                )}
                 {evaluation.def.ignore.capped && (
                   <p className="text-gold">
                     {t("def.detail.ignoreCapped")
@@ -299,6 +302,12 @@ export function ResultCard({
                     .replace("{m}", formatMultiplier(evaluation.dmg.multiplier))}
                 </p>
                 {evaluation.dmg.capped && <p className="text-gold">{t("def.detail.pdmgCapped")}</p>}
+                <p>
+                  {t("def.detail.dmgLinear").replace(
+                    "{m}",
+                    formatMultiplier(evaluation.dmg.linear),
+                  )}
+                </p>
               </LayerRow>
             )}
           </ul>
@@ -463,10 +472,10 @@ function MissingList({
 }
 
 /**
- * MDMG lives beside the total, never in it: the only formula is relative to
- * the BV test's own baseline. Lead with who has the edge (that much is
- * model-free), then the sheet's factor, flagged once it predicts more than
- * ±25% — further than any MDMG data behind the sheet.
+ * MDMG lives beside the total, never in it: the BV formula is relative to its
+ * test's own baseline. Lead with who has the edge (that much is model-free),
+ * then the sheet's factor, flagged once it predicts more than ±25% — further
+ * than any MDMG data behind the sheet — and the client's linear form beside it.
  */
 function MdmgPanel({
   kind,
@@ -517,6 +526,7 @@ function MdmgPanel({
               {t("def.mdmg.far")}
             </p>
           )}
+          <p>{t("def.detail.dmgLinear").replace("{m}", formatMultiplier(mdmg.linear))}</p>
           <p>{t("def.mdmg.notInTotal")}</p>
         </div>
       ) : (

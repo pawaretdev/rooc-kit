@@ -69,7 +69,7 @@ export function buildDefenseExport(input: {
       def: {
         id: MODEL_IDS.def,
         status: "candidate",
-        note: "Excel/ROOG ordering: flat ignore off Raw DEF, DEF% restored, Refine added after Ignore%; 5×Lv curve, floor 0.05",
+        note: "Flat ignore off Raw DEF, DEF% restored, Refine added after Ignore%; 5×Lv curve, floor 0.05. Same as the Excel/ROOG model and the literal PvP branch of an older ROO server source (DamageLuaArgs::CalculatorProcess); ROOC's own producer not found",
       },
       ignoreCap: {
         id: MODEL_IDS.ignoreCap,
@@ -90,6 +90,11 @@ export function buildDefenseExport(input: {
         id: MODEL_IDS.mdmg,
         status: "candidate",
         note: "relative to the BV test baseline only (diff 50.47); never part of a total",
+      },
+      dmgLinear: {
+        id: MODEL_IDS.dmgLinear,
+        status: "comparison_only",
+        note: "max(1 + (bonus − reduction)/100, 0.1) — the client Lua's own bonus/reduction term, fed unscaled and uncapped in an older ROO server source; ROOC's producer unseen. Reported as results.*.dmg.linear / mdmg.linear, never part of a total",
       },
     },
     input: { build, opponent },

@@ -22,7 +22,7 @@ export function AppHeader() {
   const worldMapActive = pathname === "/world-map";
   const dailiesActive = pathname === "/dailies";
   const shopActive = pathname === "/shop-planner";
-  const defenseActive = pathname === "/defense";
+  const defenseActive = pathname === "/def-planner";
   const guideActive = pathname === "/guide" || pathname.startsWith("/guide/");
 
   return (
@@ -91,7 +91,7 @@ export function AppHeader() {
             {t("nav.shopPlanner")}
           </Link>
           <Link
-            href="/defense"
+            href="/def-planner"
             aria-current={defenseActive ? "page" : undefined}
             className={`press rounded-lg px-3.5 py-1.5 ${
               defenseActive
@@ -185,7 +185,7 @@ export function AppHeader() {
             {t("nav.shopPlanner")}
           </Link>
           <Link
-            href="/defense"
+            href="/def-planner"
             aria-current={defenseActive ? "page" : undefined}
             onClick={() => setMenuOpen(false)}
             className={`block rounded-lg px-3 py-2.5 text-sm ${

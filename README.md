@@ -85,7 +85,7 @@ Rows are ordered by:
 
 *Example:* a row at levels `4, 4, 5, 5, 5` has two blockers. If both share a map, the row ranks near the top. If a filter such as *"no MVP on the map"* is active and that map has an MVP, the row is either hidden or demoted — this is a per-filter toggle between **hard filter** and **soft penalty**.
 
-### 2. DEF Planner (`/defense`)
+### 2. DEF Planner (`/def-planner`)
 
 Estimates how much a character's defensive stats cut an opponent's damage in **PvP**, layer by layer — the DEF curve (Equipment / DEF% / Refine vs Flat Ignore + Ignore%, capped at 40%), the PvP DMG rating difference, and PDMG Bonus vs Reduction — with MDMG shown separately against its test baseline. One build is enough; any saved build can be picked as a comparison. Every layer carries its model and evidence status; totals only multiply complete layers and are never presented as final damage or a "you'll survive" verdict. Formulas and evidence: [`docs/defense-formulas.md`](docs/defense-formulas.md).
 
@@ -228,7 +228,7 @@ The tracker itself is local-first and runs client-side. The server layer is Next
 ```
 rooc-kit/
 ├── src/
-│   ├── app/            # routes: / (landing), /tracker, /defense, /setup, /terms, /privacy,
+│   ├── app/            # routes: / (landing), /tracker, /def-planner, /setup, /terms, /privacy,
 │   │                   #         /api/auth/*, /api/progress, /api/defense-history
 │   ├── data/           # static game data (JSON, validated by pnpm data:check)
 │   ├── features/

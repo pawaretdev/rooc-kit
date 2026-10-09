@@ -5,6 +5,7 @@ import {
   compareEvaluations,
   defChangeRange,
   defMultiplier,
+  dmgLinearMultiplier,
   effectiveIgnoreRate,
   emptyBuild,
   emptyOpponent,
@@ -136,6 +137,13 @@ describe("PDMG / MDMG", () => {
     expect(mdmgRelative(60.47)).toBeCloseTo(1.072, 12);
     expect(mdmgRelative(-100)).toBeNull();
   });
+
+  it("the client's linear form is 1:1 with no cap and floors at 0.1", () => {
+    expect(dmgLinearMultiplier(20)).toBeCloseTo(1.2, 12);
+    expect(dmgLinearMultiplier(-40)).toBeCloseTo(0.6, 12);
+    expect(dmgLinearMultiplier(80)).toBeCloseTo(1.8, 12);
+    expect(dmgLinearMultiplier(-95)).toBe(0.1);
+  });
 });
 
 describe("evaluateKind", () => {
@@ -180,6 +188,18 @@ describe("evaluateKind", () => {
     );
     expect(e.pvp!.diff).toBe(-500);
     expect(e.dmg!.diff).toBe(20);
+  });
+
+  it("reports the linear PDMG/MDMG form for comparison only", () => {
+    const phys = ok(evaluateKind(sampleBuild(), sampleOpponent(), "physical"));
+    expect(phys.dmg!.multiplier).toBeCloseTo(1.1, 12);
+    expect(phys.dmg!.linear).toBeCloseTo(1.2, 12);
+    expect(phys.total).toBeCloseTo(
+      phys.def!.multiplier * phys.pvp!.multiplier * phys.dmg!.multiplier,
+      12,
+    );
+    const magic = ok(evaluateKind(sampleBuild(), sampleOpponent(), "magic"));
+    expect(magic.mdmg!.linear).toBeCloseTo(1.15, 12);
   });
 
   it("keeps MDMG out of the magic total", () => {
